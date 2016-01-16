@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+	<pages>
+		<uid>1</uid>
+		<pid>0</pid>
+		<title>Test Page 1</title>
+		<doktype>1</doktype>
+		<sorting>1</sorting>
+		<is_siteroot>1</is_siteroot>
+	</pages>
+	<pages>
+		<uid>11</uid>
+		<pid>100</pid>
+		<title>Test Page 1.1</title>
+		<doktype>1</doktype>
+		<sorting>11</sorting>
+	</pages>
+	<pages>
+		<uid>111</uid>
+		<pid>11</pid>
+		<title>Test Page 1.1.1</title>
+		<doktype>1</doktype>
+		<sorting>111</sorting>
+	</pages>
+	<pages>
+		<uid>112</uid>
+		<pid>11</pid>
+		<title>Test Page 1.1.2</title>
+		<doktype>1</doktype>
+		<sorting>112</sorting>
+	</pages>
+	<pages>
+		<uid>12</uid>
+		<pid>1</pid>
+		<title>Test Page 1.2 (Hidden)</title>
+		<doktype>1</doktype>
+		<sorting>12</sorting>
+		<hidden>1</hidden>
+	</pages>
+	<pages>
+		<uid>13</uid>
+		<pid>1</pid>
+		<title>Test Page 1.3 (Restricted)</title>
+		<doktype>1</doktype>
+		<sorting>13</sorting>
+		<fe_group>1</fe_group>
+	</pages>
+	<pages>
+		<uid>2</uid>
+		<pid>0</pid>
+		<title>Test Page 2</title>
+		<doktype>1</doktype>
+		<sorting>1</sorting>
+		<is_siteroot>1</is_siteroot>
+	</pages>
+	<pages>
+		<uid>3</uid>
+		<pid>0</pid>
+		<title>Test Page 3</title>
+		<doktype>1</doktype>
+		<sorting>1</sorting>
+		<is_siteroot>1</is_siteroot>
+	</pages>
+</dataset>

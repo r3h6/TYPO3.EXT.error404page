@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <pages>
+        <uid>900</uid>
+        <pid>1</pid>
+        <title>Error Page</title>
+        <doktype>104</doktype>
+        <sorting>404</sorting>
+        <deleted>1</deleted>
+    </pages>
+    <pages>
+        <uid>901</uid>
+        <pid>1</pid>
+        <title>Error Page</title>
+        <doktype>104</doktype>
+        <sorting>404</sorting>
+        <hidden>1</hidden>
+    </pages>
+</dataset>

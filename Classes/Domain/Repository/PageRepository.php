@@ -40,7 +40,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
             }
         }
 
-        $errorPages = $this->getAllErrorPages();
+        $errorPages = $this->getAccessibleErrorPages();
         if ($rootPageUid) {
             foreach ($errorPages as $errorPage) {
                 $rootLine = $this->pageRepository->getRootLine($errorPage['uid']);
@@ -58,17 +58,28 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
         return null;
     }
 
-    public function getAllErrorPages()
+    protected function getAccessibleErrorPages()
     {
         $doktype = $this->extensionConfiguration->getErrorPageType();
-        $pages = $this->getDatabaseConnection()->exec_SELECTgetRows(
+        $pages = (array) $this->getDatabaseConnection()->exec_SELECTgetRows(
             'uid',
             'pages',
             sprintf('doktype=%d', $doktype) . $this->pageRepository->enableFields('pages'),
             '',
             'sorting'
         );
-        return (array) $pages;
+
+        $accessiblePages = [];
+        foreach ($pages as $i => $errorPage) {
+            $rootLine = $this->pageRepository->getRootLine($errorPage['uid']);
+            foreach ($rootLine as $page) {
+                if (!$this->pageRepository->checkRecord('pages', (int) $page['uid'])) {
+                    continue 2;
+                }
+            }
+            $accessiblePages[] = $errorPage;
+        }
+        return $accessiblePages;
     }
 
     /**
