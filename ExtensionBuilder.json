@@ -1,0 +1,47 @@
+{
+    "modules": [
+
+    ],
+    "properties": {
+        "backendModules": [
+
+        ],
+        "description": "Custom error page handling.",
+        "emConf": {
+            "category": "plugin",
+            "custom_category": "",
+            "dependsOn": "typo3 => 7.6.0-7.6.99\n",
+            "disableLocalization": true,
+            "disableVersioning": true,
+            "skipGenerateDocumentationTemplate": true,
+            "sourceLanguage": "en",
+            "state": "beta",
+            "targetVersion": "7.6.0-7.6.99",
+            "version": ""
+        },
+        "extensionKey": "page404",
+        "name": "Page 404",
+        "originalExtensionKey": "",
+        "originalVendorName": "",
+        "persons": [
+            {
+                "company": "",
+                "email": "r3h6@outlook.com",
+                "name": "R3 H6",
+                "role": "Developer"
+            }
+        ],
+        "plugins": [
+
+        ],
+        "vendorName": "Monogon"
+    },
+    "wires": [
+
+    ],
+    "log": {
+        "last_modified": "2016-01-07 09:56",
+        "extension_builder_version": "7.6.0",
+        "be_user": " (1)"
+    }
+}
