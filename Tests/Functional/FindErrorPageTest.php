@@ -29,6 +29,16 @@ class FindErrorPageTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
      */
     protected $pageRepository;
 
+    protected $testExtensionsToLoad = array('typo3conf/ext/page404');
+
+    protected $configurationToUseInTestInstance = [
+        'EXT' => [
+            'extConf' => [
+                'page404' => 'a:1:{s:14:"doktypePage404";s:3:"104";}',
+            ],
+        ],
+    ];
+
     public function setUp()
     {
         parent::setUp();
@@ -59,7 +69,7 @@ class FindErrorPageTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
     public function findErrorPageByHostWillReturnTheFirstFoundErrorPage()
     {
         $this->importDataSet('pages');
-        $this->importDataSet('pages.error_first');
+        $this->importDataSet('test_first');
         $errorPage = $this->pageRepository->findErrorPageByHost('typo3.org');
         $this->assertInternalType('array', $errorPage, 'No error page found!');
         $this->assertEquals(404, $errorPage['uid'], 'Wrong page found!');
@@ -71,17 +81,50 @@ class FindErrorPageTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
     public function findErrorPageByHostWillReturnNullBecauseErrorPageIsNotAccessible()
     {
         $this->importDataSet('pages');
-        $this->importDataSet('pages.error_access');
+        $this->importDataSet('fe_groups');
+        $this->importDataSet('test_access');
         $errorPage = $this->pageRepository->findErrorPageByHost('typo3.org');
         $this->assertSame(null, $errorPage, 'No error page should be found!');
     }
 
     /**
      * @test
+     * @dataProvider findErrorPageByHostWillReturnErrorPageForHostsDataProvider
      */
-    public function findErrorPageByHostWillReturnErrorPageForHosts()
+    public function findErrorPageByHostWillReturnErrorPageForHosts($host, $expected)
     {
-        //and subdomains
+        $this->importDataSet('pages');
+        $this->importDataSet('sys_domain');
+        $this->importDataSet('test_hosts');
+        $errorPage = $this->pageRepository->findErrorPageByHost($host);
+        $this->assertInternalType('array', $errorPage, 'No error page found!');
+        $this->assertEquals($expected, $errorPage['uid'], 'Wrong page found!');
+    }
+
+    public function findErrorPageByHostWillReturnErrorPageForHostsDataProvider()
+    {
+        return [
+            ['www.test1.org', 14],
+            ['www.test2.org', 21],
+            ['www.test3.org', 31],
+            ['typo3.org', 31],
+        ];
+    }
+
+    /**
+     * @test
+     */
+    public function findErrorPageByHostWillReturnLocalizedErrorPage()
+    {
+        unset($this->pageRepository);
+        $GLOBALS['TSFE']->sys_language_uid = 1;
+        $this->pageRepository = new PageRepository();
+        $this->importDataSet('pages');
+        $this->importDataSet('sys_language');
+        $this->importDataSet('test_language');
+        $errorPage = $this->pageRepository->findErrorPageByHost('typo3.org');
+        $this->assertInternalType('array', $errorPage, 'No error page found!');
+        $this->assertEquals('Fehler Seite', $errorPage['title'], 'Wrong page found!');
     }
 
     protected function importDataSet($name)

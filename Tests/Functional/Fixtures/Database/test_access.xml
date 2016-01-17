@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <pages>
+        <uid>4</uid>
+        <pid>1</pid>
+        <title>Error Page (Hidden)</title>
+        <doktype>104</doktype>
+        <hidden>1</hidden>
+    </pages>
+    <pages>
+        <uid>5</uid>
+        <pid>1</pid>
+        <title>Error Page (Deleted)</title>
+        <doktype>104</doktype>
+        <deleted>1</deleted>
+    </pages>
+    <pages>
+        <uid>6</uid>
+        <pid>1</pid>
+        <title>Error Page (FE Group)</title>
+        <doktype>104</doktype>
+        <fe_group>1</fe_group>
+    </pages>
+    <pages>
+        <uid>121</uid>
+        <pid>12</pid>
+        <title>Error Page (Parent Hidden)</title>
+        <doktype>104</doktype>
+    </pages>
+    <pages>
+        <uid>131</uid>
+        <pid>13</pid>
+        <title>Error Page (Parent FE Group)</title>
+        <doktype>104</doktype>
+    </pages>
+</dataset>

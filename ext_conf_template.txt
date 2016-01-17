@@ -1,0 +1,2 @@
+# cat=page404//20 type=int+; label=Doktype: Error page 404 doktype (10 < x < 200).
+doktypePage404 = 104

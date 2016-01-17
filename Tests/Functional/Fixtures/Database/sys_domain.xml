@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+	<sys_domain>
+		<uid>10</uid>
+		<pid>1</pid>
+		<domainName>www.test1.org</domainName>
+		<redirectTo></redirectTo>
+		<sorting>10</sorting>
+	</sys_domain>
+	<sys_domain>
+		<uid>11</uid>
+		<pid>1</pid>
+		<domainName>test1.org</domainName>
+		<redirectTo>http://www.test1.org/</redirectTo>
+		<sorting>11</sorting>
+	</sys_domain>
+	<sys_domain>
+		<uid>12</uid>
+		<pid>1</pid>
+		<domainName>www.typo3.org</domainName>
+		<redirectTo></redirectTo>
+		<sorting>12</sorting>
+	</sys_domain>
+	<sys_domain>
+		<uid>20</uid>
+		<pid>2</pid>
+		<domainName>www.test2.org</domainName>
+		<redirectTo></redirectTo>
+		<sorting>20</sorting>
+	</sys_domain>
+	<sys_domain>
+		<uid>30</uid>
+		<pid>3</pid>
+		<domainName>www.test3.org</domainName>
+		<redirectTo></redirectTo>
+		<sorting>30</sorting>
+	</sys_domain>
+	<sys_domain>
+		<uid>31</uid>
+		<pid>3</pid>
+		<domainName>typo3.org</domainName>
+		<redirectTo></redirectTo>
+		<sorting>31</sorting>
+	</sys_domain>
+</dataset>
