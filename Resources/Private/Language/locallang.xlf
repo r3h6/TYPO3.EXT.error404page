@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" date="2015-11-28T16:28:39Z" product-name="page404">
+        <header/>
+        <body>
+            <trans-unit id="reasonText.e45d99d511785e2490d0532f51dba3b54eb2570e">
+                <source>The requested page does not exist!</source>
+            </trans-unit>
+            <trans-unit id="reasonText.50b226eafd277f0ca9f9fe0f6de5f105bb6652d5" approved="yes">
+                <source>ID was not an accessible page.</source>
+            </trans-unit>
+            <trans-unit id="reasonText.b2171153f8461a5ddf80996e7eaf8d08cb231be5" approved="yes">
+                <source>Subsection was found and not accessible.</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

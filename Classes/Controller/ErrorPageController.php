@@ -2,15 +2,19 @@
 
 namespace Monogon\Page404\Controller;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\HttpUtility;
 use Monogon\Page404\Configuration\ExtensionConfiguration;
 use Monogon\Page404\Domain\Repository\PageRepository;
-use TYPO3\CMS\Core\Messaging\ErrorpageMessage;
+use Monogon\Page404\Http\Request;
 use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Messaging\ErrorpageMessage;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\HttpUtility;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 class ErrorPageController
 {
+    const LOCALLANG = 'LLL:EXT:page404/Resources/Private/Language/locallang.xlf';
+
     /**
      * @var Monogon\Page404\Domain\Repository\PageRepository
      */
@@ -45,9 +49,10 @@ class ErrorPageController
      */
     public function handleError(array $params, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe)
     {
-        $reason = $params['reasonText'];
-        $currentUrl = $params['currentUrl'];
         $host = GeneralUtility::getIndpEnv('HTTP_HOST');
+        $currentUrl = $params['currentUrl'];
+        $reason = LocalizationUtility::translate('reasonText.' . sha1($params['reasonText']), 'page404', $params['reasonText']);
+
 
         if (!isset($_GET['tx_page404_request'])) {
             $cacheIdentifier = sha1($host . '/' . $GLOBALS['TSFE']->sys_language_uid);
@@ -56,8 +61,11 @@ class ErrorPageController
                 $errorPage = $this->pageRepository->findErrorPageByHost($host);
                 if ($errorPage !== null) {
                     $url = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST') . '/?id=' . $errorPage['uid'] . '&L=' . $GLOBALS['TSFE']->sys_language_uid . '&tx_page404_request=' . uniqid();
-                    $content = GeneralUtility::getUrl($url);
-                    if ($content !== false) {
+
+                    $request = GeneralUtility::makeInstance(Request::class, $url);
+                    $content = $request->send();
+
+                    if ($content !== null) {
                         // Cache the error page.
                         // To delete the cache when the content gets changed,
                         // we add the same tag as the core does.
@@ -80,5 +88,13 @@ class ErrorPageController
         $message = 'The page did not exist or was inaccessible.' . ($reason ? ' Reason: ' . htmlspecialchars($reason) : '');
         $messagePage = GeneralUtility::makeInstance(ErrorpageMessage::class, $message, $title);
         return $messagePage->render();
+    }
+    /**
+     * [getFoo description]
+     * @return string Foo
+     */
+    public function getFoo()
+    {
+        return "foo";
     }
 }
