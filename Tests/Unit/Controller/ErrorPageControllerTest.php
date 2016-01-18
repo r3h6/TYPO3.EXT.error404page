@@ -15,7 +15,7 @@ namespace Monogon\Page404\Tests\Unit\Controller;
  * Public License for more details.                                       *
  *                                                                        */
 
-// require_once __DIR__ . '/../Fixtures/GeneralUtility.php';
+require_once __DIR__ . '/../Fixtures/Request.php';
 
 use Monogon\Page404\Controller\ErrorPageController;
 
@@ -24,6 +24,9 @@ use Monogon\Page404\Controller\ErrorPageController;
  */
 class ErrorPageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 {
+    /**
+     * @var Monogon\Page404\Controller\ErrorPageController
+     */
     protected $subject;
 
     protected $params = [
@@ -34,8 +37,11 @@ class ErrorPageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->subject = $this->getMock(ErrorPageController::class, [], [], '', false);
-        $GLOBALS['TSFE'] = $this->getMock(\TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController::class, [], [], '', false);
+        $this->subject = $this->getMock(ErrorPageController::class, ['__construct'], [], '', false, true, true, false, true);
+        $GLOBALS['TSFE'] = $this->getMock(\TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController::class, ['test'], [], '', false);
+
+        // echo print_r(get_class_methods($this->subject), true);
+        // echo $this->subject instanceof ErrorPageController;
     }
 
     public function tearDown()
@@ -49,7 +55,9 @@ class ErrorPageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function handleError()
     {
-
-        $this->subject->handleError($this->params, $GLOBALS['TSFE']);
+        // $response = $this->subject->handleError($this->params, $GLOBALS['TSFE']);
+        $response = $this->subject->getFoo();
+        $this->assertSame('foo', $response);
+        $this->assertRegExp('#<title>Error 404</title>#i', $response, 'Response seems not to be an error page.');
     }
 }
