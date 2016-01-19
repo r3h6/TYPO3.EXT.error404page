@@ -2,6 +2,19 @@
 
 namespace Monogon\Page404\Controller;
 
+/*                                                                        *
+ * This script is part of the TYPO3 project - inspiring people to share!  *
+ *                                                                        *
+ * TYPO3 is free software; you can redistribute it and/or modify it under *
+ * the terms of the GNU General Public License version 3 as published by  *
+ * the Free Software Foundation.                                          *
+ *                                                                        *
+ * This script is distributed in the hope that it will be useful, but     *
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHAN-    *
+ * TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General      *
+ * Public License for more details.                                       *
+ *                                                                        */
+
 use Monogon\Page404\Configuration\ExtensionConfiguration;
 use Monogon\Page404\Domain\Repository\PageRepository;
 use Monogon\Page404\Http\Request;
@@ -11,19 +24,24 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\HttpUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
+/**
+ * Error page controller.
+ */
 class ErrorPageController
 {
     const LOCALLANG = 'LLL:EXT:page404/Resources/Private/Language/locallang.xlf';
 
     /**
      * @var Monogon\Page404\Domain\Repository\PageRepository
+     * @inject
      */
     protected $pageRepository;
 
     /**
-     * @var TYPO3\CMS\Core\Log\Logger
+     * @var TYPO3\CMS\Core\Cache\CacheManager
+     * @inject
      */
-    protected $logger;
+    protected $cacheManager;
 
     /**
      * @var TYPO3\CMS\Core\Cache\Frontend\FrontendInterface
@@ -31,28 +49,27 @@ class ErrorPageController
     protected $pageCache;
 
     /**
-     * Constructor
+     * Initialize object.
      */
-    public function __construct()
+    public function initializeObject()
     {
-        $this->pageRepository = GeneralUtility::makeInstance(PageRepository::class);
-        $this->logger = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Log\\LogManager')->getLogger(__CLASS__);
-        $this->pageCache = GeneralUtility::makeInstance(CacheManager::class)->getCache('cache_pages');
+        $this->pageCache = $this->cacheManager->getCache('cache_pages');
     }
 
     /**
      * Renders the error page.
      *
      * @param  array $params
-     * @param  TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe   [description]
      * @return string Error page html.
      */
-    public function handleError(array $params, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe)
+    public function handleError(array $params)
     {
         $host = GeneralUtility::getIndpEnv('HTTP_HOST');
         $currentUrl = $params['currentUrl'];
-        $reason = LocalizationUtility::translate('reasonText.' . sha1($params['reasonText']), 'page404', $params['reasonText']);
-
+        $reason = LocalizationUtility::translate('reasonText.' . sha1($params['reasonText']), 'page404');
+        if ($reason === null) {
+            $reason = $params['reasonText'];
+        }
 
         if (!isset($_GET['tx_page404_request'])) {
             $cacheIdentifier = sha1($host . '/' . $GLOBALS['TSFE']->sys_language_uid);

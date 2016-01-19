@@ -12,6 +12,9 @@
             <trans-unit id="reasonText.b2171153f8461a5ddf80996e7eaf8d08cb231be5" approved="yes">
                 <source>Subsection was found and not accessible.</source>
             </trans-unit>
+            <trans-unit id="reasonText.26767123f21815774f6d4973e375153372790cfd" approved="yes">
+                <source>The requested page alias does not exist.</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>
