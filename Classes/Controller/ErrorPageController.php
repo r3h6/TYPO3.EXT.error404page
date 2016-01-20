@@ -64,7 +64,7 @@ class ErrorPageController
      */
     public function handleError(array $params)
     {
-        $host = GeneralUtility::getIndpEnv('HTTP_HOST');
+        $host = GeneralUtility::getIndpEnv('REMOTE_HOST');
         $currentUrl = $params['currentUrl'];
         $reason = LocalizationUtility::translate('reasonText.' . sha1($params['reasonText']), 'page404');
         if ($reason === null) {
@@ -87,12 +87,10 @@ class ErrorPageController
                         // To delete the cache when the content gets changed,
                         // we add the same tag as the core does.
                         $this->pageCache->set($cacheIdentifier, $content, ['pageId_' . $errorPage['uid']]);
-                    } else {
-                        $content = null;
                     }
                 }
             }
-            if ($content !== null) {
+            if (is_string($content)) {
                 return str_replace(
                     ['###CURRENT_URL###', '###REASON###'],
                     [$currentUrl, $reason],

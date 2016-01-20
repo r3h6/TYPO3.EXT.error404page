@@ -15,7 +15,7 @@ namespace Monogon\Page404\Tests\Unit\Controller;
  * Public License for more details.                                       *
  *                                                                        */
 
-require_once __DIR__ . '/../Fixtures/Request.php';
+// require_once __DIR__ . '/../Fixtures/Request.php';
 
 use Monogon\Page404\Controller\ErrorPageController;
 use Monogon\Page404\Domain\Repository\PageRepository;
@@ -53,6 +53,8 @@ class ErrorPageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         'currentUrl' => '/invalid/path/',
     ];
 
+    protected $host = 'localhost';
+
     public function setUp()
     {
         parent::setUp();
@@ -62,7 +64,7 @@ class ErrorPageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         $this->pageRepository = $this->getMock(PageRepository::class, [], [], '', false);
         $this->inject($this->subject, 'pageRepository', $this->pageRepository);
 
-        $this->pageCache = $this->getMock(VariableFrontend::class, ['get'], [], '', false);
+        $this->pageCache = $this->getMock(VariableFrontend::class, ['get', 'set'], [], '', false);
         $this->inject($this->subject, 'pageCache', $this->pageCache);
 
         $this->cacheManager = $this->getMock(CacheManager::class, ['getCache'], [], '', false);
@@ -76,12 +78,17 @@ class ErrorPageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 
         $configurationManager = $this->getMock(\TYPO3\CMS\Extbase\Configuration\ConfigurationManager::class, get_class_methods(\TYPO3\CMS\Extbase\Configuration\ConfigurationManager::class), [], '', false);
         GeneralUtility::setSingletonInstance(\TYPO3\CMS\Extbase\Configuration\ConfigurationManager::class, $configurationManager);
+
+        $GLOBALS['TSFE'] = new \stdClass();
+        $GLOBALS['TSFE']->sys_language_uid = 0;
+
+        $_SERVER['REMOTE_HOST'] = $this->host;
     }
 
     public function tearDown()
     {
         parent::tearDown();
-        unset($this->subject, $this->pageRepository, $this->pageCache, $this->cacheManager, $GLOBALS['TYPO3_DB']);
+        unset($this->subject, $this->pageRepository, $this->pageCache, $this->cacheManager, $GLOBALS['TYPO3_DB'], $GLOBALS['TSFE']);
     }
 
     /**
@@ -92,5 +99,120 @@ class ErrorPageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         $_GET['tx_page404_request'] = uniqid();
         $response = $this->subject->handleError($this->params);
         $this->assertRegExp('#<title>Page Not Found</title>#i', $response, 'Response is not a standard error message.');
+    }
+
+    /**
+     * @test
+     */
+    public function handleErrorDisplaysPageFromCache()
+    {
+        $expected = 'Cache';
+
+        $this->pageCache
+            ->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue($expected));
+
+        $response = $this->subject->handleError($this->params);
+        $this->assertSame($expected, $response, 'Content is not taken from cache!');
+    }
+
+    /**
+     * @test
+     * @todo Test for different hosts...
+     */
+    public function handleErrorCallsCacheWithDifferentCacheIdentifiers()
+    {
+        $GLOBALS['STACK'] = [];
+
+        $this->pageCache
+            ->expects($this->exactly(2))
+            ->method('get')
+            ->with($this->callback(
+                function ($subject) {
+                    $GLOBALS['STACK'][] = $subject;
+                    return true;
+                }
+            ));
+
+        $GLOBALS['TSFE']->sys_language_uid = 0;
+        $this->subject->handleError($this->params);
+
+        $GLOBALS['TSFE']->sys_language_uid = 1;
+        $this->subject->handleError($this->params);
+
+        $this->assertNotSame(
+            $GLOBALS['STACK'][0],
+            $GLOBALS['STACK'][1],
+            'Cache identifier must be different for different sys languages.'
+        );
+
+        unset($GLOBALS['STACK']);
+    }
+
+    /**
+     * @test
+     */
+    public function handleErrorReturnsStandardErrorPageWhenCacheIsFalseAndNoErrorPageWasFound()
+    {
+        $this->pageCache
+            ->expects($this->any())
+            ->method('get')
+            ->will($this->returnValue(false));
+
+        $this->pageRepository
+            ->expects($this->once())
+            ->method('findErrorPageByHost')
+            ->with($this->equalTo($this->host))
+            ->will($this->returnValue(null));
+
+        $response = $this->subject->handleError($this->params);
+        $this->assertRegExp('#<title>Page Not Found</title>#i', $response, 'Response is not a standard error message.');
+    }
+
+    /**
+     * @test
+     */
+    public function handleErrorWillFindAndCacheAndReturnErrorPage()
+    {
+        require_once __DIR__ . '/../Fixtures/Request.php';
+
+        $errorPage = [
+            'uid' => rand(1, 99)
+        ];
+
+        $this->pageCache
+            ->expects($this->any())
+            ->method('get')
+            ->will($this->returnValue(false));
+
+        $this->pageCache
+            ->expects($this->once())
+            ->method('set')
+            ->with(
+                $this->callback(
+                    function ($subject) {
+                        return is_string($subject);
+                    }
+                ),
+                $this->callback(
+                    function ($subject) {
+                        return is_string($subject);
+                    }
+                ),
+                $this->equalTo(['pageId_' . $errorPage['uid']])
+            );
+
+        $this->pageRepository
+            ->expects($this->once())
+            ->method('findErrorPageByHost')
+            ->with($this->equalTo($this->host))
+            ->will($this->returnValue($errorPage));
+
+        $response = $this->subject->handleError($this->params);
+        $this->assertRegExp('#<title>Error 404</title>#i', $response, 'Response is not the error page!');
+        $this->assertRegExp('#' . $this->params['reasonText'] . '#i', $response, 'Marker ###REASON### is not replaced!');
+        $this->assertRegExp('#' . $this->params['currentUrl'] . '#i', $response, 'Marker ###CURRENT_URL### marker is not replaced!');
+        // $this->assertRegExp('#url is valid#i', $response, 'Url is not valid!');
     }
 }
