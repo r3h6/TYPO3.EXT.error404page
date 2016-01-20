@@ -106,12 +106,4 @@ class ErrorPageController
         $messagePage = GeneralUtility::makeInstance(ErrorpageMessage::class, $message, $title);
         return $messagePage->render();
     }
-    /**
-     * [getFoo description]
-     * @return string Foo
-     */
-    public function getFoo()
-    {
-        return "foo";
-    }
 }
