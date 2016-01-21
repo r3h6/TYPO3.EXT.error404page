@@ -16,6 +16,8 @@ namespace Monogon\Page404\Tests\Functional;
  *                                                                        */
 
 use Monogon\Page404\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Functional test case for the FindErrorPage.
@@ -43,7 +45,8 @@ class FindErrorPageTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
     {
         parent::setUp();
         $this->setUpBasicFrontendEnvironment();
-        $this->pageRepository = new PageRepository();
+        // $this->pageRepository = new PageRepository();
+        $this->pageRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(PageRepository::class);
     }
 
     public function tearDown()

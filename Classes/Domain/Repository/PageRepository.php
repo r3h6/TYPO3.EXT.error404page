@@ -2,35 +2,60 @@
 
 namespace Monogon\Page404\Domain\Repository;
 
+/*                                                                        *
+ * This script is part of the TYPO3 project - inspiring people to share!  *
+ *                                                                        *
+ * TYPO3 is free software; you can redistribute it and/or modify it under *
+ * the terms of the GNU General Public License version 3 as published by  *
+ * the Free Software Foundation.                                          *
+ *                                                                        *
+ * This script is distributed in the hope that it will be useful, but     *
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHAN-    *
+ * TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General      *
+ * Public License for more details.                                       *
+ *                                                                        */
+
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Monogon\Page404\Configuration\ExtensionConfiguration;
 use Monogon\Page404\Domain\Repository\DomainRepository;
 
+/**
+ * PageRepository
+ */
 class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
 {
     /**
      * @var Monogon\Page404\Domain\Repository\DomainRepository
+     * @inject
      */
     protected $domainRepository;
 
     /**
      * @var TYPO3\CMS\Frontend\Page\PageRepository
+     * @inject
      */
     protected $pageRepository;
 
     /**
      * @var Monogon\Page404\Configuration\ExtensionConfiguration
+     * @inject
      */
     protected $extensionConfiguration;
 
     /**
      * Constructor
      */
-    public function __construct()
+    // public function __construct()
+    // {
+    //     $this->domainRepository = GeneralUtility::makeInstance(DomainRepository::class);
+    //     $this->extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class);
+    //     $this->pageRepository = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Page\PageRepository::class);
+    //     $this->pageRepository->init(false);
+    //     $this->pageRepository->sys_language_uid = $GLOBALS['TSFE']->sys_language_uid;
+    // }
+
+    public function initializeObject()
     {
-        $this->domainRepository = GeneralUtility::makeInstance(DomainRepository::class);
-        $this->extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class);
-        $this->pageRepository = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Page\PageRepository::class);
         $this->pageRepository->init(false);
         $this->pageRepository->sys_language_uid = $GLOBALS['TSFE']->sys_language_uid;
     }
