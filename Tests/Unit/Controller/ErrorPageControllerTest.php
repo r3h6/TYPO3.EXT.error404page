@@ -213,6 +213,6 @@ class ErrorPageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         $this->assertRegExp('#<title>Error 404</title>#i', $response, 'Response is not the error page!');
         $this->assertRegExp('#' . $this->params['reasonText'] . '#i', $response, 'Marker ###REASON### is not replaced!');
         $this->assertRegExp('#' . $this->params['currentUrl'] . '#i', $response, 'Marker ###CURRENT_URL### marker is not replaced!');
-        // $this->assertRegExp('#url is valid#i', $response, 'Url is not valid!');
+        $this->assertRegExp('#url is valid#i', $response, 'Url must be like "?id=1&L=1&tx_page404_request=abc123"!');
     }
 }

@@ -18,7 +18,7 @@ class Request
 
     public function send()
     {
-        $url = (preg_match('/\?id=[0-9]+\&L=[1-9]{1}\&tx_page404_request=/', $this->url)) ? 'url is valid': '';
+        $url = (preg_match('/\?id=\d+\&L=\d+\&tx_page404_request=\w+$/', $this->url)) ? 'url is valid': '';
 
         return '
 <!DOCTYPE html>
