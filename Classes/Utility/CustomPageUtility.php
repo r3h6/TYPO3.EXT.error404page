@@ -4,43 +4,89 @@ namespace Monogon\Page404\Utility;
 
 class CustomPageUtility
 {
-    public static function addDoktype($extKey, $customPageDoktype, $alias = null)
+    public static function addDoktype($extKey, $doktype, $iconName)
     {
-        $relativeExtensionPath = '../typo3conf/ext/' . $extKey . '/';
-        if ($alias === null) {
-            $alias = $customPageDoktype;
-        }
+        // Add new page type:
+        $GLOBALS['PAGES_TYPES'][$doktype] = [
+            'type' => 'web',
+            'allowedTables' => '*',
+        ];
 
-        // Define a new doktype
-        $customPageIcon = $relativeExtensionPath . 'Resources/Public/Icons/Page404.png';
+        $identifier = 'apps-pagetree-' . strtolower($iconName);
 
-        // Add the new doktype to the list of page types
-        $GLOBALS['PAGES_TYPES'][$customPageDoktype] = array(
-                'type' => 'web',
-                'icon' => $customPageIcon,
-                'allowedTables' => '*'
+        // Provide icon for page tree, list view, ... :
+        $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class);
+        $iconRegistry->registerIcon(
+            $identifier,
+            \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
+            [
+                'source' => 'EXT:' . $extKey . '/Resources/Public/Icons/' . $identifier . '.svg',
+            ]
+        );
+        $iconRegistry->registerIcon(
+            $identifier . '-hideinmenu',
+            \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
+            [
+                'source' => 'EXT:' . $extKey . '/Resources/Public/Icons/' . $identifier . '-hideinmenu.svg',
+            ]
         );
 
-        // Add the new doktype to the page type selector
-        $GLOBALS['TCA']['pages']['columns']['doktype']['config']['items'][] = array(
-                'LLL:EXT:' . $extKey . '/Resources/Private/Language/locallang_be.xlf:pages.doktype.' . $alias,
-                $customPageDoktype,
-                $customPageIcon
-        );
-
-        // Also add the new doktype to the page language overlays type selector (so that translations can inherit the same type)
-        $GLOBALS['TCA']['pages_language_overlay']['columns']['doktype']['config']['items'][] = array(
-                'LLL:EXT:' . $extKey . '/Resources/Private/Language/locallang_be.xlf:pages.doktype.' . $alias,
-                $customPageDoktype,
-                $customPageIcon
-        );
-
-        // Add the icon for the new doktype
-        \TYPO3\CMS\Backend\Sprite\SpriteManager::addTcaTypeIcon('pages', $customPageDoktype, $customPageIcon);
-
-        // Add the new doktype to the list of types available from the new page menu at the top of the page tree
+        // Allow backend users to drag and drop the new page type:
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addUserTSConfig(
-            'options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $customPageDoktype . ')'
+            'options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $doktype . ')'
+        );
+    }
+
+    public static function addDoktypeToPages($extKey, $doktype, $iconName, $alias = null)
+    {
+        $identifier = 'apps-pagetree-' . strtolower($iconName);
+        $extRelPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($extKey);
+        $customPageIcon = $extRelPath . 'Resources/Public/Icons/' . $identifier . '.svg';
+
+        // Add new page type as possible select item:
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItem(
+            'pages',
+            'doktype',
+            [
+                'LLL:EXT:' . $extKey . '/Resources/Private/Language/locallang_be.xlf:pages.doktype.' . (($alias === null) ? $doktype: $alias),
+                $doktype,
+                $customPageIcon
+            ],
+            '1',
+            'after'
+        );
+
+        // Add icon for new page type:
+        \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
+            $GLOBALS['TCA']['pages'],
+            [
+                'ctrl' => [
+                    'typeicon_classes' => [
+                        $doktype => $identifier,
+                        $doktype . '-hideinmenu' => $identifier . '-hideinmenu',
+                    ],
+                ],
+            ]
+        );
+    }
+
+    public static function addDoktypeToPagesLanguageOverlay($extKey, $doktype, $iconName, $alias = null)
+    {
+        $identifier = 'apps-pagetree-' . strtolower($iconName);
+        $extRelPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($extKey);
+        $customPageIcon = $extRelPath . 'Resources/Public/Icons/' . $identifier . '.svg';
+
+        // Add new page type as possible select item:
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItem(
+            'pages_language_overlay',
+            'doktype',
+            [
+                'LLL:EXT:' . $extKey . '/Resources/Private/Language/locallang_be.xlf:pages.doktype.' . (($alias === null) ? $doktype: $alias),
+                $doktype,
+                $customPageIcon
+            ],
+            '1',
+            'after'
         );
     }
 }

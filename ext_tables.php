@@ -6,5 +6,5 @@ if (!defined('TYPO3_MODE')) {
 \Monogon\Page404\Utility\CustomPageUtility::addDoktype(
     $_EXTKEY,
     \Monogon\Page404\Configuration\ExtensionConfiguration::doktypePage404(),
-    '404'
+    'Page404'
 );
