@@ -28,11 +28,11 @@ class DomainRepository implements \TYPO3\CMS\Core\SingletonInterface
      */
     protected $pageRepository;
 
-    // public function __construct()
-    // {
-    //     $this->pageRepository = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Page\PageRepository::class);
-    // }
-
+    /**
+     * findAllNonRedirectDomains
+     *
+     * @return array Domain records
+     */
     public function findAllNonRedirectDomains()
     {
         $domains = $this->getDatabaseConnection()->exec_SELECTgetRows(

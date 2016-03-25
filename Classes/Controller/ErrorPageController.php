@@ -99,6 +99,7 @@ class ErrorPageController
             }
         }
 
+        // Fallback to core error message.
         $title = 'Page Not Found';
         $message = 'The page did not exist or was inaccessible.' . ($reason ? ' Reason: ' . htmlspecialchars($reason) : '');
         $messagePage = GeneralUtility::makeInstance(ErrorpageMessage::class, $message, $title);

@@ -43,17 +43,8 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
     protected $extensionConfiguration;
 
     /**
-     * Constructor
+     * Initialize object
      */
-    // public function __construct()
-    // {
-    //     $this->domainRepository = GeneralUtility::makeInstance(DomainRepository::class);
-    //     $this->extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class);
-    //     $this->pageRepository = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Page\PageRepository::class);
-    //     $this->pageRepository->init(false);
-    //     $this->pageRepository->sys_language_uid = $GLOBALS['TSFE']->sys_language_uid;
-    // }
-
     public function initializeObject()
     {
         $this->pageRepository->init(false);
