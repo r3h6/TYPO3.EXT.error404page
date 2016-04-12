@@ -1,6 +1,6 @@
 <?php
 
-namespace Monogon\Page404\Configuration;
+namespace R3H6\Page404\Configuration;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Monogon\Page404\Domain\Repository;
+namespace R3H6\Page404\Domain\Repository;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -16,8 +16,8 @@ namespace Monogon\Page404\Domain\Repository;
  *                                                                        */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Monogon\Page404\Configuration\ExtensionConfiguration;
-use Monogon\Page404\Domain\Repository\DomainRepository;
+use R3H6\Page404\Configuration\ExtensionConfiguration;
+use R3H6\Page404\Domain\Repository\DomainRepository;
 
 /**
  * PageRepository
@@ -25,7 +25,7 @@ use Monogon\Page404\Domain\Repository\DomainRepository;
 class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
 {
     /**
-     * @var Monogon\Page404\Domain\Repository\DomainRepository
+     * @var R3H6\Page404\Domain\Repository\DomainRepository
      * @inject
      */
     protected $domainRepository;
@@ -37,7 +37,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
     protected $pageRepository;
 
     /**
-     * @var Monogon\Page404\Configuration\ExtensionConfiguration
+     * @var R3H6\Page404\Configuration\ExtensionConfiguration
      * @inject
      */
     protected $extensionConfiguration;

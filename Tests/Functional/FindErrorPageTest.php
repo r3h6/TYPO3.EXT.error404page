@@ -1,6 +1,6 @@
 <?php
 
-namespace Monogon\Page404\Tests\Functional;
+namespace R3H6\Page404\Tests\Functional;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -15,7 +15,7 @@ namespace Monogon\Page404\Tests\Functional;
  * Public License for more details.                                       *
  *                                                                        */
 
-use Monogon\Page404\Domain\Repository\PageRepository;
+use R3H6\Page404\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -24,10 +24,10 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class FindErrorPageTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
 {
-    use \Monogon\Page404\Tests\Functional\BasicFrontendEnvironmentTrait;
+    use \R3H6\Page404\Tests\Functional\BasicFrontendEnvironmentTrait;
 
     /**
-     * @var Monogon\Page404\Domain\Repository\PageRepository
+     * @var R3H6\Page404\Domain\Repository\PageRepository
      */
     protected $pageRepository;
 
@@ -121,7 +121,7 @@ class FindErrorPageTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
     {
         unset($this->pageRepository);
         $GLOBALS['TSFE']->sys_language_uid = 1;
-        $this->pageRepository = new PageRepository();
+        $this->pageRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(PageRepository::class);
         $this->importDataSet('pages');
         $this->importDataSet('sys_language');
         $this->importDataSet('test_language');

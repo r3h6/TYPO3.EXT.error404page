@@ -1,6 +1,6 @@
 <?php
 
-namespace Monogon\Page404\Http;
+namespace R3H6\Page404\Http;
 
 class Request
 {

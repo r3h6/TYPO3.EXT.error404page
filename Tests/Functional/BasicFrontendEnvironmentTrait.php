@@ -1,6 +1,6 @@
 <?php
 
-namespace Monogon\Page404\Tests\Functional;
+namespace R3H6\Page404\Tests\Functional;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *

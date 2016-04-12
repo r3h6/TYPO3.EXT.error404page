@@ -4,12 +4,14 @@
 Documentation
 *************
 
-This extension adds a new custom page type used to render a 404 error page.
+This extension adds a new custom page type used to display a custom 404 error page.
 
 Configuration
 -------------
 
 Simply install the extension and create a new page with your error message.
+
+No TypoScript setup to include.
 
 You can use following markers in your content:
 

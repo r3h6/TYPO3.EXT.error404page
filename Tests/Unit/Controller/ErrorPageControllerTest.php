@@ -1,6 +1,6 @@
 <?php
 
-namespace Monogon\Page404\Tests\Unit\Controller;
+namespace R3H6\Page404\Tests\Unit\Controller;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -17,8 +17,8 @@ namespace Monogon\Page404\Tests\Unit\Controller;
 
 // require_once __DIR__ . '/../Fixtures/Request.php';
 
-use Monogon\Page404\Controller\ErrorPageController;
-use Monogon\Page404\Domain\Repository\PageRepository;
+use R3H6\Page404\Controller\ErrorPageController;
+use R3H6\Page404\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -29,12 +29,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class ErrorPageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 {
     /**
-     * @var Monogon\Page404\Controller\ErrorPageController
+     * @var R3H6\Page404\Controller\ErrorPageController
      */
     protected $subject;
 
     /**
-     * @var Monogon\Page404\Domain\Repository\PageRepository
+     * @var R3H6\Page404\Domain\Repository\PageRepository
      */
     protected $pageRepository;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Monogon\Page404\Controller;
+namespace R3H6\Page404\Controller;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -15,9 +15,9 @@ namespace Monogon\Page404\Controller;
  * Public License for more details.                                       *
  *                                                                        */
 
-use Monogon\Page404\Configuration\ExtensionConfiguration;
-use Monogon\Page404\Domain\Repository\PageRepository;
-use Monogon\Page404\Http\Request;
+use R3H6\Page404\Configuration\ExtensionConfiguration;
+use R3H6\Page404\Domain\Repository\PageRepository;
+use R3H6\Page404\Http\Request;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Messaging\ErrorpageMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -32,7 +32,7 @@ class ErrorPageController
     const LOCALLANG = 'LLL:EXT:page404/Resources/Private/Language/locallang.xlf';
 
     /**
-     * @var Monogon\Page404\Domain\Repository\PageRepository
+     * @var R3H6\Page404\Domain\Repository\PageRepository
      * @inject
      */
     protected $pageRepository;
@@ -72,13 +72,15 @@ class ErrorPageController
         }
 
         if (!isset($_GET['tx_page404_request'])) {
-            $cacheIdentifier = sha1($host . '/' . $GLOBALS['TSFE']->sys_language_uid);
+            $cacheIdentifier = sha1($host . '/' . $this->getLanguage());
             $content = $this->pageCache->get($cacheIdentifier);
             if ($content === false) {
                 $errorPage = $this->pageRepository->findErrorPageByHost($host);
                 if ($errorPage !== null) {
-                    $url = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST') . '/?id=' . $errorPage['uid'] . '&L=' . $GLOBALS['TSFE']->sys_language_uid . '&tx_page404_request=' . uniqid();
 
+                    $url = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST') . '/?id=' . $errorPage['uid'] . '&L=' . $this->getLanguage() . '&tx_page404_request=' . uniqid();
+                    //@todo content_fallback!?!
+die($url);
                     $request = GeneralUtility::makeInstance(Request::class, $url);
                     $content = $request->send();
 
@@ -104,5 +106,14 @@ class ErrorPageController
         $message = 'The page did not exist or was inaccessible.' . ($reason ? ' Reason: ' . htmlspecialchars($reason) : '');
         $messagePage = GeneralUtility::makeInstance(ErrorpageMessage::class, $message, $title);
         return $messagePage->render();
+    }
+
+    /**
+     * Get system language uid
+     * @return int
+     */
+    protected function getLanguage()
+    {
+        return (int) GeneralUtility::_GP('L');
     }
 }
