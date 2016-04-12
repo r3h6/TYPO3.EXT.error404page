@@ -60,11 +60,12 @@ class ErrorPageController
      * Renders the error page.
      *
      * @param  array $params
+     * @param string $host Current host
+     * @param int $language System langauge uid
      * @return string Error page html.
      */
-    public function handleError(array $params)
+    public function handleError(array $params, $host, $language)
     {
-        $host = GeneralUtility::getIndpEnv('REMOTE_HOST');
         $currentUrl = $params['currentUrl'];
         $reason = LocalizationUtility::translate('reasonText.' . sha1($params['reasonText']), 'page404');
         if ($reason === null) {
@@ -72,15 +73,14 @@ class ErrorPageController
         }
 
         if (!isset($_GET['tx_page404_request'])) {
-            $cacheIdentifier = sha1($host . '/' . $this->getLanguage());
+            $cacheIdentifier = sha1($host . '/' . $language);
             $content = $this->pageCache->get($cacheIdentifier);
             if ($content === false) {
                 $errorPage = $this->pageRepository->findErrorPageByHost($host);
                 if ($errorPage !== null) {
-
-                    $url = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST') . '/?id=' . $errorPage['uid'] . '&L=' . $this->getLanguage() . '&tx_page404_request=' . uniqid();
-                    //@todo content_fallback!?!
-die($url);
+                    // Fallback to default language if the site has no translation.
+                    $lParam = isset($errorPage['_PAGES_OVERLAY_LANGUAGE']) ? $errorPage['_PAGES_OVERLAY_LANGUAGE'] : 0;
+                    $url = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST') . '/?id=' . $errorPage['uid'] . '&L=' . $lParam . '&tx_page404_request=' . uniqid();
                     $request = GeneralUtility::makeInstance(Request::class, $url);
                     $content = $request->send();
 
@@ -106,14 +106,5 @@ die($url);
         $message = 'The page did not exist or was inaccessible.' . ($reason ? ' Reason: ' . htmlspecialchars($reason) : '');
         $messagePage = GeneralUtility::makeInstance(ErrorpageMessage::class, $message, $title);
         return $messagePage->render();
-    }
-
-    /**
-     * Get system language uid
-     * @return int
-     */
-    protected function getLanguage()
-    {
-        return (int) GeneralUtility::_GP('L');
     }
 }

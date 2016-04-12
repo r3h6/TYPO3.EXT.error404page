@@ -35,7 +35,18 @@ class ErrorHandler
      */
     public function pageNotFound(array $params, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe)
     {
-        return GeneralUtility::makeInstance(ObjectManager::class)->get(ErrorPageController::class)->handleError($params);
+        $host = GeneralUtility::getIndpEnv('REMOTE_HOST');
+        $language = $this->getSystemLanguage();
+        return GeneralUtility::makeInstance(ObjectManager::class)->get(ErrorPageController::class)->handleError($params, $host, $language);
     }
 
+    /**
+     * Get system language uid
+     *
+     * @return int
+     */
+    protected function getSystemLanguage()
+    {
+        return (int) GeneralUtility::_GP('L');
+    }
 }

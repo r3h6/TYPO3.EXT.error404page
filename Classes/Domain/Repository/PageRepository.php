@@ -48,7 +48,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
     public function initializeObject()
     {
         $this->pageRepository->init(false);
-        $this->pageRepository->sys_language_uid = $GLOBALS['TSFE']->sys_language_uid;
+        $this->pageRepository->sys_language_uid = $this->getSystemLanguage();
     }
 
     /**
@@ -115,6 +115,16 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
             }
         }
         return $accessiblePages;
+    }
+
+    /**
+     * Get system language uid
+     *
+     * @return int
+     */
+    protected function getSystemLanguage()
+    {
+        return (int) GeneralUtility::_GP('L');
     }
 
     /**

@@ -81,8 +81,7 @@ class ErrorPageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 
         $GLOBALS['TSFE'] = new \stdClass();
         $GLOBALS['TSFE']->sys_language_uid = 0;
-
-        $_SERVER['REMOTE_HOST'] = $this->host;
+        $GLOBALS['TSFE']->csConvObj = $this->getMock(\TYPO3\CMS\Core\Charset\CharsetConverter::class, get_class_methods(\TYPO3\CMS\Core\Charset\CharsetConverter::class), [], '', false);
     }
 
     public function tearDown()
@@ -97,7 +96,7 @@ class ErrorPageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     public function handleErrorReturnsStandardErrorpageMessageWhenGetParamIsSet()
     {
         $_GET['tx_page404_request'] = uniqid();
-        $response = $this->subject->handleError($this->params);
+        $response = $this->subject->handleError($this->params, $this->host, 0);
         $this->assertRegExp('#<title>Page Not Found</title>#i', $response, 'Response is not a standard error message.');
     }
 
@@ -113,7 +112,7 @@ class ErrorPageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
             ->method('get')
             ->will($this->returnValue($expected));
 
-        $response = $this->subject->handleError($this->params);
+        $response = $this->subject->handleError($this->params, $this->host, 0);
         $this->assertSame($expected, $response, 'Content is not taken from cache!');
     }
 
@@ -135,11 +134,8 @@ class ErrorPageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
                 }
             ));
 
-        $GLOBALS['TSFE']->sys_language_uid = 0;
-        $this->subject->handleError($this->params);
-
-        $GLOBALS['TSFE']->sys_language_uid = 1;
-        $this->subject->handleError($this->params);
+        $this->subject->handleError($this->params, $this->host, 0);
+        $this->subject->handleError($this->params, $this->host, 1);
 
         $this->assertNotSame(
             $GLOBALS['STACK'][0],
@@ -166,7 +162,7 @@ class ErrorPageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
             ->with($this->equalTo($this->host))
             ->will($this->returnValue(null));
 
-        $response = $this->subject->handleError($this->params);
+        $response = $this->subject->handleError($this->params, $this->host, 0);
         $this->assertRegExp('#<title>Page Not Found</title>#i', $response, 'Response is not a standard error message.');
     }
 
@@ -209,7 +205,7 @@ class ErrorPageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
             ->with($this->equalTo($this->host))
             ->will($this->returnValue($errorPage));
 
-        $response = $this->subject->handleError($this->params);
+        $response = $this->subject->handleError($this->params, $this->host, 0);
         $this->assertRegExp('#<title>Error 404</title>#i', $response, 'Response is not the error page!');
         $this->assertRegExp('#' . $this->params['reasonText'] . '#i', $response, 'Marker ###REASON### is not replaced!');
         $this->assertRegExp('#' . $this->params['currentUrl'] . '#i', $response, 'Marker ###CURRENT_URL### marker is not replaced!');
