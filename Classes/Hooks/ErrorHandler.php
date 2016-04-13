@@ -1,6 +1,6 @@
 <?php
 
-namespace R3H6\Page404\Hooks;
+namespace R3H6\Error404page\Hooks;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -15,7 +15,7 @@ namespace R3H6\Page404\Hooks;
  * Public License for more details.                                       *
  *                                                                        */
 
-use R3H6\Page404\Controller\ErrorPageController;
+use R3H6\Error404page\Controller\ErrorPageController;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace R3H6\Page404\Domain\Repository;
+namespace R3H6\Error404page\Domain\Repository;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *

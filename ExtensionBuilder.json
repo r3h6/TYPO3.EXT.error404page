@@ -6,7 +6,7 @@
         "backendModules": [
 
         ],
-        "description": "Custom error page handling.",
+        "description": "Custom error 404 page",
         "emConf": {
             "category": "plugin",
             "custom_category": "",
@@ -19,7 +19,7 @@
             "targetVersion": "7.6.0-7.6.99",
             "version": ""
         },
-        "extensionKey": "page404",
+        "extensionKey": "error404page",
         "name": "Page 404",
         "originalExtensionKey": "",
         "originalVendorName": "",

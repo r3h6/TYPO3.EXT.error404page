@@ -1,6 +1,6 @@
 <?php
 
-namespace R3H6\Page404\Domain\Repository;
+namespace R3H6\Error404page\Domain\Repository;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -16,8 +16,8 @@ namespace R3H6\Page404\Domain\Repository;
  *                                                                        */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use R3H6\Page404\Configuration\ExtensionConfiguration;
-use R3H6\Page404\Domain\Repository\DomainRepository;
+use R3H6\Error404page\Configuration\ExtensionConfiguration;
+use R3H6\Error404page\Domain\Repository\DomainRepository;
 
 /**
  * PageRepository
@@ -25,7 +25,7 @@ use R3H6\Page404\Domain\Repository\DomainRepository;
 class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
 {
     /**
-     * @var R3H6\Page404\Domain\Repository\DomainRepository
+     * @var R3H6\Error404page\Domain\Repository\DomainRepository
      * @inject
      */
     protected $domainRepository;
@@ -37,7 +37,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
     protected $pageRepository;
 
     /**
-     * @var R3H6\Page404\Configuration\ExtensionConfiguration
+     * @var R3H6\Error404page\Configuration\ExtensionConfiguration
      * @inject
      */
     protected $extensionConfiguration;
@@ -92,7 +92,8 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      */
     protected function getAccessibleErrorPages()
     {
-        $doktype = $this->extensionConfiguration->doktypePage404();
+        $doktype = $this->extensionConfiguration->doktypeError404page();
+
         $errorPages = (array) $this->getDatabaseConnection()->exec_SELECTgetRows(
             'uid',
             'pages',

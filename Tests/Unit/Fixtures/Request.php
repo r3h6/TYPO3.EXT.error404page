@@ -1,6 +1,6 @@
 <?php
 
-namespace R3H6\Page404\Http;
+namespace R3H6\Error404page\Http;
 
 class Request
 {
@@ -18,7 +18,7 @@ class Request
 
     public function send()
     {
-        $url = (preg_match('/\?id=\d+\&L=\d+\&tx_page404_request=\w+$/', $this->url)) ? 'url is valid': '';
+        $url = (preg_match('/\?id=\d+\&L=\d+\&tx_error404page_request=\w+$/', $this->url)) ? 'url is valid': '';
 
         return '
 <!DOCTYPE html>

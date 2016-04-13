@@ -1,6 +1,6 @@
 <?php
 
-namespace R3H6\Page404\Tests\Functional;
+namespace R3H6\Error404page\Tests\Functional;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -15,7 +15,7 @@ namespace R3H6\Page404\Tests\Functional;
  * Public License for more details.                                       *
  *                                                                        */
 
-use R3H6\Page404\Domain\Repository\PageRepository;
+use R3H6\Error404page\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -24,19 +24,19 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class FindErrorPageTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
 {
-    use \R3H6\Page404\Tests\Functional\BasicFrontendEnvironmentTrait;
+    use \R3H6\Error404page\Tests\Functional\BasicFrontendEnvironmentTrait;
 
     /**
-     * @var R3H6\Page404\Domain\Repository\PageRepository
+     * @var R3H6\Error404page\Domain\Repository\PageRepository
      */
     protected $pageRepository;
 
-    protected $testExtensionsToLoad = array('typo3conf/ext/page404');
+    protected $testExtensionsToLoad = array('typo3conf/ext/error404page');
 
     protected $configurationToUseInTestInstance = [
         'EXT' => [
             'extConf' => [
-                'page404' => 'a:1:{s:14:"doktypePage404";s:3:"104";}',
+                'error404page' => 'a:1:{s:19:"doktypeError404page";s:3:"104";}',
             ],
         ],
     ];
@@ -71,6 +71,6 @@ class FindErrorPageTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
 
     protected function importDataSet($name)
     {
-        parent::importDataSet(ORIGINAL_ROOT . 'typo3conf/ext/page404/Tests/Functional/Fixtures/Database/' . $name . '.xml');
+        parent::importDataSet(ORIGINAL_ROOT . 'typo3conf/ext/error404page/Tests/Functional/Fixtures/Database/' . $name . '.xml');
     }
 }

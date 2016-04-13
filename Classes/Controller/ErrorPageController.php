@@ -1,6 +1,6 @@
 <?php
 
-namespace R3H6\Page404\Controller;
+namespace R3H6\Error404page\Controller;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -15,9 +15,9 @@ namespace R3H6\Page404\Controller;
  * Public License for more details.                                       *
  *                                                                        */
 
-use R3H6\Page404\Configuration\ExtensionConfiguration;
-use R3H6\Page404\Domain\Repository\PageRepository;
-use R3H6\Page404\Http\Request;
+use R3H6\Error404page\Configuration\ExtensionConfiguration;
+use R3H6\Error404page\Domain\Repository\PageRepository;
+use R3H6\Error404page\Http\Request;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Messaging\ErrorpageMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -29,10 +29,10 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  */
 class ErrorPageController
 {
-    const LOCALLANG = 'LLL:EXT:page404/Resources/Private/Language/locallang.xlf';
+    const LOCALLANG = 'LLL:EXT:error404page/Resources/Private/Language/locallang.xlf';
 
     /**
-     * @var R3H6\Page404\Domain\Repository\PageRepository
+     * @var R3H6\Error404page\Domain\Repository\PageRepository
      * @inject
      */
     protected $pageRepository;
@@ -67,12 +67,12 @@ class ErrorPageController
     public function handleError(array $params, $host, $language)
     {
         $currentUrl = $params['currentUrl'];
-        $reason = LocalizationUtility::translate('reasonText.' . sha1($params['reasonText']), 'page404');
+        $reason = LocalizationUtility::translate('reasonText.' . sha1($params['reasonText']), 'error404page');
         if ($reason === null) {
             $reason = $params['reasonText'];
         }
 
-        if (!isset($_GET['tx_page404_request'])) {
+        if (!isset($_GET['tx_error404page_request'])) {
             $cacheIdentifier = sha1($host . '/' . $language);
             $content = $this->pageCache->get($cacheIdentifier);
             if ($content === false) {
@@ -80,7 +80,7 @@ class ErrorPageController
                 if ($errorPage !== null) {
                     // Fallback to default language if the site has no translation.
                     $lParam = isset($errorPage['_PAGES_OVERLAY_LANGUAGE']) ? $errorPage['_PAGES_OVERLAY_LANGUAGE'] : 0;
-                    $url = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST') . '/?id=' . $errorPage['uid'] . '&L=' . $lParam . '&tx_page404_request=' . uniqid();
+                    $url = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST') . '/?id=' . $errorPage['uid'] . '&L=' . $lParam . '&tx_error404page_request=' . uniqid();
                     $request = GeneralUtility::makeInstance(Request::class, $url);
                     $content = $request->send();
 

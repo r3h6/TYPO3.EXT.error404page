@@ -1,6 +1,6 @@
 <?php
 
-namespace R3H6\Page404\Tests\Unit\Controller;
+namespace R3H6\Error404page\Tests\Unit\Controller;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -17,8 +17,8 @@ namespace R3H6\Page404\Tests\Unit\Controller;
 
 // require_once __DIR__ . '/../Fixtures/Request.php';
 
-use R3H6\Page404\Controller\ErrorPageController;
-use R3H6\Page404\Domain\Repository\PageRepository;
+use R3H6\Error404page\Controller\ErrorPageController;
+use R3H6\Error404page\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -29,12 +29,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class ErrorPageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 {
     /**
-     * @var R3H6\Page404\Controller\ErrorPageController
+     * @var R3H6\Error404page\Controller\ErrorPageController
      */
     protected $subject;
 
     /**
-     * @var R3H6\Page404\Domain\Repository\PageRepository
+     * @var R3H6\Error404page\Domain\Repository\PageRepository
      */
     protected $pageRepository;
 
@@ -95,7 +95,7 @@ class ErrorPageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function handleErrorReturnsStandardErrorpageMessageWhenGetParamIsSet()
     {
-        $_GET['tx_page404_request'] = uniqid();
+        $_GET['tx_error404page_request'] = uniqid();
         $response = $this->subject->handleError($this->params, $this->host, 0);
         $this->assertRegExp('#<title>Page Not Found</title>#i', $response, 'Response is not a standard error message.');
     }
@@ -209,6 +209,6 @@ class ErrorPageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         $this->assertRegExp('#<title>Error 404</title>#i', $response, 'Response is not the error page!');
         $this->assertRegExp('#' . $this->params['reasonText'] . '#i', $response, 'Marker ###REASON### is not replaced!');
         $this->assertRegExp('#' . $this->params['currentUrl'] . '#i', $response, 'Marker ###CURRENT_URL### marker is not replaced!');
-        $this->assertRegExp('#url is valid#i', $response, 'Url must be like "?id=1&L=1&tx_page404_request=abc123"!');
+        $this->assertRegExp('#url is valid#i', $response, 'Url must be like "?id=1&L=1&tx_error404page_request=abc123"!');
     }
 }

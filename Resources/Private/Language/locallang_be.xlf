@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-    <file source-language="en" datatype="plaintext" original="messages" date="2015-11-28T16:28:39Z" product-name="page404">
+    <file source-language="en" datatype="plaintext" original="messages" date="2015-11-28T16:28:39Z" product-name="error404page">
         <header/>
         <body>
             <trans-unit id="pages.doktype.404">

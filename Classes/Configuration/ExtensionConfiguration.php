@@ -1,6 +1,6 @@
 <?php
 
-namespace R3H6\Page404\Configuration;
+namespace R3H6\Error404page\Configuration;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -10,7 +10,7 @@ class ExtensionConfiguration implements \TYPO3\CMS\Core\SingletonInterface
     /**
      * @var string
      */
-    const EXT_KEY = 'page404';
+    const EXT_KEY = 'error404page';
 
     /**
      * @var array

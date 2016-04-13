@@ -1,6 +1,6 @@
 <?php
 
-namespace R3H6\Page404\Utility;
+namespace R3H6\Error404page\Utility;
 
 class CustomPageUtility
 {
