@@ -1,2 +1,2 @@
-# cat=error404page//20 type=int+; label=Doktype: Error page 404 doktype (10 < x < 200).
+# cat=error404page//20 type=int+; label= LLL:EXT:error404page/Resources/Private/Language/locallang_be.xlf:emconf.doktypeError404page
 doktypeError404page = 104
