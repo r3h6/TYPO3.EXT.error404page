@@ -22,7 +22,3 @@ If you need, you can change the page type in the extension configuration.
 
 .. note:: If you change the page type, you must update the doktype of your previously created error pages by yourself.
 
-Contributing
-------------
-
-Please use GitHub. You can report issues or make pull request on branch develop.
