@@ -1,0 +1,12 @@
+
+ # Module configuration
+module.tx_error404page_web_error404pagelog {
+	persistence {
+		storagePid = {$module.tx_error404page_log.persistence.storagePid}
+	}
+	view {
+		templateRootPaths.0 = {$module.tx_error404page_log.view.templateRootPath}
+		partialRootPaths.0 = {$module.tx_error404page_log.view.partialRootPath}
+		layoutRootPaths.0 = {$module.tx_error404page_log.view.layoutRootPath}
+	}
+}

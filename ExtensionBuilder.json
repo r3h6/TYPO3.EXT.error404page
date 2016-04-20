@@ -1,14 +1,117 @@
 {
     "modules": [
+        {
+            "config": {
+                "position": [
+                    242,
+                    101
+                ]
+            },
+            "name": "New Model Object",
+            "value": {
+                "actionGroup": {
+                    "_default0_list": true,
+                    "_default1_show": false,
+                    "_default2_new_create": false,
+                    "_default3_edit_update": false,
+                    "_default4_delete": false,
+                    "customActions": [
+                        "index",
+                        "deleteAll"
+                    ]
+                },
+                "name": "Error",
+                "objectsettings": {
+                    "addDeletedField": false,
+                    "addHiddenField": false,
+                    "addStarttimeEndtimeFields": false,
+                    "aggregateRoot": false,
+                    "categorizable": false,
+                    "description": "",
+                    "mapToTable": "",
+                    "parentClass": "",
+                    "sorting": false,
+                    "type": "Entity",
+                    "uid": "1144252219907"
+                },
+                "propertyGroup": {
+                    "properties": [
+                        {
+                            "allowedFileTypes": "",
+                            "maxItems": "1",
+                            "propertyDescription": "Sha1",
+                            "propertyIsExcludeField": false,
+                            "propertyIsRequired": true,
+                            "propertyName": "sha1",
+                            "propertyType": "String",
+                            "uid": "981342016879"
+                        },
+                        {
+                            "allowedFileTypes": "",
+                            "maxItems": "1",
+                            "propertyDescription": "Url",
+                            "propertyIsExcludeField": false,
+                            "propertyIsRequired": true,
+                            "propertyName": "url",
+                            "propertyType": "Text",
+                            "uid": "774256755640"
+                        },
+                        {
+                            "allowedFileTypes": "",
+                            "maxItems": "1",
+                            "propertyDescription": "Reason",
+                            "propertyIsExcludeField": false,
+                            "propertyIsRequired": true,
+                            "propertyName": "reason",
+                            "propertyType": "Text",
+                            "uid": "867566621235"
+                        },
+                        {
+                            "allowedFileTypes": "",
+                            "maxItems": "1",
+                            "propertyDescription": "Last referer",
+                            "propertyIsExcludeField": false,
+                            "propertyIsRequired": false,
+                            "propertyName": "lastReferer",
+                            "propertyType": "Text",
+                            "uid": "1398445632288"
+                        },
+                        {
+                            "allowedFileTypes": "",
+                            "maxItems": "1",
+                            "propertyDescription": "Counter",
+                            "propertyIsExcludeField": false,
+                            "propertyIsRequired": true,
+                            "propertyName": "counter",
+                            "propertyType": "Integer",
+                            "uid": "1393277544388"
+                        }
+                    ]
+                },
+                "relationGroup": {
+                    "relations": [
 
+                    ]
+                }
+            }
+        }
     ],
     "properties": {
         "backendModules": [
-
+            {
+                "actions": {
+                    "controllerActionCombinations": "Error=>index,list,deleteAll"
+                },
+                "description": "Error log",
+                "key": "log",
+                "mainModule": "web",
+                "name": "Error log",
+                "tabLabel": "Error log"
+            }
         ],
         "description": "Custom error 404 page",
         "emConf": {
-            "category": "plugin",
+            "category": "fe",
             "custom_category": "",
             "dependsOn": "typo3 => 7.6.0-7.6.99\n",
             "disableLocalization": true,
@@ -17,12 +120,12 @@
             "sourceLanguage": "en",
             "state": "beta",
             "targetVersion": "7.6.0-7.6.99",
-            "version": ""
+            "version": "1.1.0"
         },
         "extensionKey": "error404page",
-        "name": "Page 404",
-        "originalExtensionKey": "",
-        "originalVendorName": "",
+        "name": "Error 404 page",
+        "originalExtensionKey": "error404page",
+        "originalVendorName": "R3H6",
         "persons": [
             {
                 "company": "",
@@ -40,7 +143,7 @@
 
     ],
     "log": {
-        "last_modified": "2016-01-07 09:56",
+        "last_modified": "2016-04-20 11:03",
         "extension_builder_version": "7.6.0",
         "be_user": " (1)"
     }

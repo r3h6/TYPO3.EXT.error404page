@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2016-04-20T23:03:54Z" product-name="error404page">
+		<header/>
+		<body>
+			<trans-unit id="sha1.description">
+				<source>Sha1</source>
+			</trans-unit>
+			<trans-unit id="url.description">
+				<source>Url</source>
+			</trans-unit>
+			<trans-unit id="reason.description">
+				<source>Reason</source>
+			</trans-unit>
+			<trans-unit id="last_referer.description">
+				<source>Last referer</source>
+			</trans-unit>
+			<trans-unit id="counter.description">
+				<source>Counter</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

@@ -1,0 +1,45 @@
+
+<f:layout name="Default" />
+
+This Template is responsible for creating a table of domain objects.
+
+If you modify this template, do not forget to change the overwrite settings
+in /Configuration/ExtensionBuilder/settings.yaml:
+  Resources:
+    Private:
+      Templates:
+        List.html: keep
+
+Otherwise your changes will be overwritten the next time you save the extension in the extension builder
+
+<f:section name="content">
+<h1>Listing for Error</h1>
+
+<f:flashMessages />
+
+<table  class="tx_error404page" >
+	<tr>
+		<th><f:translate key="tx_error404page_domain_model_error.sha1" /></th>
+		<th><f:translate key="tx_error404page_domain_model_error.url" /></th>
+		<th><f:translate key="tx_error404page_domain_model_error.reason" /></th>
+		<th><f:translate key="tx_error404page_domain_model_error.last_referer" /></th>
+		<th><f:translate key="tx_error404page_domain_model_error.counter" /></th>
+		<th> </th>
+		<th> </th>
+	</tr>
+
+	<f:for each="{errors}" as="error">
+		<tr>
+			<td><f:link.action action="show" arguments="{error : error}"> {error.sha1}</f:link.action></td>
+			<td><f:link.action action="show" arguments="{error : error}"> {error.url}</f:link.action></td>
+			<td><f:link.action action="show" arguments="{error : error}"> {error.reason}</f:link.action></td>
+			<td><f:link.action action="show" arguments="{error : error}"> {error.lastReferer}</f:link.action></td>
+			<td><f:link.action action="show" arguments="{error : error}"> {error.counter}</f:link.action></td>
+			<td><f:link.action action="edit" arguments="{error : error}">Edit</f:link.action></td>
+			<td><f:link.action action="delete" arguments="{error : error}">Delete</f:link.action></td>
+		</tr>
+	</f:for>
+</table>
+
+<f:link.action action="new">New Error</f:link.action>
+</f:section>
