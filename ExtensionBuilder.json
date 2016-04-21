@@ -3,7 +3,7 @@
         {
             "config": {
                 "position": [
-                    242,
+                    241,
                     101
                 ]
             },
@@ -17,7 +17,8 @@
                     "_default4_delete": false,
                     "customActions": [
                         "index",
-                        "deleteAll"
+                        "deleteAll",
+                        "chart"
                     ]
                 },
                 "name": "Error",
@@ -100,7 +101,7 @@
         "backendModules": [
             {
                 "actions": {
-                    "controllerActionCombinations": "Error=>index,list,deleteAll"
+                    "controllerActionCombinations": "Error=>index,list,deleteAll,chart"
                 },
                 "description": "Error log",
                 "key": "log",
@@ -143,7 +144,7 @@
 
     ],
     "log": {
-        "last_modified": "2016-04-20 11:03",
+        "last_modified": "2016-04-21 08:37",
         "extension_builder_version": "7.6.0",
         "be_user": " (1)"
     }

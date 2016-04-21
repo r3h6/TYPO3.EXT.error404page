@@ -32,6 +32,12 @@ class ErrorPageController
     const LOCALLANG = 'LLL:EXT:error404page/Resources/Private/Language/locallang.xlf';
 
     /**
+     * @var R3H6\Error404page\Domain\Repository\ErrorRepository
+     * @inject
+     */
+    protected $errorRepository;
+
+    /**
      * @var R3H6\Error404page\Domain\Repository\PageRepository
      * @inject
      */
@@ -73,6 +79,9 @@ class ErrorPageController
         }
 
         if (!isset($_GET['tx_error404page_request'])) {
+
+            $this->errorRepository->log(GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'), $params['reasonText'], GeneralUtility::getIndpEnv('HTTP_REFERER'));
+
             $cacheIdentifier = sha1($host . '/' . $language);
             $content = $this->pageCache->get($cacheIdentifier);
             if ($content === false) {

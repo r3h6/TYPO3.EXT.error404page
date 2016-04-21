@@ -19,8 +19,8 @@ if (TYPO3_MODE === 'BE') {
 		'log',	// Submodule key
 		'',						// Position
 		array(
-			'Error' => 'index, list, deleteAll',
-			
+			'Error' => 'index, list, deleteAll, chart',
+
 		),
 		array(
 			'access' => 'user,group',

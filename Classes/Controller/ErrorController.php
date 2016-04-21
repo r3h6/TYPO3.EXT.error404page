@@ -29,8 +29,16 @@ namespace R3H6\Error404page\Controller;
 /**
  * ErrorController
  */
-class R3H6\Error404page\Controller\ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
+class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 {
+
+    /**
+     * ErrorRepository
+     *
+     * @var R3H6\Error404page\Domain\Repository\ErrorRepository
+     * @inject
+     */
+    protected $errorRepository;
 
     /**
      * action list
@@ -42,7 +50,7 @@ class R3H6\Error404page\Controller\ErrorController extends \TYPO3\CMS\Extbase\Mv
         $errors = $this->errorRepository->findAll();
         $this->view->assign('errors', $errors);
     }
-    
+
     /**
      * action index
      *
@@ -50,9 +58,9 @@ class R3H6\Error404page\Controller\ErrorController extends \TYPO3\CMS\Extbase\Mv
      */
     public function indexAction()
     {
-        
+
     }
-    
+
     /**
      * action deleteAll
      *
@@ -60,7 +68,19 @@ class R3H6\Error404page\Controller\ErrorController extends \TYPO3\CMS\Extbase\Mv
      */
     public function deleteAllAction()
     {
-        
+
+    }
+
+    /**
+     * action chart
+     *
+     * @param string $what
+     * @return void
+     */
+    public function chartAction($what)
+    {
+        $chart = $this->errorRepository->getUrls();
+        $this->view->assign('chart', $chart);
     }
 
 }

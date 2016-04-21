@@ -33,6 +33,13 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 {
 
     /**
+     * IP
+     *
+     * @var int
+     */
+    protected $ip = 0;
+    
+    /**
      * Sha1
      *
      * @var string
@@ -156,24 +163,24 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     }
     
     /**
-     * Returns the counter
+     * Returns the ip
      *
-     * @return int $counter
+     * @return int $ip
      */
-    public function getCounter()
+    public function getIp()
     {
-        return $this->counter;
+        return $this->ip;
     }
     
     /**
-     * Sets the counter
+     * Sets the ip
      *
-     * @param int $counter
+     * @param int $ip
      * @return void
      */
-    public function setCounter($counter)
+    public function setIp($ip)
     {
-        $this->counter = $counter;
+        $this->ip = $ip;
     }
 
 }
