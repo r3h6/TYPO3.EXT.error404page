@@ -74,13 +74,24 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
     /**
      * action chart
      *
-     * @param string $what
+     * @param string $demand
      * @return void
      */
-    public function chartAction($what)
+    public function chartAction($demand)
     {
-        $chart = $this->errorRepository->getUrls();
-        $this->view->assign('chart', $chart);
+        $errors = null;
+        switch ($demand) {
+            case 'urls':
+                $errors = $this->errorRepository->findErrorsTopUrls();
+                break;
+            case 'reasons':
+                $errors = $this->errorRepository->findErrorsTopReasons();
+                break;
+            case 'count':
+                $errors = $this->errorRepository->findErrorsGroupedByDay();
+                break;
+        }
+        $this->view->assign('errors', $errors);
     }
 
 }

@@ -38,7 +38,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @var int
      */
     protected $ip = 0;
-    
+
     /**
      * Sha1
      *
@@ -46,7 +46,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @validate NotEmpty
      */
     protected $sha1 = '';
-    
+
     /**
      * Url
      *
@@ -54,7 +54,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @validate NotEmpty
      */
     protected $url = '';
-    
+
     /**
      * Reason
      *
@@ -62,14 +62,14 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @validate NotEmpty
      */
     protected $reason = '';
-    
+
     /**
      * Last referer
      *
      * @var string
      */
     protected $lastReferer = '';
-    
+
     /**
      * Counter
      *
@@ -77,7 +77,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
      * @validate NotEmpty
      */
     protected $counter = 0;
-    
+
     /**
      * Returns the sha1
      *
@@ -87,7 +87,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         return $this->sha1;
     }
-    
+
     /**
      * Sets the sha1
      *
@@ -98,7 +98,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->sha1 = $sha1;
     }
-    
+
     /**
      * Returns the url
      *
@@ -108,7 +108,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         return $this->url;
     }
-    
+
     /**
      * Sets the url
      *
@@ -119,7 +119,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->url = $url;
     }
-    
+
     /**
      * Returns the reason
      *
@@ -129,7 +129,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         return $this->reason;
     }
-    
+
     /**
      * Sets the reason
      *
@@ -140,7 +140,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->reason = $reason;
     }
-    
+
     /**
      * Returns the lastReferer
      *
@@ -150,7 +150,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         return $this->lastReferer;
     }
-    
+
     /**
      * Sets the lastReferer
      *
@@ -161,7 +161,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->lastReferer = $lastReferer;
     }
-    
+
     /**
      * Returns the ip
      *
@@ -171,7 +171,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         return $this->ip;
     }
-    
+
     /**
      * Sets the ip
      *
@@ -182,5 +182,23 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     {
         $this->ip = $ip;
     }
+    /**
+     * Gets the counter
+     *
+     * @return int [description]
+     */
+    public function getCounter()
+    {
+        return $this->counter;
+    }
 
+    /**
+     * Sets the counter
+     *
+     * @param int $counter [description]
+     */
+    public function setCounter($counter)
+    {
+        $this->counter = $counter;
+    }
 }

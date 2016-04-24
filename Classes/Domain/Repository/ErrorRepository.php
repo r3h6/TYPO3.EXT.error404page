@@ -35,62 +35,66 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 {
     protected static $table = 'tx_error404page_domain_model_error';
 
-    public function getCountPerDay()
+    public function initializeObject()
     {
-
+        /** @var $querySettings \TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings */
+        $querySettings = $this->objectManager->get('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\Typo3QuerySettings');
+        $querySettings->setRespectStoragePage(false);
+        $querySettings->setRespectSysLanguage(false);
+        $this->setDefaultQuerySettings($querySettings);
     }
 
-    public function getReasons()
+    public function findErrorsGroupedByDay(\DateTime $startDate = null, \DateTime $endDate = null)
     {
-
+        if ($endDate === null) {
+            $endDate = new \DateTime('today midnight');
+        }
+        if ($startDate === null) {
+            $startDate = clone $endDate;
+            $startDate->modify('-1 week');
+        }
+        /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
+        $query = $this->createQuery();
+        $query->statement(
+            sprintf('SELECT count(*) AS counter, DATE(FROM_UNIXTIME(crdate)) AS dayDate FROM %s WHERE crdate > %d AND crdate < %d GROUP BY dayDate ORDER BY dayDate ASC', static::$table, $startDate->getTimestamp(), $endDate->getTimestamp())
+        );
+        return $query->execute(true);
     }
 
-    public function getUrls()
+    public function findErrorsTopReasons($limit = 10)
     {
-        $rows = $this->getDatabasConnection()->exec_SELECTgetRows('url, reason, crdate, count(*) AS counter', self::$table, '1=1', 'url, reason');
-        return $rows;
+        /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
+        $query = $this->createQuery();
+        $query->statement(
+            sprintf('SELECT reason, count(*) AS counter FROM %s GROUP BY reason ORDER BY counter DESC LIMIT %d', static::$table, $limit)
+        );
+        return $query->execute(true);
+    }
+
+    public function findErrorsTopUrls($limit = 10)
+    {
+        /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
+        $query = $this->createQuery();
+        $query->statement(
+            sprintf('SELECT url, count(*) AS counter FROM %s GROUP BY url ORDER BY counter DESC LIMIT %d', static::$table, $limit)
+        );
+        return $query->execute(true);
     }
 
     public function log($url, $reason, $lastReferer)
     {
         $sha1 = sha1($url . '/' . $reason);
-
-
-        // $error = $this->getDatabasConnection()->exec_SELECTgetSingleRow('counter', self::$table, "sha1='$sha1'");
-        //if (!is_array($error)) {
-            $error = [
-                'sha1' => $sha1,
-                'url' => $url,
-                'reason' => $reason,
-                'counter' => 0,
-            ];
-        //}
-        $error['last_referer'] = $lastReferer;
-        $error['crdate'] = time();
-        // $error['counter'] = intval($error['counter']) + 1;
-
-        // if ($error['counter'] === 1) {
-            $this->getDatabasConnection()->exec_INSERTquery(self::$table, $error);
-        // } else {
-            // $this->getDatabasConnection()->exec_UPDATEquery(self::$table, "sha1='$sha1'", $error);
-        // }
-
-        /** @var R3H6\Error404page\Domain\Model\Error $error */
-        // $error = $this->findOneBySha1($sha1);
-        // if ($error === null) {
-        //     $error = $this->objectManager->get(Error::class);
-        //     $error->setSha1($sha1);
-        //     $error->setUrl($url);
-        //     $error->setReason($reason);
-        // }
-        // $error->setCounter($error->getCounter() + 1);
-        // $error->setLastReferer($lastReferer);
-
-        // if ($error->getUid() !== null) {
-        //     $this->update($error);
-        // } else {
-        //     $this->add($error);
-        // }
+        $now = time();
+        $error = [
+            'sha1' => $sha1,
+            'url' => $url,
+            'reason' => $reason,
+            'counter' => 0,
+            'last_referer' => $lastReferer,
+            'crdate' => $now,
+            'tstamp' => $now,
+        ];
+        $this->getDatabasConnection()->exec_INSERTquery(self::$table, $error);
     }
 
     /**

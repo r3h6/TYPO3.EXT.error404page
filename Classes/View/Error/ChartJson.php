@@ -17,10 +17,13 @@ namespace R3H6\Error404page\View\Error;
 /**
  * ChartJson
  */
-class ChartJson extends \TYPO3\CMS\Lang\View\AbstractJsonView
+class ChartJson extends \TYPO3\CMS\Extbase\Mvc\View\JsonView
 {
-    public function getReponseData()
-    {
-        return $this->variables['chart'];
-    }
+    protected $variablesToRender = array('errors');
+
+    // public function getReponseData()
+    // {
+    //     \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($this->variables);
+    //     return $this->variables['errors'];
+    // }
 }

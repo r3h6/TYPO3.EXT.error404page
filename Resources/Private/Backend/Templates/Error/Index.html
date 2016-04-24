@@ -5,6 +5,8 @@
 
 <f:flashMessages />
 
-<div id="UrlChart" class="ct-chart" data-source="{f:uri.action(action: 'chart', format: 'json', arguments: {what: 'urls'})}"></div>
+<canvas height="200" width="600" class="ct-chart" data-chart="url" data-source="{f:uri.action(action: 'chart', format: 'json', arguments: {demand: 'urls'})}"></canvas>
+<canvas height="200" width="600" class="ct-chart" data-chart="url" data-source="{f:uri.action(action: 'chart', format: 'json', arguments: {demand: 'reasons'})}"></canvas>
+<canvas height="200" width="600" class="ct-chart" data-chart="count" data-source="{f:uri.action(action: 'chart', format: 'json', arguments: {demand: 'count'})}"></canvas>
 
 </f:section>
