@@ -1,6 +1,8 @@
 <?php
 namespace R3H6\Error404page\Domain\Repository;
 
+use R3H6\Error404page\Domain\Model\Error;
+
 /***************************************************************
  *
  *  Copyright notice
@@ -26,13 +28,14 @@ namespace R3H6\Error404page\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use R3H6\Error404page\Domain\Model\Error;
-
 /**
  * The repository for Errors
  */
 class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 {
+
+    const MAX_ENTRIES = 10000;
+
     protected static $table = 'tx_error404page_domain_model_error';
 
     public function initializeObject()
@@ -44,6 +47,10 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         $this->setDefaultQuerySettings($querySettings);
     }
 
+    /**
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     */
     public function findErrorsGroupedByDay(\DateTime $startDate = null, \DateTime $endDate = null)
     {
         if ($endDate === null) {
@@ -55,52 +62,57 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         }
         /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
         $query = $this->createQuery();
-        $query->statement(
-            sprintf('SELECT count(*) AS counter, DATE(FROM_UNIXTIME(crdate)) AS dayDate FROM %s WHERE crdate > %d AND crdate < %d GROUP BY dayDate ORDER BY dayDate ASC', static::$table, $startDate->getTimestamp(), $endDate->getTimestamp())
-        );
+        $query->statement(sprintf('SELECT count(*) AS counter, DATE(FROM_UNIXTIME(crdate)) AS dayDate FROM %s WHERE crdate > %d AND crdate < %d GROUP BY dayDate ORDER BY dayDate ASC', static::$table, $startDate->getTimestamp(), $endDate->getTimestamp()));
         return $query->execute(true);
     }
 
+    /**
+     * @param $limit
+     */
     public function findErrorsTopReasons($limit = 10)
     {
         /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
         $query = $this->createQuery();
-        $query->statement(
-            sprintf('SELECT reason, count(*) AS counter FROM %s GROUP BY reason ORDER BY counter DESC LIMIT %d', static::$table, $limit)
-        );
+        $query->statement(sprintf('SELECT reason, count(*) AS counter FROM %s GROUP BY reason ORDER BY counter DESC LIMIT %d', static::$table, $limit));
         return $query->execute(true);
     }
 
+    /**
+     * @param $limit
+     */
     public function findErrorsTopUrls($limit = 10)
     {
         /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
         $query = $this->createQuery();
-        $query->statement(
-            sprintf('SELECT url, count(*) AS counter FROM %s GROUP BY url ORDER BY counter DESC LIMIT %d', static::$table, $limit)
-        );
+        $query->statement(sprintf('SELECT url, count(*) AS counter FROM %s GROUP BY url ORDER BY counter DESC LIMIT %d', static::$table, $limit));
         return $query->execute(true);
     }
 
-    public function log($url, $reason, $lastReferer)
+
+    public function log($url, $rootPage, $reason, $referer, $userAgent, $ip)
     {
-        $sha1 = sha1($url . '/' . $reason);
-        $now = time();
-        $error = [
-            'sha1' => $sha1,
-            'url' => $url,
-            'reason' => $reason,
-            'counter' => 0,
-            'last_referer' => $lastReferer,
-            'crdate' => $now,
-            'tstamp' => $now,
-        ];
-        $this->getDatabasConnection()->exec_INSERTquery(self::$table, $error);
+        /** @var R3H6\Error404page\Domain\Model\Error $error */
+        $error = $this->objectManager->get(Error::class);
+        $error->setUrl($url);
+        $error->setRootPage($rootPage);
+        $error->setReason($reason);
+        $error->setReferer($referer);
+        $error->setUserAgent($userAgent);
+        $error->setIp($ip);
+
+        $count = $this->getDatabaseConnection()->exec_SELECTcountRows('*', self::$table);
+        if ($count < self::MAX_ENTRIES) {
+            $this->getDatabaseConnection()->exec_INSERTquery(self::$table, $error->toArray());
+        } else {
+            $row = $this->getDatabaseConnection()->exec_SELECTgetSingleRow('uid', self::$table, '1=1', '', 'crdate ASC');
+            $this->getDatabaseConnection()->exec_UPDATEquery(self::$table, 'uid=' . $row['uid'], $error->toArray());
+        }
     }
 
     /**
      * @return TYPO3\CMS\Core\Database\DatabaseConnection
      */
-    protected function getDatabasConnection()
+    protected function getDatabaseConnection()
     {
         return $GLOBALS['TYPO3_DB'];
     }

@@ -5,10 +5,10 @@ if (!defined('TYPO3_MODE')) {
 
 \R3H6\Error404page\Utility\CustomPageUtility::addDoktype(
     $_EXTKEY,
-    \R3H6\Error404page\Configuration\ExtensionConfiguration::doktypeError404page(),
+    \R3H6\Error404page\Configuration\ExtensionConfiguration::get('doktypeError404page'),
     'Error404page'
 );
-if (TYPO3_MODE === 'BE') {
+if (TYPO3_MODE === 'BE' && \R3H6\Error404page\Configuration\ExtensionConfiguration::get('enableErrorLog')) {
 
 	/**
 	 * Registers a Backend Module
@@ -19,7 +19,7 @@ if (TYPO3_MODE === 'BE') {
 		'log',	// Submodule key
 		'',						// Position
 		array(
-			'Error' => 'index, list, deleteAll, chart',
+			'Error' => 'list, deleteAll',
 
 		),
 		array(

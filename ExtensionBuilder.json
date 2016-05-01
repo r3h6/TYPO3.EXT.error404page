@@ -3,8 +3,8 @@
         {
             "config": {
                 "position": [
-                    241,
-                    101
+                    240,
+                    102
                 ]
             },
             "name": "New Model Object",
@@ -16,9 +16,7 @@
                     "_default3_edit_update": false,
                     "_default4_delete": false,
                     "customActions": [
-                        "index",
-                        "deleteAll",
-                        "chart"
+                        "deleteAll"
                     ]
                 },
                 "name": "Error",
@@ -26,27 +24,17 @@
                     "addDeletedField": false,
                     "addHiddenField": false,
                     "addStarttimeEndtimeFields": false,
-                    "aggregateRoot": false,
+                    "aggregateRoot": true,
                     "categorizable": false,
                     "description": "",
                     "mapToTable": "",
                     "parentClass": "",
                     "sorting": false,
-                    "type": "Entity",
+                    "type": "ValueObject",
                     "uid": "1144252219907"
                 },
                 "propertyGroup": {
                     "properties": [
-                        {
-                            "allowedFileTypes": "",
-                            "maxItems": "1",
-                            "propertyDescription": "Sha1",
-                            "propertyIsExcludeField": false,
-                            "propertyIsRequired": true,
-                            "propertyName": "sha1",
-                            "propertyType": "String",
-                            "uid": "981342016879"
-                        },
                         {
                             "allowedFileTypes": "",
                             "maxItems": "1",
@@ -56,6 +44,16 @@
                             "propertyName": "url",
                             "propertyType": "Text",
                             "uid": "774256755640"
+                        },
+                        {
+                            "allowedFileTypes": "",
+                            "maxItems": "1",
+                            "propertyDescription": "Root page",
+                            "propertyIsExcludeField": false,
+                            "propertyIsRequired": true,
+                            "propertyName": "rootPage",
+                            "propertyType": "Integer",
+                            "uid": "150532476374"
                         },
                         {
                             "allowedFileTypes": "",
@@ -70,22 +68,42 @@
                         {
                             "allowedFileTypes": "",
                             "maxItems": "1",
+                            "propertyDescription": "Counter",
+                            "propertyIsExcludeField": false,
+                            "propertyIsRequired": false,
+                            "propertyName": "counter",
+                            "propertyType": "Integer",
+                            "uid": "1393277544388"
+                        },
+                        {
+                            "allowedFileTypes": "",
+                            "maxItems": "1",
                             "propertyDescription": "Last referer",
                             "propertyIsExcludeField": false,
                             "propertyIsRequired": false,
-                            "propertyName": "lastReferer",
+                            "propertyName": "referer",
                             "propertyType": "Text",
                             "uid": "1398445632288"
                         },
                         {
                             "allowedFileTypes": "",
                             "maxItems": "1",
-                            "propertyDescription": "Counter",
+                            "propertyDescription": "IP",
                             "propertyIsExcludeField": false,
-                            "propertyIsRequired": true,
-                            "propertyName": "counter",
-                            "propertyType": "Integer",
-                            "uid": "1393277544388"
+                            "propertyIsRequired": false,
+                            "propertyName": "ip",
+                            "propertyType": "String",
+                            "uid": "330639666707"
+                        },
+                        {
+                            "allowedFileTypes": "",
+                            "maxItems": "1",
+                            "propertyDescription": "User agent",
+                            "propertyIsExcludeField": false,
+                            "propertyIsRequired": false,
+                            "propertyName": "userAgent",
+                            "propertyType": "String",
+                            "uid": "811489195919"
                         }
                     ]
                 },
@@ -101,9 +119,9 @@
         "backendModules": [
             {
                 "actions": {
-                    "controllerActionCombinations": "Error=>index,list,deleteAll,chart"
+                    "controllerActionCombinations": "Error=>list,deleteAll"
                 },
-                "description": "Error log",
+                "description": "List url's which raised a page ot found error.",
                 "key": "log",
                 "mainModule": "web",
                 "name": "Error log",
@@ -144,7 +162,7 @@
 
     ],
     "log": {
-        "last_modified": "2016-04-21 08:37",
+        "last_modified": "2016-05-01 09:34",
         "extension_builder_version": "7.6.0",
         "be_user": " (1)"
     }

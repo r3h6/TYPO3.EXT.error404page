@@ -55,7 +55,7 @@ class ErrorControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 
 		$allErrors = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array(), array(), '', FALSE);
 
-		$errorRepository = $this->getMock('', array('findAll'), array(), '', FALSE);
+		$errorRepository = $this->getMock('R3H6\\Error404page\\Domain\\Repository\\ErrorRepository', array('findAll'), array(), '', FALSE);
 		$errorRepository->expects($this->once())->method('findAll')->will($this->returnValue($allErrors));
 		$this->inject($this->subject, 'errorRepository', $errorRepository);
 
@@ -73,7 +73,7 @@ class ErrorControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 	{
 		$error = new \R3H6\Error404page\Domain\Model\Error();
 
-		$errorRepository = $this->getMock('', array('remove'), array(), '', FALSE);
+		$errorRepository = $this->getMock('R3H6\\Error404page\\Domain\\Repository\\ErrorRepository', array('remove'), array(), '', FALSE);
 		$errorRepository->expects($this->once())->method('remove')->with($error);
 		$this->inject($this->subject, 'errorRepository', $errorRepository);
 

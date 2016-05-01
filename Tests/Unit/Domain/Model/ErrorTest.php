@@ -54,31 +54,6 @@ class ErrorTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 	/**
 	 * @test
 	 */
-	public function getSha1ReturnsInitialValueForString()
-	{
-		$this->assertSame(
-			'',
-			$this->subject->getSha1()
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function setSha1ForStringSetsSha1()
-	{
-		$this->subject->setSha1('Conceived at T3CON10');
-
-		$this->assertAttributeEquals(
-			'Conceived at T3CON10',
-			'sha1',
-			$this->subject
-		);
-	}
-
-	/**
-	 * @test
-	 */
 	public function getUrlReturnsInitialValueForString()
 	{
 		$this->assertSame(
@@ -100,6 +75,18 @@ class ErrorTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 			$this->subject
 		);
 	}
+
+	/**
+	 * @test
+	 */
+	public function getRootPageReturnsInitialValueForInt()
+	{	}
+
+	/**
+	 * @test
+	 */
+	public function setRootPageForIntSetsRootPage()
+	{	}
 
 	/**
 	 * @test
@@ -129,24 +116,19 @@ class ErrorTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 	/**
 	 * @test
 	 */
-	public function getLastRefererReturnsInitialValueForString()
+	public function setReasonForStringSetsReason2()
 	{
-		$this->assertSame(
-			'',
-			$this->subject->getLastReferer()
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function setLastRefererForStringSetsLastReferer()
-	{
-		$this->subject->setLastReferer('Conceived at T3CON10');
+		$this->subject->setReason('Segment "test" was not a keyword for a postVarSet as expected on page with id=123.');
 
 		$this->assertAttributeEquals(
-			'Conceived at T3CON10',
-			'lastReferer',
+			'Segment was not a keyword for a postVarSet as expected on page',
+			'reason',
+			$this->subject
+		);
+
+		$this->assertAttributeEquals(
+			123,
+			'pid',
 			$this->subject
 		);
 	}
@@ -162,4 +144,79 @@ class ErrorTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 	 */
 	public function setCounterForIntSetsCounter()
 	{	}
+
+	/**
+	 * @test
+	 */
+	public function getRefererReturnsInitialValueForString()
+	{
+		$this->assertSame(
+			'',
+			$this->subject->getReferer()
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function setRefererForStringSetsReferer()
+	{
+		$this->subject->setReferer('Conceived at T3CON10');
+
+		$this->assertAttributeEquals(
+			'Conceived at T3CON10',
+			'referer',
+			$this->subject
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function getIpReturnsInitialValueForString()
+	{
+		$this->assertSame(
+			'',
+			$this->subject->getIp()
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function setIpForStringSetsIp()
+	{
+		$this->subject->setIp('Conceived at T3CON10');
+
+		$this->assertAttributeEquals(
+			'Conceived at T3CON10',
+			'ip',
+			$this->subject
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function getUserAgentReturnsInitialValueForString()
+	{
+		$this->assertSame(
+			'',
+			$this->subject->getUserAgent()
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function setUserAgentForStringSetsUserAgent()
+	{
+		$this->subject->setUserAgent('Conceived at T3CON10');
+
+		$this->assertAttributeEquals(
+			'Conceived at T3CON10',
+			'userAgent',
+			$this->subject
+		);
+	}
 }

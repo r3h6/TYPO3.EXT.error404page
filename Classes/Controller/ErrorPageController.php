@@ -80,7 +80,16 @@ class ErrorPageController
 
         if (!isset($_GET['tx_error404page_request'])) {
 
-            $this->errorRepository->log(GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'), $params['reasonText'], GeneralUtility::getIndpEnv('HTTP_REFERER'));
+            if (ExtensionConfiguration::get('enableErrorLog')) {
+                $this->errorRepository->log(
+                    GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'),
+                    $this->pageRepository->findRootPageByHost($host),
+                    $params['reasonText'],
+                    GeneralUtility::getIndpEnv('HTTP_REFERER'),
+                    GeneralUtility::getIndpEnv('HTTP_USER_AGENT'),
+                    GeneralUtility::getIndpEnv('REMOTE_ADDR')
+                );
+            }
 
             $cacheIdentifier = sha1($host . '/' . $language);
             $content = $this->pageCache->get($cacheIdentifier);

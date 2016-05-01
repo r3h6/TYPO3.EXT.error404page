@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2016-04-21T20:37:20Z" product-name="error404page">
+	<file source-language="en" datatype="plaintext" original="messages" date="2016-05-01T21:34:37Z" product-name="error404page">
 		<header/>
 		<body>
 			<trans-unit id="tx_error404page_domain_model_error">
 				<source>Error</source>
 			</trans-unit>
-			<trans-unit id="tx_error404page_domain_model_error.sha1">
-				<source>Sha1</source>
-			</trans-unit>
 			<trans-unit id="tx_error404page_domain_model_error.url">
 				<source>Url</source>
+			</trans-unit>
+			<trans-unit id="tx_error404page_domain_model_error.root_page">
+				<source>Root Page</source>
 			</trans-unit>
 			<trans-unit id="tx_error404page_domain_model_error.reason">
 				<source>Reason</source>
 			</trans-unit>
-			<trans-unit id="tx_error404page_domain_model_error.last_referer">
-				<source>Last Referer</source>
-			</trans-unit>
 			<trans-unit id="tx_error404page_domain_model_error.counter">
 				<source>Counter</source>
+			</trans-unit>
+			<trans-unit id="tx_error404page_domain_model_error.referer">
+				<source>Referer</source>
+			</trans-unit>
+			<trans-unit id="tx_error404page_domain_model_error.ip">
+				<source>Ip</source>
+			</trans-unit>
+			<trans-unit id="tx_error404page_domain_model_error.user_agent">
+				<source>User Agent</source>
 			</trans-unit>
 		</body>
 	</file>

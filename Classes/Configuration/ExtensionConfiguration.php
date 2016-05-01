@@ -28,16 +28,22 @@ class ExtensionConfiguration implements \TYPO3\CMS\Core\SingletonInterface
         }
     }
 
-    public function __call($name, $arguments)
+    private function _get($key)
     {
-        if (isset($this->configuration[$name])) {
-            return $this->configuration[$name];
-        }
-        return null;
+        return isset($this->configuration[$key]) ? $this->configuration[$key]: null;
     }
 
-    public static function __callStatic($name, $arguments)
+    public function __call($method, $arguments)
     {
-        return GeneralUtility::makeInstance(ExtensionConfiguration::class)->$name();
+        if (method_exists($this, '_' . $method)) {
+            return call_user_func_array([$this, '_' . $method], $arguments);
+        }
+        throw new \RuntimeException("Method $method doesn't exist", 1461958193);
+    }
+
+    public static function __callStatic($method, $arguments)
+    {
+        $instance = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(self::class);
+        return call_user_func_array([$instance, $method], $arguments);
     }
 }

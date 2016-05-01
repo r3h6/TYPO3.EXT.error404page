@@ -1,8 +1,14 @@
+﻿.. ==================================================
+.. FOR YOUR INFORMATION
+.. --------------------------------------------------
+.. -*- coding: utf-8 -*- with BOM.
+
+
 .. _start:
 
-*************
+=============
 Documentation
-*************
+=============
 
 This extension adds a new custom page type used to display a custom 404 error page.
 

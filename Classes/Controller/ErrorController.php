@@ -38,8 +38,8 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      * @var R3H6\Error404page\Domain\Repository\ErrorRepository
      * @inject
      */
-    protected $errorRepository;
-
+    protected $errorRepository = null;
+    
     /**
      * action list
      *
@@ -47,20 +47,10 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      */
     public function listAction()
     {
-        $errors = $this->errorRepository->findAll();
+        $errors = $this->errorRepository->findErrorsTopUrls(100);
         $this->view->assign('errors', $errors);
     }
-
-    /**
-     * action index
-     *
-     * @return void
-     */
-    public function indexAction()
-    {
-
-    }
-
+    
     /**
      * action deleteAll
      *
@@ -68,30 +58,7 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      */
     public function deleteAllAction()
     {
-
-    }
-
-    /**
-     * action chart
-     *
-     * @param string $demand
-     * @return void
-     */
-    public function chartAction($demand)
-    {
-        $errors = null;
-        switch ($demand) {
-            case 'urls':
-                $errors = $this->errorRepository->findErrorsTopUrls();
-                break;
-            case 'reasons':
-                $errors = $this->errorRepository->findErrorsTopReasons();
-                break;
-            case 'count':
-                $errors = $this->errorRepository->findErrorsGroupedByDay();
-                break;
-        }
-        $this->view->assign('errors', $errors);
+        
     }
 
 }

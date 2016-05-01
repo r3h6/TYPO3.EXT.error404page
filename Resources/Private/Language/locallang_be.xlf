@@ -6,6 +6,12 @@
             <trans-unit id="pages.doktype.404">
                 <source>Error 404</source>
             </trans-unit>
+            <trans-unit id="configuration.doktypeError404page">
+                <source>Doktype: Error page 404 doktype (10 &lt; x &lt; 200).</source>
+            </trans-unit>
+            <trans-unit id="configuration.enableErrorLog">
+                <source>Log: Enable error log.</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>
