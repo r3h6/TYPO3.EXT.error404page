@@ -1,9 +1,6 @@
 
  # Module configuration
-module.tx_error404page_web_error404pagelog {
-	persistence {
-		storagePid = {$module.tx_error404page_log.persistence.storagePid}
-	}
+module.tx_error404page_web_error404pagestatistic {
 	view {
 		templateRootPaths.0 = EXT:error404page/Resources/Private/Backend/Templates/
 		partialRootPaths.0 = EXT:error404page/Resources/Private/Backend/Partials/

@@ -15,15 +15,9 @@ namespace R3H6\Error404page\View\Error;
  *                                                                        */
 
 /**
- * ChartJson
+ * ListJson
  */
-class ChartJson extends \TYPO3\CMS\Extbase\Mvc\View\JsonView
+class ListJson extends \TYPO3\CMS\Extbase\Mvc\View\JsonView
 {
     protected $variablesToRender = array('errors');
-
-    // public function getReponseData()
-    // {
-    //     \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($this->variables);
-    //     return $this->variables['errors'];
-    // }
 }

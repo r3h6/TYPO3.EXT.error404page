@@ -58,7 +58,7 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         }
         if ($startDate === null) {
             $startDate = clone $endDate;
-            $startDate->modify('-1 week');
+            $startDate->modify('-1 month');
         }
         /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
         $query = $this->createQuery();
@@ -88,7 +88,6 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         return $query->execute(true);
     }
 
-
     public function log($url, $rootPage, $reason, $referer, $userAgent, $ip)
     {
         /** @var R3H6\Error404page\Domain\Model\Error $error */
@@ -107,6 +106,11 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
             $row = $this->getDatabaseConnection()->exec_SELECTgetSingleRow('uid', self::$table, '1=1', '', 'crdate ASC');
             $this->getDatabaseConnection()->exec_UPDATEquery(self::$table, 'uid=' . $row['uid'], $error->toArray());
         }
+    }
+
+    public function deleteAll()
+    {
+        $this->getDatabaseConnection()->exec_TRUNCATEquery(self::$table);
     }
 
     /**

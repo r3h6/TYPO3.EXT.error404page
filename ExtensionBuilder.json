@@ -119,13 +119,13 @@
         "backendModules": [
             {
                 "actions": {
-                    "controllerActionCombinations": "Error=>list,deleteAll"
+                    "controllerActionCombinations": "Error=>dashboard,list,deleteAll"
                 },
                 "description": "List url's which raised a page ot found error.",
-                "key": "log",
+                "key": "statistic",
                 "mainModule": "web",
-                "name": "Error log",
-                "tabLabel": "Error log"
+                "name": "Error statistic",
+                "tabLabel": "Error statistic"
             }
         ],
         "description": "Custom error 404 page",

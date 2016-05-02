@@ -1,11 +1,5 @@
 
-<f:be.container
-	loadJQuery="true"
-	jQueryNamespace="jQuery"
-	includeRequireJsModules="{
-		0: '{f:uri.resource(path: \'JavaScripts/log.js\')}'
-	}"
->
+<f:be.container>
 	<div class="typo3-fullDoc">
 		<div id="typo3-docheader">
 			<div class="typo3-docheader-functions">
@@ -17,9 +11,9 @@
 					<f:be.pageInfo />
 				</div>
 			</div>
-			<div class="typo3-docheader-buttons">
+			<div class="typo3-docheader-buttons" style="height: auto;">
 				<div class="left">
-
+					<span class="btn btn-default"><f:be.buttons.icon uri="{f:uri.action(action: 'deleteAll')}" icon="actions-edit-delete" /></span>
 				</div>
 				<div class="right">
 					<f:be.buttons.shortcut />

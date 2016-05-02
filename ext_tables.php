@@ -16,16 +16,16 @@ if (TYPO3_MODE === 'BE' && \R3H6\Error404page\Configuration\ExtensionConfigurati
 	\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
 		'R3H6.' . $_EXTKEY,
 		'web',	 // Make module a submodule of 'web'
-		'log',	// Submodule key
+		'statistic',	// Submodule key
 		'',						// Position
 		array(
-			'Error' => 'list, deleteAll',
+			'Error' => 'dashboard, list, deleteAll',
 
 		),
 		array(
 			'access' => 'user,group',
 			'icon'   => 'EXT:' . $_EXTKEY . '/ext_icon.gif',
-			'labels' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_log.xlf',
+			'labels' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_statistic.xlf',
 		)
 	);
 

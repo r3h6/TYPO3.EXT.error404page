@@ -2,4 +2,4 @@
 doktypeError404page = 104
 
 # cat=error404page//20; type=boolean; label=LLL:EXT:error404page/Resources/Private/Language/locallang_be.xlf:configuration.enableErrorLog
-enableErrorLog = 1
+enableErrorLog = 0

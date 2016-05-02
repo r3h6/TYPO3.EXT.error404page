@@ -39,18 +39,29 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      * @inject
      */
     protected $errorRepository = null;
-    
+
     /**
-     * action list
+     * action dashboard
      *
      * @return void
      */
-    public function listAction()
+    public function dashboardAction()
     {
         $errors = $this->errorRepository->findErrorsTopUrls(100);
         $this->view->assign('errors', $errors);
     }
-    
+
+    /**
+     * action list
+     *
+     * @param string $demand
+     * @return void
+     */
+    public function listAction($demand = null)
+    {
+        throw new \RuntimeException("Not yet implemented", 1462195924);
+    }
+
     /**
      * action deleteAll
      *
@@ -58,7 +69,8 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      */
     public function deleteAllAction()
     {
-        
+        $this->errorRepository->deleteAll();
+        $this->addFlashMessage('Truncated errors log.');
+        $this->redirect('dashboard');
     }
-
 }

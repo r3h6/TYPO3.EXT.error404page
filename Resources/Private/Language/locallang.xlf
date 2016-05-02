@@ -28,7 +28,7 @@
 				<source>User Agent</source>
 			</trans-unit>
 			<trans-unit id="title.error.list" approved="yes">
-				<source>Error log</source>
+				<source>Top error pages</source>
 			</trans-unit>
 		</body>
 	</file>
