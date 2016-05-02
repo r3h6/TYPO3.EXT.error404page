@@ -24,7 +24,7 @@ if (TYPO3_MODE === 'BE' && \R3H6\Error404page\Configuration\ExtensionConfigurati
 		),
 		array(
 			'access' => 'user,group',
-			'icon'   => 'EXT:' . $_EXTKEY . '/ext_icon.gif',
+			'icon'   => 'EXT:' . $_EXTKEY . '/ext_icon.svg',
 			'labels' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_statistic.xlf',
 		)
 	);
