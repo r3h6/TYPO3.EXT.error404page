@@ -47,7 +47,7 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      */
     public function dashboardAction()
     {
-        $errors = $this->errorRepository->findErrorsTopUrls(100);
+        $errors = $this->errorRepository->findErrorTopUrls(100);
         $this->view->assign('errors', $errors);
     }
 

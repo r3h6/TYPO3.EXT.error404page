@@ -51,36 +51,36 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      * @param \DateTime $startDate
      * @param \DateTime $endDate
      */
-    public function findErrorsGroupedByDay(\DateTime $startDate = null, \DateTime $endDate = null)
+    public function findErrorGroupedByDay(\DateTime $startDate = null, \DateTime $endDate = null)
     {
-        if ($endDate === null) {
-            $endDate = new \DateTime('today midnight');
-        }
-        if ($startDate === null) {
-            $startDate = clone $endDate;
-            $startDate->modify('-1 month');
-        }
-        /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
-        $query = $this->createQuery();
-        $query->statement(sprintf('SELECT count(*) AS counter, DATE(FROM_UNIXTIME(crdate)) AS dayDate FROM %s WHERE crdate > %d AND crdate < %d GROUP BY dayDate ORDER BY dayDate ASC', static::$table, $startDate->getTimestamp(), $endDate->getTimestamp()));
-        return $query->execute(true);
+        // if ($endDate === null) {
+        //     $endDate = new \DateTime('today midnight');
+        // }
+        // if ($startDate === null) {
+        //     $startDate = clone $endDate;
+        //     $startDate->modify('-1 month');
+        // }
+        // /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
+        // $query = $this->createQuery();
+        // $query->statement(sprintf('SELECT count(*) AS counter, DATE(FROM_UNIXTIME(crdate)) AS dayDate FROM %s WHERE crdate > %d AND crdate < %d GROUP BY dayDate ORDER BY dayDate ASC', static::$table, $startDate->getTimestamp(), $endDate->getTimestamp()));
+        // return $query->execute(true);
     }
 
     /**
      * @param $limit
      */
-    public function findErrorsTopReasons($limit = 10)
+    public function findErrorTopReasons($limit = 10)
     {
-        /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
-        $query = $this->createQuery();
-        $query->statement(sprintf('SELECT reason, count(*) AS counter FROM %s GROUP BY reason ORDER BY counter DESC LIMIT %d', static::$table, $limit));
-        return $query->execute(true);
+        // /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
+        // $query = $this->createQuery();
+        // $query->statement(sprintf('SELECT reason, count(*) AS counter FROM %s GROUP BY reason ORDER BY counter DESC LIMIT %d', static::$table, $limit));
+        // return $query->execute(true);
     }
 
     /**
      * @param $limit
      */
-    public function findErrorsTopUrls($limit = 10)
+    public function findErrorTopUrls($limit = 10)
     {
         /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
         $query = $this->createQuery();
