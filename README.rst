@@ -28,3 +28,8 @@ If you need, you can change the page type in the extension configuration.
 
 .. note:: If you change the page type, you must update the doktype of your previously created error pages by yourself.
 
+
+Contributing
+------------
+
+Bug reports and pull request are welcome through `GitHub <https://github.com/r3h6/TYPO3.EXT.error404page/>`_
