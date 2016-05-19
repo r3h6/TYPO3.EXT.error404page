@@ -103,7 +103,7 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         if ($count < self::MAX_ENTRIES) {
             $this->getDatabaseConnection()->exec_INSERTquery(self::$table, $error->toArray());
         } else {
-            $row = $this->getDatabaseConnection()->exec_SELECTgetSingleRow('uid', self::$table, '1=1', '', 'crdate ASC');
+            $row = $this->getDatabaseConnection()->exec_SELECTgetSingleRow('uid', self::$table, '1=1', '', 'tstamp ASC');
             $this->getDatabaseConnection()->exec_UPDATEquery(self::$table, 'uid=' . $row['uid'], $error->toArray());
         }
     }
