@@ -3,6 +3,18 @@
 	<file source-language="en" datatype="plaintext" original="messages" date="2016-05-01T21:34:37Z" product-name="error404page">
 		<header/>
 		<body>
+			<trans-unit id="btn.delete_all">
+				<source>Flush error statistic</source>
+			</trans-unit>
+			<trans-unit id="title.error_grouped_by_day" approved="yes">
+				<source>Errors per days</source>
+			</trans-unit>
+			<trans-unit id="title.error_top_urls" approved="yes">
+				<source>Top error pages</source>
+			</trans-unit>
+			<trans-unit id="title.view.dashboard">
+				<source>Error statistic</source>
+			</trans-unit>
 			<trans-unit id="tx_error404page_domain_model_error">
 				<source>Error</source>
 			</trans-unit>
@@ -26,9 +38,6 @@
 			</trans-unit>
 			<trans-unit id="tx_error404page_domain_model_error.user_agent">
 				<source>User Agent</source>
-			</trans-unit>
-			<trans-unit id="title.error.list" approved="yes">
-				<source>Top error pages</source>
 			</trans-unit>
 		</body>
 	</file>

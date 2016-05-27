@@ -59,7 +59,19 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      */
     public function listAction($demand = null)
     {
-        throw new \RuntimeException("Not yet implemented", 1462195924);
+        switch ($demand) {
+            case 'ErrorGroupedByDay':
+                $errors = $this->errorRepository->findErrorGroupedByDay();
+                break;
+            case 'ErrorTopUrls':
+                $errors = $this->errorRepository->findErrorTopUrls();
+                break;
+            default:
+                throw new \InvalidArgumentException(sprintf('Unknown demand "%s"', $demand), 1462195924);
+                break;
+        }
+        $this->view->assign('errors', $errors);
+        $this->view->assign('demand', $demand);
     }
 
     /**

@@ -53,17 +53,24 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      */
     public function findErrorGroupedByDay(\DateTime $startDate = null, \DateTime $endDate = null)
     {
-        // if ($endDate === null) {
-        //     $endDate = new \DateTime('today midnight');
-        // }
-        // if ($startDate === null) {
-        //     $startDate = clone $endDate;
-        //     $startDate->modify('-1 month');
-        // }
-        // /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
-        // $query = $this->createQuery();
-        // $query->statement(sprintf('SELECT count(*) AS counter, DATE(FROM_UNIXTIME(crdate)) AS dayDate FROM %s WHERE crdate > %d AND crdate < %d GROUP BY dayDate ORDER BY dayDate ASC', static::$table, $startDate->getTimestamp(), $endDate->getTimestamp()));
-        // return $query->execute(true);
+        if ($endDate === null) {
+            $endDate = new \DateTime('today midnight');
+        }
+        if ($startDate === null) {
+            $minTime = (new \DateTime('today midnight -1 month'))->getTimestamp();
+            /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
+            $query = $this->createQuery();
+            $query->statement(sprintf('SELECT MIN(tstamp) AS minTime FROM %s', static::$table));
+            $result = $query->execute(true);
+            if (!empty($result)) {
+                $minTime = max((int) $result[0]['minTime'], $minTime);
+            }
+            $startDate = new \DateTime('@' . $minTime);
+        }
+        /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
+        $query = $this->createQuery();
+        $query->statement(sprintf('SELECT count(*) AS counter, DATE(FROM_UNIXTIME(tstamp)) AS dayDate FROM %s WHERE tstamp > %d AND tstamp < %d GROUP BY dayDate ORDER BY dayDate ASC', static::$table, $startDate->getTimestamp(), $endDate->getTimestamp()));
+        return $query->execute(true);
     }
 
     /**

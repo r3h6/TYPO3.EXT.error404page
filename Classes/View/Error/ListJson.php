@@ -19,5 +19,5 @@ namespace R3H6\Error404page\View\Error;
  */
 class ListJson extends \TYPO3\CMS\Extbase\Mvc\View\JsonView
 {
-    protected $variablesToRender = array('errors');
+    protected $variablesToRender = array('errors', 'demand');
 }
