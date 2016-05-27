@@ -12,7 +12,7 @@
 
 $EM_CONF[$_EXTKEY] = array(
 	'title' => 'Error 404 page',
-	'description' => 'Custom error 404 page',
+	'description' => 'Custom error 404 pages made simple. Use TYPO3 pages for display error documents. Works for multi domain and multilingual installations.',
 	'category' => 'fe',
 	'author' => 'R3 H6',
 	'author_email' => 'r3h6@outlook.com',
