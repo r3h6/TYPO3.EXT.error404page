@@ -54,7 +54,7 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
     public function findErrorGroupedByDay(\DateTime $startDate = null, \DateTime $endDate = null)
     {
         if ($endDate === null) {
-            $endDate = new \DateTime('today midnight');
+            $endDate = new \DateTime('tomorrow');
         }
         if ($startDate === null) {
             $minTime = (new \DateTime('today midnight -1 month'))->getTimestamp();
