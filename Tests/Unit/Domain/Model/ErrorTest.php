@@ -219,4 +219,17 @@ class ErrorTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 			$this->subject
 		);
 	}
+
+	/**
+	 * @test
+	 */
+	public function toArrayReturnsArray()
+	{
+		$this->assertArraySubset(
+			[
+				'pid' => null,
+			],
+			$this->subject->toArray()
+		);
+	}
 }

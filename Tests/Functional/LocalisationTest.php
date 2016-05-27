@@ -22,7 +22,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 /**
  * Functional test case for the FindErrorPage.
  */
-class FindErrorPageTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
+class LocalisationTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
 {
     use \R3H6\Error404page\Tests\Functional\BasicFrontendEnvironmentTrait;
 
