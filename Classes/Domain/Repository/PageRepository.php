@@ -43,6 +43,11 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
     protected $extensionConfiguration;
 
     /**
+     * @var array
+     */
+    protected $rootPageHostMap = [];
+
+    /**
      * Initialize object
      */
     public function initializeObject()
@@ -51,23 +56,33 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
         $this->pageRepository->sys_language_uid = $this->getSystemLanguage();
     }
 
+    /**
+     * Finds the root page uid for a given host.
+     *
+     * @param  string $host
+     * @return int
+     */
     public function findRootPageByHost($host)
     {
-        $rootPageUid = 0;
-        $domains = $this->domainRepository->findAllNonRedirectDomains();
-        foreach ($domains as $domain) {
-            if (strpos($host, $domain['domainName']) === 0) {
-                $rootPageUid = (int) $domain['pid'];
-                break;
+        if (!isset($this->rootPageHostMap[$host])) {
+            $rootPageUid = 0;
+            $domains = $this->domainRepository->findAllNonRedirectDomains();
+            foreach ($domains as $domain) {
+                if (strpos($host, $domain['domainName']) === 0) {
+                    $rootPageUid = (int) $domain['pid'];
+                    break;
+                }
             }
+            if ($rootPageUid === 0) {
+                $rootPages = $this->getDatabaseConnection()->exec_SELECTgetRows('uid', 'pages', 'pid=0 AND is_siteroot=1' . $this->pageRepository->enableFields('pages'));
+                if (count($rootPages) === 1) {
+                    $rootPageUid = (int) $rootPages[0]['uid'];
+                }
+            }
+            $this->rootPageHostMap[$host] = $rootPageUid;
         }
 
-        $rootPages = $this->getDatabaseConnection()->exec_SELECTgetRows('uid', 'pages', 'pid=0 AND is_siteroot=1' . $this->pageRepository->enableFields('pages'));
-        if (count($rootPages) === 1) {
-            $rootPageUid = (int) $rootPages[0]['uid'];
-        }
-
-        return $rootPageUid;
+        return $this->rootPageHostMap[$host];
     }
 
     /**
