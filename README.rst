@@ -12,7 +12,7 @@ Documentation
 
 Custom error 404 pages made simple. Use TYPO3 pages for display error documents. Works for multi domain and multilingual installations.
 
-This extension adds a new custom page type for rendering custom 404 error pages.
+This extension adds a new custom page type for rendering 404 documents.
 
 
 Screenshots
