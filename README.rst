@@ -18,12 +18,12 @@ This extension adds a new custom page type for rendering custom 404 error pages.
 Screenshots
 -----------
 
-.. figure:: ./Documentation/Images/ModulPage.png
+.. figure:: ./Documentation/Images/ModulePage.png
    :alt: New page type.
    :width: 200px
 
-.. figure:: ./Documentation/Images/ModulStatistic.png
-   :alt: Optional statistic backend modul.
+.. figure:: ./Documentation/Images/ModuleStatistic.png
+   :alt: Optional statistic backend module.
    :width: 200px
 
 
@@ -50,10 +50,10 @@ Configuration
     If you change the page type, you must update the doktype of your previously created error pages by yourself.
 
 
-Statistic
----------
+Log and statistic
+-----------------
 
-If enabled, the last 100'000 errors are logged and listed in the backend modul "Error statistic".
+If log is enabled, the last 100'000 errors are logged and listed in the backend modul "Error statistic".
 
 
 Contributing
