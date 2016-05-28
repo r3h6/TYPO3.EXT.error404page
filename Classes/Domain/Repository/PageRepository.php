@@ -43,12 +43,46 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
     protected $extensionConfiguration;
 
     /**
+     * @var array
+     */
+    protected $rootPageHostMap = [];
+
+    /**
      * Initialize object
      */
     public function initializeObject()
     {
         $this->pageRepository->init(false);
         $this->pageRepository->sys_language_uid = $this->getSystemLanguage();
+    }
+
+    /**
+     * Finds the root page uid for a given host.
+     *
+     * @param  string $host
+     * @return int
+     */
+    public function findRootPageByHost($host)
+    {
+        if (!isset($this->rootPageHostMap[$host])) {
+            $rootPageUid = 0;
+            $domains = $this->domainRepository->findAllNonRedirectDomains();
+            foreach ($domains as $domain) {
+                if (strpos($host, $domain['domainName']) === 0) {
+                    $rootPageUid = (int) $domain['pid'];
+                    break;
+                }
+            }
+            if ($rootPageUid === 0) {
+                $rootPages = $this->getDatabaseConnection()->exec_SELECTgetRows('uid', 'pages', 'pid=0 AND is_siteroot=1' . $this->pageRepository->enableFields('pages'));
+                if (count($rootPages) === 1) {
+                    $rootPageUid = (int) $rootPages[0]['uid'];
+                }
+            }
+            $this->rootPageHostMap[$host] = $rootPageUid;
+        }
+
+        return $this->rootPageHostMap[$host];
     }
 
     /**
@@ -59,14 +93,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      */
     public function findErrorPageByHost($host)
     {
-        $rootPageUid = 0;
-        $domains = $this->domainRepository->findAllNonRedirectDomains();
-        foreach ($domains as $domain) {
-            if (strpos($host, $domain['domainName']) === 0) {
-                $rootPageUid = (int) $domain['pid'];
-            }
-        }
-
+        $rootPageUid = $this->findRootPageByHost($host);
         $errorPages = $this->getAccessibleErrorPages();
         if ($rootPageUid) {
             foreach ($errorPages as $errorPage) {
@@ -92,7 +119,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      */
     protected function getAccessibleErrorPages()
     {
-        $doktype = $this->extensionConfiguration->doktypeError404page();
+        $doktype = $this->extensionConfiguration->get('doktypeError404page');
 
         $errorPages = (array) $this->getDatabaseConnection()->exec_SELECTgetRows(
             'uid',

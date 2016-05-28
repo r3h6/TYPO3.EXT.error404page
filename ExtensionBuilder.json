@@ -1,14 +1,136 @@
 {
     "modules": [
+        {
+            "config": {
+                "position": [
+                    240,
+                    102
+                ]
+            },
+            "name": "New Model Object",
+            "value": {
+                "actionGroup": {
+                    "_default0_list": true,
+                    "_default1_show": false,
+                    "_default2_new_create": false,
+                    "_default3_edit_update": false,
+                    "_default4_delete": false,
+                    "customActions": [
+                        "deleteAll"
+                    ]
+                },
+                "name": "Error",
+                "objectsettings": {
+                    "addDeletedField": false,
+                    "addHiddenField": false,
+                    "addStarttimeEndtimeFields": false,
+                    "aggregateRoot": true,
+                    "categorizable": false,
+                    "description": "",
+                    "mapToTable": "",
+                    "parentClass": "",
+                    "sorting": false,
+                    "type": "ValueObject",
+                    "uid": "1144252219907"
+                },
+                "propertyGroup": {
+                    "properties": [
+                        {
+                            "allowedFileTypes": "",
+                            "maxItems": "1",
+                            "propertyDescription": "Url",
+                            "propertyIsExcludeField": false,
+                            "propertyIsRequired": true,
+                            "propertyName": "url",
+                            "propertyType": "Text",
+                            "uid": "774256755640"
+                        },
+                        {
+                            "allowedFileTypes": "",
+                            "maxItems": "1",
+                            "propertyDescription": "Root page",
+                            "propertyIsExcludeField": false,
+                            "propertyIsRequired": true,
+                            "propertyName": "rootPage",
+                            "propertyType": "Integer",
+                            "uid": "150532476374"
+                        },
+                        {
+                            "allowedFileTypes": "",
+                            "maxItems": "1",
+                            "propertyDescription": "Reason",
+                            "propertyIsExcludeField": false,
+                            "propertyIsRequired": true,
+                            "propertyName": "reason",
+                            "propertyType": "Text",
+                            "uid": "867566621235"
+                        },
+                        {
+                            "allowedFileTypes": "",
+                            "maxItems": "1",
+                            "propertyDescription": "Counter",
+                            "propertyIsExcludeField": false,
+                            "propertyIsRequired": false,
+                            "propertyName": "counter",
+                            "propertyType": "Integer",
+                            "uid": "1393277544388"
+                        },
+                        {
+                            "allowedFileTypes": "",
+                            "maxItems": "1",
+                            "propertyDescription": "Last referer",
+                            "propertyIsExcludeField": false,
+                            "propertyIsRequired": false,
+                            "propertyName": "referer",
+                            "propertyType": "Text",
+                            "uid": "1398445632288"
+                        },
+                        {
+                            "allowedFileTypes": "",
+                            "maxItems": "1",
+                            "propertyDescription": "IP",
+                            "propertyIsExcludeField": false,
+                            "propertyIsRequired": false,
+                            "propertyName": "ip",
+                            "propertyType": "String",
+                            "uid": "330639666707"
+                        },
+                        {
+                            "allowedFileTypes": "",
+                            "maxItems": "1",
+                            "propertyDescription": "User agent",
+                            "propertyIsExcludeField": false,
+                            "propertyIsRequired": false,
+                            "propertyName": "userAgent",
+                            "propertyType": "String",
+                            "uid": "811489195919"
+                        }
+                    ]
+                },
+                "relationGroup": {
+                    "relations": [
 
+                    ]
+                }
+            }
+        }
     ],
     "properties": {
         "backendModules": [
-
+            {
+                "actions": {
+                    "controllerActionCombinations": "Error=>dashboard,list,deleteAll"
+                },
+                "description": "List url's which raised a page ot found error.",
+                "key": "statistic",
+                "mainModule": "web",
+                "name": "Error statistic",
+                "tabLabel": "Error statistic"
+            }
         ],
         "description": "Custom error 404 page",
         "emConf": {
-            "category": "plugin",
+            "category": "fe",
             "custom_category": "",
             "dependsOn": "typo3 => 7.6.0-7.6.99\n",
             "disableLocalization": true,
@@ -17,12 +139,12 @@
             "sourceLanguage": "en",
             "state": "beta",
             "targetVersion": "7.6.0-7.6.99",
-            "version": ""
+            "version": "1.1.0"
         },
         "extensionKey": "error404page",
-        "name": "Page 404",
-        "originalExtensionKey": "",
-        "originalVendorName": "",
+        "name": "Error 404 page",
+        "originalExtensionKey": "error404page",
+        "originalVendorName": "R3H6",
         "persons": [
             {
                 "company": "",
@@ -40,7 +162,7 @@
 
     ],
     "log": {
-        "last_modified": "2016-01-07 09:56",
+        "last_modified": "2016-05-01 09:34",
         "extension_builder_version": "7.6.0",
         "be_user": " (1)"
     }

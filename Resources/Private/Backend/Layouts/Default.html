@@ -1,0 +1,41 @@
+
+<f:be.container
+	includeCssFiles="{
+		0: '{f:uri.resource(path: \'StyleSheets/statistic.css\')}'
+	}"
+	includeRequireJsModules="{
+		0: '{f:uri.resource(path: \'JavaScripts/statistic.js\')}'
+	}"
+>
+	<div class="module" data-module-id="" data-module-name="">
+		<div class="module-docheader t3js-module-docheader" style="height: auto;">
+			<div class="module-docheader-bar module-docheader-bar-navigation t3js-module-docheader-bar t3js-module-docheader-bar-navigation" style="height: auto;">
+				<div class="module-docheader-bar-column-left">
+					<f:be.buttons.csh />
+				</div>
+				<div class="module-docheader-bar-column-right">
+					<f:be.pagePath />
+					<f:be.pageInfo />
+				</div>
+			</div>
+			<div class="module-docheader-bar module-docheader-bar-buttons t3js-module-docheader-bar t3js-module-docheader-bar-buttons" style="height: auto;">
+				<div class="module-docheader-bar-column-left">
+					<div class="btn-toolbar" role="toolbar" aria-label="">
+						<div class="btn-group" role="group" aria-label="">
+							<span class="btn btn-sm btn-default"><f:be.buttons.icon uri="{f:uri.action(action: 'deleteAll')}" title="{f:translate(key: 'btn.delete_all')}" icon="actions-edit-delete" /></span>
+						</div>
+					</div>
+				</div>
+				<div class="module-docheader-bar-column-right">
+					<div class="btn-toolbar" role="toolbar" aria-label="">
+						<f:be.buttons.shortcut />
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="module-body t3js-module-body">
+				<f:flashMessages />
+				<f:render section="content" />
+		</div>
+	</div>
+</f:be.container>
