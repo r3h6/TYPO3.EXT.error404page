@@ -1,0 +1,26 @@
+.ellipsis {
+    position: relative !important;
+}
+.ellipsis:before {
+    content: '&nbsp;';
+    visibility: hidden;
+}
+.ellipsis span {
+    position: absolute;
+    left: 0;
+    right: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: inherit;
+    padding-top: 0;
+}
+.table-errors {
+    width: 100%;
+}
+.table-errors .col-url {
+    width: 90%;
+}
+.table-errors .col-counter {
+    text-align: right;
+}

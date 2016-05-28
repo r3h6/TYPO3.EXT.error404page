@@ -1,0 +1,49 @@
+<html xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<f:layout name="Default" />
+
+
+<f:section name="content">
+
+<h1><f:translate key="title.view.dashboard" /></h1>
+
+<div class="panel panel-space panel-default recordlist">
+	<div class="panel-heading">
+		<f:translate key="title.error_grouped_by_day" />
+	</div>
+	<div class="table-fit">
+		<canvas width="400" height="100" data-chart="{f:uri.action(action: 'list', format: 'json', arguments: {demand: 'ErrorGroupedByDay'})}"></canvas>
+	</div>
+</div>
+
+<div class="panel panel-space panel-default recordlist">
+	<div class="panel-heading">
+		<f:translate key="title.error_top_urls" />
+	</div>
+	<div class="table-fit">
+		<table  class="table table-striped table-errors">
+			<thead>
+				<tr>
+					<th class="col-icon"></th>
+					<th class="col-url"><f:translate key="tx_error404page_domain_model_error.url" /></th>
+					<th class="col-counter"><f:translate key="tx_error404page_domain_model_error.counter" /></th>
+				</tr>
+			</thead>
+			<tbody>
+				<f:for each="{errors}" as="error">
+					<tr class="log-row">
+						<td class="col-icon"><core:icon identifier="apps-pagetree-error404page" size="small" /></td>
+						<td class="col-url ellipsis"><span>{error.url}</span></td>
+						<td class="col-counter">{error.counter}</td>
+					</tr>
+				</f:for>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+</f:section>
+
+</html>
+
+
