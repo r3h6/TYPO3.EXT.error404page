@@ -57,7 +57,7 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
             $endDate = new \DateTime('tomorrow');
         }
         if ($startDate === null) {
-            $minTime = (new \DateTime('today midnight -1 month'))->getTimestamp();
+            $minTime = (new \DateTime('@' . $endDate->getTimestamp()))->modify('-1 month')->getTimestamp();
             /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
             $query = $this->createQuery();
             $query->statement(sprintf('SELECT MIN(tstamp) AS minTime FROM %s', static::$table));
@@ -70,7 +70,18 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
         $query = $this->createQuery();
         $query->statement(sprintf('SELECT count(*) AS counter, DATE(FROM_UNIXTIME(tstamp)) AS dayDate FROM %s WHERE tstamp > %d AND tstamp < %d GROUP BY dayDate ORDER BY dayDate ASC', static::$table, $startDate->getTimestamp(), $endDate->getTimestamp()));
-        return $query->execute(true);
+        $results = $query->execute(true);
+        return $results;
+        $errors = [];
+
+        $interval = new \DateInterval('P1D');
+        $dateRange = new \DatePeriod($startDate, $interval, $endDate);
+
+        foreach ($dateRange as $date) {
+            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($date->format('Y-m-d'));
+        }
+
+        return $errors;
     }
 
     /**
