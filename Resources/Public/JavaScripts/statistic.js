@@ -1,16 +1,21 @@
-define(["jquery", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"], function($) {
+(function (factory) {
+if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module depending on jQuery.
+    // define(['jquery'], factory);
+    define(["jquery", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"], factory);
+} else {
+    // No AMD. Register plugin with global jQuery object.
+    factory(jQuery);
+}
+}(function ($) {
 
     var r3h6 = r3h6 || {};
 
     r3h6.ErrorGroupedByDayChart = function (el, data)
     {
-        this.el = el;
-        this.$el = $(el);
-        this.data = data;
-
-        labels = [];
-        points = [];
-        for (var i in data['errors']){
+        var labels = [];
+        var points = [];
+        for (var i = 0; i < data['errors'].length; i++){
             labels.push(data['errors'][i]['dayDate']);
             points.push(data['errors'][i]['counter']);
         }
@@ -21,6 +26,7 @@ define(["jquery", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.m
                 datasets: [{
                     label: "Errors",
                     fill: false,
+                    lineTension: 0,
                     data: points
                 }]
             },
@@ -45,4 +51,4 @@ define(["jquery", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.m
         })
     });
 
-});
+}));

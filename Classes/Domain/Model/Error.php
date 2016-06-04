@@ -250,7 +250,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
             $properties[GeneralUtility::camelCaseToLowerCaseUnderscored($key)] = $value;
         }
         $properties['tstamp'] = time();
-        $properties['pid'] = $this->pid;
+        $properties['pid'] = (int) $this->pid;
         if ($this->_isNew()) {
             $properties['crdate'] = $properties['tstamp'];
         }

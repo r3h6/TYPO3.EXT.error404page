@@ -3,30 +3,18 @@ namespace R3H6\Error404page\Domain\Repository;
 
 use R3H6\Error404page\Domain\Model\Error;
 
-/***************************************************************
- *
- *  Copyright notice
- *
- *  (c) 2016 R3 H6 <r3h6@outlook.com>
- *
- *  All rights reserved
- *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+/*                                                                        *
+ * This script is part of the TYPO3 project - inspiring people to share!  *
+ *                                                                        *
+ * TYPO3 is free software; you can redistribute it and/or modify it under *
+ * the terms of the GNU General Public License version 3 as published by  *
+ * the Free Software Foundation.                                          *
+ *                                                                        *
+ * This script is distributed in the hope that it will be useful, but     *
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHAN-    *
+ * TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General      *
+ * Public License for more details.                                       *
+ *                                                                        */
 
 /**
  * The repository for Errors
@@ -57,7 +45,7 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
             $endDate = new \DateTime('tomorrow');
         }
         if ($startDate === null) {
-            $minTime = (new \DateTime('today midnight -1 month'))->getTimestamp();
+            $minTime = (new \DateTime('@' . $endDate->getTimestamp()))->modify('-1 month')->getTimestamp();
             /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
             $query = $this->createQuery();
             $query->statement(sprintf('SELECT MIN(tstamp) AS minTime FROM %s', static::$table));
@@ -67,10 +55,33 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
             }
             $startDate = new \DateTime('@' . $minTime);
         }
+
         /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
         $query = $this->createQuery();
         $query->statement(sprintf('SELECT count(*) AS counter, DATE(FROM_UNIXTIME(tstamp)) AS dayDate FROM %s WHERE tstamp > %d AND tstamp < %d GROUP BY dayDate ORDER BY dayDate ASC', static::$table, $startDate->getTimestamp(), $endDate->getTimestamp()));
-        return $query->execute(true);
+
+        // Fetch results
+        $results = $query->execute(true);
+
+        // Fill the gaps with empty entries
+        $errors = [];
+        $interval = new \DateInterval('P1D');
+        $dateRange = new \DatePeriod($startDate, $interval, $endDate);
+        $i = 0;
+        foreach ($dateRange as $date) {
+            $dayDate = $date->format('Y-m-d');
+            if (isset($results[$i]) && $results[$i]['dayDate'] === $dayDate) {
+                $errors[] = $results[$i];
+                $i++;
+            } else {
+                $errors[] = [
+                    'counter' => '0',
+                    'dayDate' => $dayDate,
+                ];
+            }
+        }
+
+        return $errors;
     }
 
     /**
