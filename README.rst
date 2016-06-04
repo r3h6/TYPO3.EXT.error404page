@@ -20,11 +20,11 @@ Screenshots
 
 .. figure:: ./Documentation/Images/ModulePage.png
    :alt: New page type.
-   :width: 200px
+   :width: 400px
 
 .. figure:: ./Documentation/Images/ModuleStatistic.png
    :alt: Optional statistic backend module.
-   :width: 200px
+   :width: 400px
 
 
 Usage
@@ -32,10 +32,12 @@ Usage
 
 Simply install the extension and create a new page with your error message.
 
-You can use following markers in your content:
+You can use following markers in your content.
 
-:###CURRENT_URL###: The url of the called page.
-:###REASON###: A text why the error occured.
+:###CURRENT_URL###:
+    The url of the called page.
+:###REASON###:
+    A text why the error occured.
 
 
 Configuration

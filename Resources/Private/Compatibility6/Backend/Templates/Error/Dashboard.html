@@ -1,0 +1,34 @@
+<f:layout name="Default" />
+
+<f:section name="content">
+
+<h1><f:translate key="title.view.dashboard" /></h1>
+
+<table border="0" cellpadding="0" cellspacing="0" class="typo3-dblist">
+	<tr class="t3-row-header">
+		<td><f:translate key="title.error_grouped_by_day" /></td>
+	</tr>
+	<tr>
+		<td><canvas width="400" height="100" data-chart="{f:uri.action(action: 'list', format: 'json', arguments: {demand: 'ErrorGroupedByDay'})}"></canvas></td>
+	</tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" class="typo3-dblist table-errors">
+	<tr class="t3-row-header">
+		<td colspan="3"><f:translate key="title.error_top_urls" /></td>
+	</tr>
+	<tr class="c-headLine">
+		<td class="col-icon"></td>
+		<td class="col-url"><f:translate key="tx_error404page_domain_model_error.url" /></td>
+		<td class="col-counter"><f:translate key="tx_error404page_domain_model_error.counter" /></td>
+	</tr>
+	<f:for each="{errors}" as="error">
+		<tr class="db_list_normal">
+			<td class="col-icon"><img src="{f:uri.resource(path: 'Icons/tx_error404page_domain_model_error.png')}" /></td>
+			<td class="col-url ellipsis"><span>{error.url}</span></td>
+			<td class="col-counter">{error.counter}</td>
+		</tr>
+	</f:for>
+</table>
+
+</f:section>
