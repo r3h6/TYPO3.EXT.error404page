@@ -13,13 +13,9 @@ if (typeof define === 'function' && define.amd) {
 
     r3h6.ErrorGroupedByDayChart = function (el, data)
     {
-        this.el = el;
-        this.$el = $(el);
-        this.data = data;
-
-        labels = [];
-        points = [];
-        for (var i in data['errors']){
+        var labels = [];
+        var points = [];
+        for (var i = 0; i < data['errors'].length; i++){
             labels.push(data['errors'][i]['dayDate']);
             points.push(data['errors'][i]['counter']);
         }
@@ -30,6 +26,7 @@ if (typeof define === 'function' && define.amd) {
                 datasets: [{
                     label: "Errors",
                     fill: false,
+                    lineTension: 0,
                     data: points
                 }]
             },
