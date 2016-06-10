@@ -2,6 +2,7 @@
 namespace R3H6\Error404page\Domain\Repository;
 
 use R3H6\Error404page\Domain\Model\Error;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -85,9 +86,22 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
     }
 
     /**
+     * Returns eldest error
+     *
+     * @return R3H6\Error404page\Domain\Model\Error
+     */
+    public function findEldestError()
+    {
+        /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
+        $query = $this->createQuery();
+        $query->setOrderings(['tstamp' => QueryInterface::ORDER_ASCENDING]);
+        return $query->execute()->getFirst();
+    }
+
+    /**
      * @param $limit
      */
-    public function findErrorTopReasons($limit = 10)
+    public function findErrorTopReasons(\DateTime $startDate = null, $limit = 10)
     {
         // /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
         // $query = $this->createQuery();
@@ -98,7 +112,7 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
     /**
      * @param $limit
      */
-    public function findErrorTopUrls($limit = 10)
+    public function findErrorTopUrls($limit = 10, \DateTime $startDate = null)
     {
         /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
         $query = $this->createQuery();

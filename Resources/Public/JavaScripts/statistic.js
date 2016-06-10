@@ -2,7 +2,7 @@
 if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module depending on jQuery.
     // define(['jquery'], factory);
-    define(["jquery", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"], factory);
+    define(["jquery", "//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"], factory);
 } else {
     // No AMD. Register plugin with global jQuery object.
     factory(jQuery);
@@ -45,8 +45,14 @@ if (typeof define === 'function' && define.amd) {
     $(document).ready(function($) {
         $('canvas[data-chart]').each(function(i, el){
             $.get($(this).data('chart'), function(data){
-                var className = data['demand'] + 'Chart';
-                (new r3h6[className](el, data));
+                // try {
+                    var className = data['demand']['type'] + 'Chart';
+                    console.log(className);
+                    (new r3h6[className](el, data));
+                // } catch (e){
+                //     console.log(e);
+                //     // top.TYPO3.Notification.error("", e);
+                // }
             });
         })
     });

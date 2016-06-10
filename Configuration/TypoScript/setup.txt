@@ -7,3 +7,16 @@ module.tx_error404page_web_error404pagestatistic {
 		layoutRootPaths.0 = EXT:error404page/Resources/Private/Backend/Layouts/
 	}
 }
+config.tx_extbase{
+	persistence{
+		classes{
+			R3H6\Error404page\Domain\Model\Error {
+				mapping {
+					columns {
+						tstamp.mapOnProperty = timestamp
+					}
+				}
+			}
+		}
+	}
+}

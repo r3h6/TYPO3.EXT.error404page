@@ -75,14 +75,12 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
      */
     protected $userAgent = '';
 
-    // public function __construct($url, $rootPage, $reason, $referer, $userAgent, $ip)
-    // {
-    //     $this->url = $url;
-    //     $this->rootPage = $rootPage;
-    //     $this->reason = $reason;
-    //     $this->referer = $referer;
-    //     $this->userAgent
-    // }
+    /**
+     * Timestamp
+     *
+     * @var integer
+     */
+    protected $timestamp = 0;
 
     /**
      * Returns the url
@@ -236,6 +234,26 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     public function setUserAgent($userAgent)
     {
         $this->userAgent = $userAgent;
+    }
+
+    /**
+     * Gets the timestamp
+     *
+     * @return integer
+     */
+    public function getTimestamp()
+    {
+        return $this->timestamp;
+    }
+
+    /**
+     * Sets the timestamp
+     *
+     * @param integer $timestamp
+     */
+    public function setTimestamp($timestamp)
+    {
+        $this->timestamp = $timestamp;
     }
 
     /**

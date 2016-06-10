@@ -26,6 +26,8 @@ namespace R3H6\Error404page\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use R3H6\Error404page\Domain\Model\Dto\ErrorDemand;
+use TYPO3\CMS\Extbase\Property\TypeConverter\PersistentObjectConverter;
 /**
  * ErrorController
  */
@@ -43,31 +45,46 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
     /**
      * action dashboard
      *
+     * @param \R3H6\Error404page\Domain\Model\Dto\ErrorDemand $demand
      * @return void
      */
-    public function dashboardAction()
+    public function dashboardAction(ErrorDemand $demand = null)
     {
+        if ($demand === null) {
+            $demand = $this->objectManager->get(ErrorDemand::class);
+            $demand->setMinTime(strtotime(ErrorDemand::TIME_ONE_WEEK_AGO));
+        }
         $errors = $this->errorRepository->findErrorTopUrls(100);
         $this->view->assign('errors', $errors);
+        $this->view->assign('demand', $demand);
     }
+
+    protected function initializeListAction()
+    {
+        $propertyMappingConfiguration = $this->arguments->getArgument('demand')->getPropertyMappingConfiguration();
+        $propertyMappingConfiguration->allowAllProperties();
+        $propertyMappingConfiguration->setTypeConverterOption(PersistentObjectConverter::class, PersistentObjectConverter::CONFIGURATION_CREATION_ALLOWED, true);
+    }
+
 
     /**
      * action list
      *
-     * @param string $demand
+     * @param \R3H6\Error404page\Domain\Model\Dto\ErrorDemand $demand
      * @return void
      */
-    public function listAction($demand = null)
+    public function listAction(ErrorDemand $demand)
     {
-        switch ($demand) {
-            case 'ErrorGroupedByDay':
-                $errors = $this->errorRepository->findErrorGroupedByDay();
+        switch ($demand->getType()) {
+            case ErrorDemand::TYPE_GROUPED_BY_DAY:
+                $errors = $this->errorRepository->findErrorGroupedByDay(
+                    new \DateTime('@' . $demand->getMinTime())
+                );
                 break;
-            case 'ErrorTopUrls':
-                $errors = $this->errorRepository->findErrorTopUrls();
-                break;
-            default:
-                throw new \InvalidArgumentException(sprintf('Unknown demand "%s"', $demand), 1462195924);
+            case ErrorDemand::TYPE_TOP_URLS:
+                $errors = $this->errorRepository->findErrorTopUrls(
+                    new \DateTime('@' . $demand->getMinTime())
+                );
                 break;
         }
         $this->view->assign('errors', $errors);
