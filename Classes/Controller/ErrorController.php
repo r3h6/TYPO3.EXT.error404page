@@ -78,7 +78,7 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
         switch ($demand->getType()) {
             case ErrorDemand::TYPE_GROUPED_BY_DAY:
                 $errors = $this->errorRepository->findErrorGroupedByDay(
-                    new \DateTime('@' . $demand->getMinTime())
+                    $demand->getMinTime() ? new \DateTime('@' . $demand->getMinTime()): null
                 );
                 break;
             case ErrorDemand::TYPE_TOP_URLS:

@@ -46,38 +46,50 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
             $endDate = new \DateTime('tomorrow');
         }
         if ($startDate === null) {
-            $minTime = (new \DateTime('@' . $endDate->getTimestamp()))->modify('-1 month')->getTimestamp();
+            $minTime = $endDate->getTimestamp() - 86400;
             /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
             $query = $this->createQuery();
             $query->statement(sprintf('SELECT MIN(tstamp) AS minTime FROM %s', static::$table));
             $result = $query->execute(true);
             if (!empty($result)) {
-                $minTime = max((int) $result[0]['minTime'], $minTime);
+                $minTime = min((int) $result[0]['minTime'], $minTime);
             }
             $startDate = new \DateTime('@' . $minTime);
         }
 
+
         /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
         $query = $this->createQuery();
-        $query->statement(sprintf('SELECT count(*) AS counter, DATE(FROM_UNIXTIME(tstamp)) AS dayDate FROM %s WHERE tstamp > %d AND tstamp < %d GROUP BY dayDate ORDER BY dayDate ASC', static::$table, $startDate->getTimestamp(), $endDate->getTimestamp()));
+
+        $range = $endDate->diff($startDate);
+
+        if ($range->days > 180) {
+            $timeFormat = '%Y.%m';
+            $interval = new \DateInterval('P1M');
+        } else {
+            $timeFormat = '%Y.%m.%d';
+            $interval = new \DateInterval('P1D');
+        }
+
+        $query->statement(sprintf('SELECT count(*) AS counter,  DATE_FORMAT(FROM_UNIXTIME(tstamp), "%s") AS timeUnit FROM %s WHERE tstamp > %d AND tstamp < %d GROUP BY timeUnit ORDER BY timeUnit ASC', $timeFormat, static::$table, $startDate->getTimestamp(), $endDate->getTimestamp()));
 
         // Fetch results
         $results = $query->execute(true);
 
         // Fill the gaps with empty entries
         $errors = [];
-        $interval = new \DateInterval('P1D');
         $dateRange = new \DatePeriod($startDate, $interval, $endDate);
         $i = 0;
+        $timeFormat = str_replace('%', '', $timeFormat);
         foreach ($dateRange as $date) {
-            $dayDate = $date->format('Y-m-d');
-            if (isset($results[$i]) && $results[$i]['dayDate'] === $dayDate) {
+            $timeUnit = $date->format($timeFormat);
+            if (isset($results[$i]) && $results[$i]['timeUnit'] === $timeUnit) {
                 $errors[] = $results[$i];
                 $i++;
             } else {
                 $errors[] = [
                     'counter' => '0',
-                    'dayDate' => $dayDate,
+                    'timeUnit' => $timeUnit,
                 ];
             }
         }
