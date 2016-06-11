@@ -56,6 +56,11 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
      */
     protected $type = '';
 
+    /**
+     * [$limit description]
+     * @var integer
+     */
+    protected $limit = 0;
 
     /**
      * Gets the minTime
@@ -115,6 +120,26 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     public function setType($type)
     {
         $this->type = $type;
+    }
+
+    /**
+     * Gets the limit
+     *
+     * @return integer
+     */
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    /**
+     * Sets the limit
+     *
+     * @param integer $limit
+     */
+    public function setLimit($limit)
+    {
+        $this->limit = $limit;
     }
 
     public function getMinDateOptions()

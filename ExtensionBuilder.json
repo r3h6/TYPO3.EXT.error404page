@@ -11,11 +11,12 @@
             "value": {
                 "actionGroup": {
                     "_default0_list": true,
-                    "_default1_show": false,
+                    "_default1_show": true,
                     "_default2_new_create": false,
                     "_default3_edit_update": false,
                     "_default4_delete": false,
                     "customActions": [
+                        "dashboard",
                         "deleteAll"
                     ]
                 },
@@ -119,7 +120,7 @@
         "backendModules": [
             {
                 "actions": {
-                    "controllerActionCombinations": "Error=>dashboard,list,deleteAll"
+                    "controllerActionCombinations": "Error=>dashboard,list,show,deleteAll"
                 },
                 "description": "List url's which raised a page ot found error.",
                 "key": "statistic",

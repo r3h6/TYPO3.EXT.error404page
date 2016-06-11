@@ -28,6 +28,7 @@ namespace R3H6\Error404page\Controller;
 
 use R3H6\Error404page\Domain\Model\Dto\ErrorDemand;
 use TYPO3\CMS\Extbase\Property\TypeConverter\PersistentObjectConverter;
+
 /**
  * ErrorController
  */
@@ -53,8 +54,9 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
         if ($demand === null) {
             $demand = $this->objectManager->get(ErrorDemand::class);
             $demand->setMinTime(strtotime(ErrorDemand::TIME_ONE_WEEK_AGO));
+            $demand->setLimit(100);
         }
-        $errors = $this->errorRepository->findErrorTopUrls(100);
+        $errors = $this->errorRepository->findErrorTopUrls();
         $this->view->assign('errors', $errors);
         $this->view->assign('demand', $demand);
     }
@@ -66,7 +68,6 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
         $propertyMappingConfiguration->setTypeConverterOption(PersistentObjectConverter::class, PersistentObjectConverter::CONFIGURATION_CREATION_ALLOWED, true);
     }
 
-
     /**
      * action list
      *
@@ -75,19 +76,20 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      */
     public function listAction(ErrorDemand $demand)
     {
-        switch ($demand->getType()) {
-            case ErrorDemand::TYPE_GROUPED_BY_DAY:
-                $errors = $this->errorRepository->findErrorGroupedByDay(
-                    $demand->getMinTime() ? new \DateTime('@' . $demand->getMinTime()): null
-                );
-                break;
-            case ErrorDemand::TYPE_TOP_URLS:
-                $errors = $this->errorRepository->findErrorTopUrls(
-                    new \DateTime('@' . $demand->getMinTime())
-                );
-                break;
-        }
+        $errors = $this->errorRepository->findDemanded($demand);
         $this->view->assign('errors', $errors);
+        $this->view->assign('demand', $demand);
+    }
+
+    /**
+     * action show
+     *
+     * @param \R3H6\Error404page\Domain\Model\Error $error
+     * @return void
+     */
+    public function showAction(\R3H6\Error404page\Domain\Model\Error $error)
+    {
+        $this->view->assign('error', $error);
         $this->view->assign('demand', $demand);
     }
 

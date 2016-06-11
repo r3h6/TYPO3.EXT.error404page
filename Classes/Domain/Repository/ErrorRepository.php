@@ -17,6 +17,8 @@ use TYPO3\CMS\Extbase\Persistence\QueryInterface;
  * Public License for more details.                                       *
  *                                                                        */
 
+use R3H6\Error404page\Domain\Model\Dto\ErrorDemand;
+
 /**
  * The repository for Errors
  */
@@ -36,6 +38,21 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         $this->setDefaultQuerySettings($querySettings);
     }
 
+    public function findDemanded(ErrorDemand $demand)
+    {
+        switch ($demand->getType()) {
+            case ErrorDemand::TYPE_GROUPED_BY_DAY:
+                return $this->findErrorGroupedByDay(
+                    $demand->getMinTime() ? new \DateTime('@' . $demand->getMinTime()): null
+                );
+            case ErrorDemand::TYPE_TOP_URLS:
+                return $this->findErrorTopUrls(
+                    new \DateTime('@' . $demand->getMinTime())
+                );
+        }
+        return null;
+    }
+
     /**
      * @param \DateTime $startDate
      * @param \DateTime $endDate
@@ -47,12 +64,10 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         }
         if ($startDate === null) {
             $minTime = $endDate->getTimestamp() - 86400;
-            /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
-            $query = $this->createQuery();
-            $query->statement(sprintf('SELECT MIN(tstamp) AS minTime FROM %s', static::$table));
-            $result = $query->execute(true);
-            if (!empty($result)) {
-                $minTime = min((int) $result[0]['minTime'], $minTime);
+            /** @var R3H6\Error404page\Domain\Model\Error */
+            $error = $this->findEldestError();
+            if ($error !== null) {
+                $minTime = min($error->getTimestamp(), $minTime);
             }
             $startDate = new \DateTime('@' . $minTime);
         }

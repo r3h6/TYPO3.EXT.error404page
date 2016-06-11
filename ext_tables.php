@@ -29,7 +29,7 @@ if (TYPO3_MODE === 'BE' && \R3H6\Error404page\Configuration\ExtensionConfigurati
 		'statistic',	// Submodule key
 		'',						// Position
 		array(
-			'Error' => 'dashboard, list, deleteAll',
+			'Error' => 'dashboard, list, show, deleteAll',
 
 		),
 		array(
