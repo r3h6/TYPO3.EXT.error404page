@@ -28,7 +28,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
      * @var integer
      */
     protected $timestamp = 0;
-    
+
     /**
      * Url
      *
@@ -36,7 +36,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
      * @validate NotEmpty
      */
     protected $url = '';
-    
+
     /**
      * Root page
      *
@@ -44,7 +44,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
      * @validate NotEmpty
      */
     protected $rootPage = 0;
-    
+
     /**
      * Reason
      *
@@ -52,7 +52,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
      * @validate NotEmpty
      */
     protected $reason = '';
-    
+
     /**
      * Counter
      *
@@ -60,35 +60,35 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
      * @validate NotEmpty
      */
     protected $counter = 0;
-    
+
     /**
      * Last referer
      *
      * @var string
      */
     protected $referer = '';
-    
+
     /**
      * IP
      *
      * @var string
      */
     protected $ip = '';
-    
+
     /**
      * User agent
      *
      * @var string
      */
     protected $userAgent = '';
-    
+
     /**
      * urlHash
      *
      * @var string
      */
     protected $urlHash = '';
-    
+
     /**
      * Returns the url
      *
@@ -98,7 +98,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     {
         return $this->url;
     }
-    
+
     /**
      * Sets the url
      *
@@ -108,8 +108,9 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     public function setUrl($url)
     {
         $this->url = $url;
+        $this->urlHash = sha1($url);
     }
-    
+
     /**
      * Returns the reason
      *
@@ -119,7 +120,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     {
         return $this->reason;
     }
-    
+
     /**
      * Sets the reason
      *
@@ -130,19 +131,15 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     {
         if (preg_match('/Cannot decode "([^"]+)"/si', $reason)) {
             $reason = 'Cannot decode path';
-        } else {
-            if (preg_match('/Could not map alias "([^"]+)" to an id\\./si', $reason)) {
-                $reason = 'Could not map alias to an id.';
-            } else {
-                if (preg_match('/Segment "([^"]+)" was not a keyword for a postVarSet as expected on page with id=([0-9]+)\\./si', $reason, $matches)) {
-                    $reason = 'Segment was not a keyword for a postVarSet as expected on page';
-                    $this->pid = (int) $matches[2];
-                }
-            }
+        } else if (preg_match('/Could not map alias "([^"]+)" to an id\\./si', $reason)) {
+            $reason = 'Could not map alias to an id.';
+        } else if (preg_match('/Segment "([^"]+)" was not a keyword for a postVarSet as expected on page with id=([0-9]+)\\./si', $reason, $matches)) {
+            $reason = 'Segment was not a keyword for a postVarSet as expected on page';
+            $this->pid = (int) $matches[2];
         }
         $this->reason = $reason;
     }
-    
+
     /**
      * Returns the ip
      *
@@ -152,7 +149,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     {
         return $this->ip;
     }
-    
+
     /**
      * Sets the ip
      *
@@ -163,27 +160,27 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     {
         $this->ip = $ip;
     }
-    
+
     /**
      * Gets the counter
      *
-     * @return int [description]
+     * @return int
      */
     public function getCounter()
     {
         return $this->counter;
     }
-    
+
     /**
      * Sets the counter
      *
-     * @param int $counter [description]
+     * @param int $counter
      */
     public function setCounter($counter)
     {
         $this->counter = $counter;
     }
-    
+
     /**
      * Returns the referer
      *
@@ -193,7 +190,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     {
         return $this->referer;
     }
-    
+
     /**
      * Sets the referer
      *
@@ -204,7 +201,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     {
         $this->referer = $referer;
     }
-    
+
     /**
      * Returns the rootPage
      *
@@ -214,7 +211,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     {
         return $this->rootPage;
     }
-    
+
     /**
      * Sets the rootPage
      *
@@ -225,7 +222,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     {
         $this->rootPage = $rootPage;
     }
-    
+
     /**
      * Returns the userAgent
      *
@@ -235,7 +232,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     {
         return $this->userAgent;
     }
-    
+
     /**
      * Sets the userAgent
      *
@@ -246,7 +243,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     {
         $this->userAgent = $userAgent;
     }
-    
+
     /**
      * Gets the timestamp
      *
@@ -256,7 +253,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     {
         return $this->timestamp;
     }
-    
+
     /**
      * Sets the timestamp
      *
@@ -266,7 +263,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     {
         $this->timestamp = $timestamp;
     }
-    
+
     /**
      * Returns properties array
      *
@@ -284,9 +281,10 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
             $properties['crdate'] = $properties['tstamp'];
         }
         unset($properties['uid']);
+        unset($properties['timestamp']);
         return $properties;
     }
-    
+
     /**
      * Returns the urlHash
      *
@@ -296,16 +294,4 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     {
         return $this->urlHash;
     }
-    
-    /**
-     * Sets the urlHash
-     *
-     * @param string $urlHash
-     * @return void
-     */
-    public function setUrlHash($urlHash)
-    {
-        $this->urlHash = $urlHash;
-    }
-
 }

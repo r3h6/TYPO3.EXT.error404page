@@ -26,9 +26,9 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 {
 
     const MAX_ENTRIES = 10000;
-    
+
     protected static $table = 'tx_error404page_domain_model_error';
-    
+
     public function initializeObject()
     {
         /** @var $querySettings \TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings */
@@ -37,19 +37,21 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         $querySettings->setRespectSysLanguage(false);
         $this->setDefaultQuerySettings($querySettings);
     }
-    
+
     /**
      * @param ErrorDemand $demand
      */
     public function findDemanded(ErrorDemand $demand)
     {
         switch ($demand->getType()) {
-            case ErrorDemand::TYPE_GROUPED_BY_DAY:    return $this->findErrorGroupedByDay($demand->getMinTime() ? new \DateTime('@' . $demand->getMinTime()) : null);
-            case ErrorDemand::TYPE_TOP_URLS:    return $this->findErrorTopUrls(new \DateTime('@' . $demand->getMinTime()));
+            case ErrorDemand::TYPE_GROUPED_BY_DAY:
+                return $this->findErrorGroupedByDay($demand->getMinTime() ? new \DateTime('@' . $demand->getMinTime()) : null);
+            case ErrorDemand::TYPE_TOP_URLS:
+                return $this->findErrorTopUrls(new \DateTime('@' . $demand->getMinTime()));
         }
         return null;
     }
-    
+
     /**
      * @param \DateTime $startDate
      * @param \DateTime $endDate
@@ -100,7 +102,7 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         }
         return $errors;
     }
-    
+
     /**
      * Returns eldest error
      *
@@ -113,16 +115,16 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         $query->setOrderings(array('tstamp' => QueryInterface::ORDER_ASCENDING));
         return $query->execute()->getFirst();
     }
-    
+
     /**
      * @param \DateTime $startDate
      * @param $limit
      */
     public function findErrorTopReasons(\DateTime $startDate = null, $limit = 10)
     {
-        
+
     }
-    
+
     /**
      * @param $limit
      * @param \DateTime $startDate
@@ -131,10 +133,33 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
     {
         /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
         $query = $this->createQuery();
-        $query->statement(sprintf('SELECT url, count(*) AS counter FROM %s GROUP BY url ORDER BY counter DESC LIMIT %d', static::$table, $limit));
+        $query->statement(sprintf('SELECT url_hash AS urlHash, url, count(*) AS counter FROM %s GROUP BY urlHash ORDER BY counter DESC LIMIT %d', static::$table, $limit));
         return $query->execute(true);
     }
-    
+
+    /**
+     * Checks if db fields are consistent
+     *
+     * @return boolean
+     */
+    public function isConsistent()
+    {
+        /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
+        $query = $this->createQuery();
+        $query->matching(
+            $query->logicalOr(
+                $query->equals('urlHash', null),
+                $query->equals('urlHash', '')
+            )
+        );
+        try {
+            return $query->count() === 0;
+        } catch (\Exception $exception) {
+
+        }
+        return false;
+    }
+
     /**
      * @param $url
      * @param $rootPage
@@ -153,20 +178,31 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         $error->setReferer($referer);
         $error->setUserAgent($userAgent);
         $error->setIp($ip);
+
+        $values = $error->toArray();
+        $this->getDatabaseConnection()->debugOutput = false;
         $count = $this->getDatabaseConnection()->exec_SELECTcountRows('*', self::$table);
         if ($count < self::MAX_ENTRIES) {
-            $this->getDatabaseConnection()->exec_INSERTquery(self::$table, $error->toArray());
+            $this->getDatabaseConnection()->exec_INSERTquery(self::$table, $values);
+            if ($this->getDatabaseConnection()->sql_errno()) {
+                unset($values['url_hash']);
+                $this->getDatabaseConnection()->exec_INSERTquery(self::$table, $values);
+            }
         } else {
             $row = $this->getDatabaseConnection()->exec_SELECTgetSingleRow('uid', self::$table, '1=1', '', 'tstamp ASC');
-            $this->getDatabaseConnection()->exec_UPDATEquery(self::$table, 'uid=' . $row['uid'], $error->toArray());
+            $this->getDatabaseConnection()->exec_UPDATEquery(self::$table, 'uid=' . $row['uid'], $values);
+            if ($this->getDatabaseConnection()->sql_errno()) {
+                unset($values['url_hash']);
+                $this->getDatabaseConnection()->exec_UPDATEquery(self::$table, 'uid=' . $row['uid'], $values);
+            }
         }
     }
-    
+
     public function deleteAll()
     {
         $this->getDatabaseConnection()->exec_TRUNCATEquery(self::$table);
     }
-    
+
     /**
      * @return TYPO3\CMS\Core\Database\DatabaseConnection
      */

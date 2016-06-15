@@ -3,6 +3,7 @@ namespace R3H6\Error404page\Controller;
 
 use R3H6\Error404page\Domain\Model\Dto\ErrorDemand;
 use TYPO3\CMS\Extbase\Property\TypeConverter\PersistentObjectConverter;
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -39,6 +40,9 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      */
     public function dashboardAction(ErrorDemand $demand = null)
     {
+        if ($this->errorRepository->isConsistent() === false) {
+            $this->addFlashMessage('Please execute the update script!', '', AbstractMessage::ERROR);
+        }
         if ($demand === null) {
             $demand = $this->objectManager->get(ErrorDemand::class);
             $demand->setMinTime(strtotime(ErrorDemand::TIME_ONE_WEEK_AGO));
@@ -72,10 +76,10 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
     /**
      * action show
      *
-     * @param \R3H6\Error404page\Domain\Model\Error $error
+     * @param  string $error
      * @return void
      */
-    public function showAction(\R3H6\Error404page\Domain\Model\Error $error)
+    public function showAction($error)
     {
         $this->view->assign('error', $error);
         $this->view->assign('demand', $demand);
