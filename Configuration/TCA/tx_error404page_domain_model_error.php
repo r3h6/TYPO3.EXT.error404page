@@ -11,14 +11,14 @@ return array(
 		'enablecolumns' => array(
 
 		),
-		'searchFields' => 'url,root_page,reason,counter,referer,ip,user_agent,',
+		'searchFields' => 'url,url_hash,root_page,reason,counter,referer,ip,user_agent,',
 		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('error404page') . 'Resources/Public/Icons/tx_error404page_domain_model_error.gif'
 	),
 	'interface' => array(
-		'showRecordFieldList' => 'url, root_page, reason, counter, referer, ip, user_agent',
+		'showRecordFieldList' => 'url, url_hash, root_page, reason, counter, referer, ip, user_agent',
 	),
 	'types' => array(
-		'1' => array('showitem' => 'url, root_page, reason, counter, referer, ip, user_agent, '),
+		'1' => array('showitem' => 'url, url_hash, root_page, reason, counter, referer, ip, user_agent, '),
 	),
 	'palettes' => array(
 		'1' => array('showitem' => ''),
@@ -34,6 +34,15 @@ return array(
 				'rows' => 15,
 				'eval' => 'trim,required'
 			)
+		),
+		'url_hash' => array(
+			'exclude' => 0,
+			'label' => 'LLL:EXT:error404page/Resources/Private/Language/locallang_db.xlf:tx_error404page_domain_model_error.url_hash',
+			'config' => array(
+				'type' => 'input',
+				'size' => 30,
+				'eval' => 'trim'
+			),
 		),
 		'root_page' => array(
 			'exclude' => 0,

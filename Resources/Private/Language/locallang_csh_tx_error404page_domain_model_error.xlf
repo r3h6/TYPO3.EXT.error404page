@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2016-05-01T21:34:37Z" product-name="error404page">
+	<file source-language="en" datatype="plaintext" original="messages" date="2016-06-11T15:19:24Z" product-name="error404page">
 		<header/>
 		<body>
 			<trans-unit id="url.description">
 				<source>Url</source>
+			</trans-unit>
+			<trans-unit id="url_hash.description">
+				<source>urlHash</source>
 			</trans-unit>
 			<trans-unit id="root_page.description">
 				<source>Root page</source>

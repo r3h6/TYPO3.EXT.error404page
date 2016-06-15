@@ -79,6 +79,31 @@ class ErrorTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 	/**
 	 * @test
 	 */
+	public function getUrlHashReturnsInitialValueForString()
+	{
+		$this->assertSame(
+			'',
+			$this->subject->getUrlHash()
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function setUrlHashForStringSetsUrlHash()
+	{
+		$this->subject->setUrlHash('Conceived at T3CON10');
+
+		$this->assertAttributeEquals(
+			'Conceived at T3CON10',
+			'urlHash',
+			$this->subject
+		);
+	}
+
+	/**
+	 * @test
+	 */
 	public function getRootPageReturnsInitialValueForInt()
 	{	}
 
@@ -109,26 +134,6 @@ class ErrorTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 		$this->assertAttributeEquals(
 			'Conceived at T3CON10',
 			'reason',
-			$this->subject
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function setReasonForStringSetsReason2()
-	{
-		$this->subject->setReason('Segment "test" was not a keyword for a postVarSet as expected on page with id=123.');
-
-		$this->assertAttributeEquals(
-			'Segment was not a keyword for a postVarSet as expected on page',
-			'reason',
-			$this->subject
-		);
-
-		$this->assertAttributeEquals(
-			123,
-			'pid',
 			$this->subject
 		);
 	}
@@ -217,19 +222,6 @@ class ErrorTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 			'Conceived at T3CON10',
 			'userAgent',
 			$this->subject
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function toArrayReturnsArray()
-	{
-		$this->assertArraySubset(
-			[
-				'pid' => null,
-			],
-			$this->subject->toArray()
 		);
 	}
 }

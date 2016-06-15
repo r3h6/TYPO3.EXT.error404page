@@ -7,6 +7,7 @@ CREATE TABLE tx_error404page_domain_model_error (
 	pid int(11) DEFAULT '0' NOT NULL,
 
 	url text NOT NULL,
+	url_hash varchar(255) DEFAULT '' NOT NULL,
 	root_page int(11) DEFAULT '0' NOT NULL,
 	reason text NOT NULL,
 	counter int(11) DEFAULT '0' NOT NULL,

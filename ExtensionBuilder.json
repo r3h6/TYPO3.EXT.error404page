@@ -49,6 +49,16 @@
                         {
                             "allowedFileTypes": "",
                             "maxItems": "1",
+                            "propertyDescription": "",
+                            "propertyIsExcludeField": false,
+                            "propertyIsRequired": false,
+                            "propertyName": "urlHash",
+                            "propertyType": "String",
+                            "uid": "48085350261"
+                        },
+                        {
+                            "allowedFileTypes": "",
+                            "maxItems": "1",
                             "propertyDescription": "Root page",
                             "propertyIsExcludeField": false,
                             "propertyIsRequired": true,
@@ -139,7 +149,7 @@
             "skipGenerateDocumentationTemplate": true,
             "sourceLanguage": "en",
             "state": "beta",
-            "targetVersion": "6.2.0-7.6.99",
+            "targetVersion": "7.6.0-7.6.99",
             "version": "1.2.0"
         },
         "extensionKey": "error404page",
@@ -163,7 +173,7 @@
 
     ],
     "log": {
-        "last_modified": "2016-05-01 09:34",
+        "last_modified": "2016-06-11 03:19",
         "extension_builder_version": "7.6.0",
         "be_user": " (1)"
     }
