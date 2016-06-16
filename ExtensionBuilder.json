@@ -149,8 +149,8 @@
             "skipGenerateDocumentationTemplate": true,
             "sourceLanguage": "en",
             "state": "beta",
-            "targetVersion": "7.6.0-7.6.99",
-            "version": "1.2.0"
+            "targetVersion": "6.2.0-7.6.99",
+            "version": "1.2.1"
         },
         "extensionKey": "error404page",
         "name": "Error 404 page",
