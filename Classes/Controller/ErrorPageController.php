@@ -98,7 +98,7 @@ class ErrorPageController
                 if ($errorPage !== null) {
                     // Fallback to default language if the site has no translation.
                     $lParam = isset($errorPage['_PAGES_OVERLAY_LANGUAGE']) ? $errorPage['_PAGES_OVERLAY_LANGUAGE'] : 0;
-                    $url = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST') . '/?id=' . $errorPage['uid'] . '&L=' . $lParam . '&tx_error404page_request=' . uniqid();
+                    $url = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST') . '/index.php?id=' . $errorPage['uid'] . '&L=' . $lParam . '&tx_error404page_request=' . uniqid();
                     $request = GeneralUtility::makeInstance(Request::class, $url);
                     $content = $request->send();
 
