@@ -34,10 +34,12 @@ Simply install the extension and create a new page with your error message.
 
 You can use following markers in your content.
 
+
 :###CURRENT_URL###:
-    The url of the called page.
+   The url of the called page.
+
 :###REASON###:
-    A text why the error occured.
+   A text why the error occured.
 
 
 Configuration
@@ -49,13 +51,24 @@ Configuration
 
 .. warning::
 
-    If you change the page type, you must update the doktype of your previously created error pages by yourself.
+   If you change the page type, you must update the doktype of your previously created error pages by yourself.
 
 
 Log and statistic
 -----------------
 
-If log is enabled, the last 100'000 errors are logged and listed in the backend modul "Error statistic".
+If log is enabled, the last 10'000 errors are logged and listed in the backend modul "Error statistic".
+
+
+FAQ
+---
+
+How it works?
+   The error handler makes a request to fetch the error page and returns it.
+
+Instead of the error page, the home page is shown?
+   Perhaps you have some htaccess rules that redirects the error handler's request.
+   Make sure it is possible to call your error page directly (ex. http://typo3.request.host/index.php?id=123&L=0&tx_error404page_request=ab12cd34de56).
 
 
 Contributing
