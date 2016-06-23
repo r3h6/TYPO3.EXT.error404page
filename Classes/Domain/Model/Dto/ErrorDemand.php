@@ -24,6 +24,7 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
 {
     const TYPE_GROUPED_BY_DAY = 'ErrorGroupedByDay';
     const TYPE_TOP_URLS = 'ErrorTopUrls';
+    const DEFAULT_LIMIT = 50;
 
 
     const TIME_ONE_WEEK_AGO = 'midnight -1 week';
@@ -60,7 +61,13 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
      * [$limit description]
      * @var integer
      */
-    protected $limit = 0;
+    protected $limit = self::DEFAULT_LIMIT;
+
+    /**
+     * [$urlHash description]
+     * @var string
+     */
+    protected $urlHash = '';
 
     /**
      * Gets the minTime
@@ -142,6 +149,31 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
         $this->limit = $limit;
     }
 
+    /**
+     * Gets the urlHash
+     *
+     * @return string
+     */
+    public function getUrlHash()
+    {
+        return $this->urlHash;
+    }
+
+    /**
+     * Sets the urlHash
+     *
+     * @param string $urlHash
+     */
+    public function setUrlHash($urlHash)
+    {
+        $this->urlHash = $urlHash;
+    }
+
+    /**
+     * Returns the date options
+     *
+     * @return array options for select
+     */
     public function getMinDateOptions()
     {
         $eldestError = $this->_errorRepository->findEldestError();
@@ -151,18 +183,18 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
         if ($eldestError !== null) {
             $minTime = strtotime(self::TIME_ONE_WEEK_AGO);
             if ($eldestError->getTimestamp() < $minTime) {
-                $options[$minTime] = LocalizationUtility::translate('tx_error404page_domain_model_dto_errordemand.min_date.week', 'error404page');
+                $options[$minTime] = LocalizationUtility::translate('tx_error404page_domain_model_dto_errordemand.min_date.7', 'error404page');
             }
             $minTime = strtotime(self::TIME_ONE_MONTH_AGO);
             if ($eldestError->getTimestamp() < $minTime) {
-                $options[$minTime] = LocalizationUtility::translate('tx_error404page_domain_model_dto_errordemand.min_date.month', 'error404page');
+                $options[$minTime] = LocalizationUtility::translate('tx_error404page_domain_model_dto_errordemand.min_date.31', 'error404page');
             }
             $minTime = strtotime(self::TIME_ONE_YEAR_AGO);
             if ($eldestError->getTimestamp() < $minTime) {
-                $options[$minTime] = LocalizationUtility::translate('tx_error404page_domain_model_dto_errordemand.min_date.year', 'error404page');
+                $options[$minTime] = LocalizationUtility::translate('tx_error404page_domain_model_dto_errordemand.min_date.365', 'error404page');
             }
         }
-        $options[0] = LocalizationUtility::translate('tx_error404page_domain_model_dto_errordemand.min_date.all', 'error404page');
+        $options[0] = LocalizationUtility::translate('tx_error404page_domain_model_dto_errordemand.min_date.0', 'error404page');
         return $options;
     }
 }

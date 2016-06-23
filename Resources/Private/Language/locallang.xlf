@@ -42,17 +42,17 @@
 			<trans-unit id="tx_error404page_domain_model_error.user_agent">
 				<source>User Agent</source>
 			</trans-unit>
-			<trans-unit id="tx_error404page_domain_model_dto_errordemand.min_date.all">
+			<trans-unit id="tx_error404page_domain_model_dto_errordemand.min_date.0">
 				<source>All</source>
 			</trans-unit>
-			<trans-unit id="tx_error404page_domain_model_dto_errordemand.min_date.year">
-				<source>Year</source>
+			<trans-unit id="tx_error404page_domain_model_dto_errordemand.min_date.365">
+				<source>Last year</source>
 			</trans-unit>
-			<trans-unit id="tx_error404page_domain_model_dto_errordemand.min_date.month">
-				<source>Month</source>
+			<trans-unit id="tx_error404page_domain_model_dto_errordemand.min_date.31">
+				<source>Last month</source>
 			</trans-unit>
-			<trans-unit id="tx_error404page_domain_model_dto_errordemand.min_date.week">
-				<source>Week</source>
+			<trans-unit id="tx_error404page_domain_model_dto_errordemand.min_date.7">
+				<source>Last 7 days</source>
 			</trans-unit>
 		</body>
 	</file>

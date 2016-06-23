@@ -6,13 +6,14 @@ return array(
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'cruser_id' => 'cruser_id',
-		'dividers2tabs' => TRUE,
-
+		'dividers2tabs' => true,
+		'hideTable' => true,
 		'enablecolumns' => array(
 
 		),
 		'searchFields' => 'url,url_hash,root_page,reason,counter,referer,ip,user_agent,',
-		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('error404page') . 'Resources/Public/Icons/tx_error404page_domain_model_error.gif'
+		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('error404page') . 'Resources/Public/Icons/tx_error404page_domain_model_error.gif',
+		'rootLevel' => -1
 	),
 	'interface' => array(
 		'showRecordFieldList' => 'url, url_hash, root_page, reason, counter, referer, ip, user_agent',
@@ -100,6 +101,6 @@ return array(
 				'eval' => 'trim'
 			),
 		),
-		
+
 	),
 );

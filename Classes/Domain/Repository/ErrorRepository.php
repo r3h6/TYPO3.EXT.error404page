@@ -29,6 +29,8 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 
     protected static $table = 'tx_error404page_domain_model_error';
 
+    private $isConsistent = null;
+
     public function initializeObject()
     {
         /** @var $querySettings \TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings */
@@ -43,23 +45,23 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      */
     public function findDemanded(ErrorDemand $demand)
     {
+        if (!$this->isConsistent()) {
+            return null;
+        }
+        $minDate = $demand->getMinTime() ? new \DateTime('@' . $demand->getMinTime()) : null;
         switch ($demand->getType()) {
             case ErrorDemand::TYPE_GROUPED_BY_DAY:
-                return $this->findErrorGroupedByDay($demand->getMinTime() ? new \DateTime('@' . $demand->getMinTime()) : null);
+                return $this->findErrorGroupedByDay($minDate, null, $demand->getUrlHash());
             case ErrorDemand::TYPE_TOP_URLS:
-                return $this->findErrorTopUrls(new \DateTime('@' . $demand->getMinTime()));
+                return $this->findErrorTopUrls($demand->getLimit(), $minDate);
         }
         return null;
     }
 
-    /**
-     * @param \DateTime $startDate
-     * @param \DateTime $endDate
-     */
-    public function findErrorGroupedByDay(\DateTime $startDate = null, \DateTime $endDate = null)
+    protected function normalizeDates(&$startDate, &$endDate)
     {
         if ($endDate === null) {
-            $endDate = new \DateTime('tomorrow');
+            $endDate = new \DateTime('tomorrow midnight');
         }
         if ($startDate === null) {
             $minTime = $endDate->getTimestamp() - 86400;
@@ -70,6 +72,15 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
             }
             $startDate = new \DateTime('@' . $minTime);
         }
+    }
+
+    /**
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     */
+    public function findErrorGroupedByDay(\DateTime $startDate = null, \DateTime $endDate = null, $urlHash = null)
+    {
+        $this->normalizeDates($startDate, $endDate);
         /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
         $query = $this->createQuery();
         $range = $endDate->diff($startDate);
@@ -80,12 +91,19 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
             $timeFormat = '%Y.%m.%d';
             $interval = new \DateInterval('P1D');
         }
-        $query->statement(sprintf('SELECT count(*) AS counter,  DATE_FORMAT(FROM_UNIXTIME(tstamp), "%s") AS timeUnit FROM %s WHERE tstamp > %d AND tstamp < %d GROUP BY timeUnit ORDER BY timeUnit ASC', $timeFormat, static::$table, $startDate->getTimestamp(), $endDate->getTimestamp()));
+
+        $where = sprintf('tstamp > %d AND tstamp < %d', $startDate->getTimestamp(), $endDate->getTimestamp());
+        if ($urlHash) {
+            $where .= ' AND url_hash="' . $this->getDatabaseConnection()->quoteStr($urlHash, static::$table) . '"';
+        }
+
+        $query->statement(sprintf('SELECT count(*) AS counter,  DATE_FORMAT(FROM_UNIXTIME(tstamp), "%s") AS timeUnit FROM %s WHERE %s GROUP BY timeUnit ORDER BY timeUnit ASC', $timeFormat, static::$table, $where));
         // Fetch results
         $results = $query->execute(true);
         // Fill the gaps with empty entries
         $errors = array();
-        $dateRange = new \DatePeriod($startDate, $interval, $endDate);
+        $shift = new \DateInterval('P1D');
+        $dateRange = new \DatePeriod($startDate->add($shift), $interval, $endDate->add($shift));
         $i = 0;
         $timeFormat = str_replace('%', '', $timeFormat);
         foreach ($dateRange as $date) {
@@ -129,11 +147,16 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      * @param $limit
      * @param \DateTime $startDate
      */
-    public function findErrorTopUrls($limit = 10, \DateTime $startDate = null)
+    public function findErrorTopUrls($limit = 10, \DateTime $startDate = null, \DateTime $endDate = null)
     {
+        $this->normalizeDates($startDate, $endDate);
+        $where = sprintf('tstamp > %d AND tstamp < %d', $startDate->getTimestamp(), $endDate->getTimestamp());
+
+        $sql = sprintf('SELECT url_hash AS urlHash, url, count(*) AS counter FROM %s WHERE %s GROUP BY urlHash ORDER BY counter DESC LIMIT %d', static::$table, $where, $limit);
+
         /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
         $query = $this->createQuery();
-        $query->statement(sprintf('SELECT url_hash AS urlHash, url, count(*) AS counter FROM %s GROUP BY urlHash ORDER BY counter DESC LIMIT %d', static::$table, $limit));
+        $query->statement($sql);
         return $query->execute(true);
     }
 
@@ -144,20 +167,22 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      */
     public function isConsistent()
     {
-        /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
-        $query = $this->createQuery();
-        $query->matching(
-            $query->logicalOr(
-                $query->equals('urlHash', null),
-                $query->equals('urlHash', '')
-            )
-        );
-        try {
-            return $query->count() === 0;
-        } catch (\Exception $exception) {
-
+        if ($this->isConsistent === null) {
+            /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
+            $query = $this->createQuery();
+            $query->matching(
+                $query->logicalOr(
+                    $query->equals('urlHash', null),
+                    $query->equals('urlHash', '')
+                )
+            );
+            try {
+                $this->isConsistent = $query->count() === 0;
+            } catch (\Exception $exception) {
+                $this->isConsistent = false;
+            }
         }
-        return false;
+        return $this->isConsistent;
     }
 
     /**

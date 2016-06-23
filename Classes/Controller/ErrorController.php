@@ -43,21 +43,23 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
         if ($this->errorRepository->isConsistent() === false) {
             $this->addFlashMessage('Please execute the update script!', '', AbstractMessage::ERROR);
         }
+
         if ($demand === null) {
             $demand = $this->objectManager->get(ErrorDemand::class);
             $demand->setMinTime(strtotime(ErrorDemand::TIME_ONE_WEEK_AGO));
             $demand->setLimit(100);
         }
-        $errors = $this->errorRepository->findErrorTopUrls();
+
+        $demand->setType(ErrorDemand::TYPE_TOP_URLS);
+        $errors = $this->errorRepository->findDemanded($demand);
+
         $this->view->assign('errors', $errors);
         $this->view->assign('demand', $demand);
     }
 
     protected function initializeListAction()
     {
-        $propertyMappingConfiguration = $this->arguments->getArgument('demand')->getPropertyMappingConfiguration();
-        $propertyMappingConfiguration->allowAllProperties();
-        $propertyMappingConfiguration->setTypeConverterOption(PersistentObjectConverter::class, PersistentObjectConverter::CONFIGURATION_CREATION_ALLOWED, true);
+        $this->allowAllProperties('demand');
     }
 
     /**
@@ -73,15 +75,20 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
         $this->view->assign('demand', $demand);
     }
 
+    protected function initializeShowAction()
+    {
+        $this->allowAllProperties('demand');
+    }
+
     /**
      * action show
      *
-     * @param  string $error
+     * @param \R3H6\Error404page\Domain\Model\Dto\ErrorDemand $demand
      * @return void
      */
-    public function showAction($error)
+    public function showAction(ErrorDemand $demand)
     {
-        $this->view->assign('error', $error);
+        $this->view->assign('error', $this->errorRepository->findOneByUrlHash($demand->getUrlHash()));
         $this->view->assign('demand', $demand);
     }
 
@@ -97,4 +104,10 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
         $this->redirect('dashboard');
     }
 
+    protected function allowAllProperties($argument)
+    {
+        $propertyMappingConfiguration = $this->arguments->getArgument($argument)->getPropertyMappingConfiguration();
+        $propertyMappingConfiguration->allowAllProperties();
+        $propertyMappingConfiguration->setTypeConverterOption(PersistentObjectConverter::class, PersistentObjectConverter::CONFIGURATION_CREATION_ALLOWED, true);
+    }
 }

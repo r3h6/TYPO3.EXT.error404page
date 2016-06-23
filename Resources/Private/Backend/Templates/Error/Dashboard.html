@@ -40,7 +40,7 @@
 					<tr class="log-row">
 						<td class="col-icon"><core:icon identifier="apps-pagetree-error404page" size="small" /></td>
 						<td class="col-url ellipsis">
-							<span><f:link.action action="show" arguments="{error: '{error.urlHash}'}">{error.url}</f:link.action></span>
+							<span><f:link.action action="show" arguments="{demand: {urlHash: error.urlHash, minTime: demand.minTime}}">{error.url}</f:link.action></span>
 						</td>
 						<td class="col-counter">{error.counter}</td>
 					</tr>
