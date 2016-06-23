@@ -4,12 +4,18 @@
 
 <h1><f:translate key="title.view.dashboard" /></h1>
 
+<f:form class="form-inline" name="demand" object="{demand}" action="dashboard">
+		<div class="form-group">
+			<f:form.select class="form-control" property="minTime" options="{demand.minDateOptions}" />
+		</div>
+</f:form>
+
 <table border="0" cellpadding="0" cellspacing="0" class="typo3-dblist">
 	<tr class="t3-row-header">
 		<td><f:translate key="title.error_grouped_by_day" /></td>
 	</tr>
 	<tr>
-		<td><canvas width="400" height="100" data-chart="{f:uri.action(action: 'list', format: 'json', arguments: {demand: 'ErrorGroupedByDay'})}"></canvas></td>
+		<td><canvas width="400" height="100" data-chart="{f:uri.action(action: 'list', format: 'json', arguments: {demand: {type: 'ErrorGroupedByDay', minTime: demand.minTime}})}"></canvas></td>
 	</tr>
 </table>
 
@@ -25,7 +31,7 @@
 	<f:for each="{errors}" as="error">
 		<tr class="db_list_normal">
 			<td class="col-icon"><img src="{f:uri.resource(path: 'Icons/tx_error404page_domain_model_error.png')}" /></td>
-			<td class="col-url ellipsis"><span>{error.url}</span></td>
+			<td class="col-url ellipsis"><span><f:link.action action="show" arguments="{demand: {urlHash: error.urlHash, minTime: demand.minTime}}">{error.url}</f:link.action></span></td>
 			<td class="col-counter">{error.counter}</td>
 		</tr>
 	</f:for>

@@ -9,11 +9,12 @@ if (!defined('TYPO3_MODE')) {
     'Error404page'
 );
 if (TYPO3_MODE === 'BE' && \R3H6\Error404page\Configuration\ExtensionConfiguration::get('enableErrorLog')) {
-	if (version_compare(\TYPO3\CMS\Core\Utility\VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '>=')) {
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup(
-			'<INCLUDE_TYPOSCRIPT: source="FILE:EXT:error404page/Configuration/TypoScript/setup.txt">'
-		);
-	} else {
+
+	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup(
+		'<INCLUDE_TYPOSCRIPT: source="FILE:EXT:error404page/Configuration/TypoScript/setup.txt">'
+	);
+
+	if (version_compare(\TYPO3\CMS\Core\Utility\VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
 		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup(
 			'<INCLUDE_TYPOSCRIPT: source="FILE:EXT:error404page/Configuration/TypoScript/Compatibility6/setup.txt">'
 		);
@@ -28,7 +29,7 @@ if (TYPO3_MODE === 'BE' && \R3H6\Error404page\Configuration\ExtensionConfigurati
 		'statistic',	// Submodule key
 		'',						// Position
 		array(
-			'Error' => 'dashboard, list, deleteAll',
+			'Error' => 'dashboard, list, show, deleteAll',
 
 		),
 		array(

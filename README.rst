@@ -27,6 +27,11 @@ Screenshots
    :width: 400px
 
 
+Installation
+------------
+
+Through `TER <https://typo3.org/extensions/repository/view/error404page/>`_ or with `composer <https://composer.typo3.org/satis.html#!/error404page>`_ (typo3-ter/error404page).
+
 Usage
 -----
 
@@ -34,12 +39,8 @@ Simply install the extension and create a new page with your error message.
 
 You can use following markers in your content.
 
-
-:###CURRENT_URL###:
-   The url of the called page.
-
-:###REASON###:
-   A text why the error occured.
+:###CURRENT_URL###: The url of the called page.
+:###REASON###: A text why the error occured.
 
 
 Configuration

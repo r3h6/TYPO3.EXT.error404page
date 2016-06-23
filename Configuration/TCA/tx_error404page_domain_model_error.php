@@ -6,19 +6,20 @@ return array(
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'cruser_id' => 'cruser_id',
-		'dividers2tabs' => TRUE,
-
+		'dividers2tabs' => true,
+		'hideTable' => true,
 		'enablecolumns' => array(
 
 		),
-		'searchFields' => 'url,root_page,reason,counter,referer,ip,user_agent,',
-		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('error404page') . 'Resources/Public/Icons/tx_error404page_domain_model_error.gif'
+		'searchFields' => 'url,url_hash,root_page,reason,counter,referer,ip,user_agent,',
+		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('error404page') . 'Resources/Public/Icons/tx_error404page_domain_model_error.gif',
+		'rootLevel' => -1
 	),
 	'interface' => array(
-		'showRecordFieldList' => 'url, root_page, reason, counter, referer, ip, user_agent',
+		'showRecordFieldList' => 'url, url_hash, root_page, reason, counter, referer, ip, user_agent',
 	),
 	'types' => array(
-		'1' => array('showitem' => 'url, root_page, reason, counter, referer, ip, user_agent, '),
+		'1' => array('showitem' => 'url, url_hash, root_page, reason, counter, referer, ip, user_agent, '),
 	),
 	'palettes' => array(
 		'1' => array('showitem' => ''),
@@ -34,6 +35,15 @@ return array(
 				'rows' => 15,
 				'eval' => 'trim,required'
 			)
+		),
+		'url_hash' => array(
+			'exclude' => 0,
+			'label' => 'LLL:EXT:error404page/Resources/Private/Language/locallang_db.xlf:tx_error404page_domain_model_error.url_hash',
+			'config' => array(
+				'type' => 'input',
+				'size' => 30,
+				'eval' => 'trim'
+			),
 		),
 		'root_page' => array(
 			'exclude' => 0,
@@ -91,6 +101,6 @@ return array(
 				'eval' => 'trim'
 			),
 		),
-		
+
 	),
 );

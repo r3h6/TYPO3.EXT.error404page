@@ -23,6 +23,13 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
 {
 
     /**
+     * Timestamp
+     *
+     * @var integer
+     */
+    protected $timestamp = 0;
+
+    /**
      * Url
      *
      * @var string
@@ -75,14 +82,12 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
      */
     protected $userAgent = '';
 
-    // public function __construct($url, $rootPage, $reason, $referer, $userAgent, $ip)
-    // {
-    //     $this->url = $url;
-    //     $this->rootPage = $rootPage;
-    //     $this->reason = $reason;
-    //     $this->referer = $referer;
-    //     $this->userAgent
-    // }
+    /**
+     * urlHash
+     *
+     * @var string
+     */
+    protected $urlHash = '';
 
     /**
      * Returns the url
@@ -103,6 +108,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     public function setUrl($url)
     {
         $this->url = $url;
+        $this->urlHash = sha1($url);
     }
 
     /**
@@ -125,9 +131,9 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     {
         if (preg_match('/Cannot decode "([^"]+)"/si', $reason)) {
             $reason = 'Cannot decode path';
-        } else if (preg_match('/Could not map alias "([^"]+)" to an id\./si', $reason)) {
+        } else if (preg_match('/Could not map alias "([^"]+)" to an id\\./si', $reason)) {
             $reason = 'Could not map alias to an id.';
-        } else if (preg_match('/Segment "([^"]+)" was not a keyword for a postVarSet as expected on page with id=([0-9]+)\./si', $reason, $matches)) {
+        } else if (preg_match('/Segment "([^"]+)" was not a keyword for a postVarSet as expected on page with id=([0-9]+)\\./si', $reason, $matches)) {
             $reason = 'Segment was not a keyword for a postVarSet as expected on page';
             $this->pid = (int) $matches[2];
         }
@@ -158,7 +164,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     /**
      * Gets the counter
      *
-     * @return int [description]
+     * @return int
      */
     public function getCounter()
     {
@@ -168,7 +174,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     /**
      * Sets the counter
      *
-     * @param int $counter [description]
+     * @param int $counter
      */
     public function setCounter($counter)
     {
@@ -239,13 +245,33 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
+     * Gets the timestamp
+     *
+     * @return integer
+     */
+    public function getTimestamp()
+    {
+        return $this->timestamp;
+    }
+
+    /**
+     * Sets the timestamp
+     *
+     * @param integer $timestamp
+     */
+    public function setTimestamp($timestamp)
+    {
+        $this->timestamp = $timestamp;
+    }
+
+    /**
      * Returns properties array
      *
      * @return array
      */
     public function toArray()
     {
-        $properties = [];
+        $properties = array();
         foreach ($this->_getProperties() as $key => $value) {
             $properties[GeneralUtility::camelCaseToLowerCaseUnderscored($key)] = $value;
         }
@@ -255,6 +281,17 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
             $properties['crdate'] = $properties['tstamp'];
         }
         unset($properties['uid']);
+        unset($properties['timestamp']);
         return $properties;
+    }
+
+    /**
+     * Returns the urlHash
+     *
+     * @return string $urlHash
+     */
+    public function getUrlHash()
+    {
+        return $this->urlHash;
     }
 }

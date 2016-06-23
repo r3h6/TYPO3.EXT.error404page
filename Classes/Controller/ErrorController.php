@@ -1,30 +1,22 @@
 <?php
 namespace R3H6\Error404page\Controller;
 
-/***************************************************************
- *
- *  Copyright notice
- *
- *  (c) 2016 R3 H6 <r3h6@outlook.com>
- *
- *  All rights reserved
- *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+use R3H6\Error404page\Domain\Model\Dto\ErrorDemand;
+use TYPO3\CMS\Extbase\Property\TypeConverter\PersistentObjectConverter;
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
+
+/*                                                                        *
+ * This script is part of the TYPO3 project - inspiring people to share!  *
+ *                                                                        *
+ * TYPO3 is free software; you can redistribute it and/or modify it under *
+ * the terms of the GNU General Public License version 3 as published by  *
+ * the Free Software Foundation.                                          *
+ *                                                                        *
+ * This script is distributed in the hope that it will be useful, but     *
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHAN-    *
+ * TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General      *
+ * Public License for more details.                                       *
+ *                                                                        */
 
 /**
  * ErrorController
@@ -43,34 +35,60 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
     /**
      * action dashboard
      *
+     * @param \R3H6\Error404page\Domain\Model\Dto\ErrorDemand $demand
      * @return void
      */
-    public function dashboardAction()
+    public function dashboardAction(ErrorDemand $demand = null)
     {
-        $errors = $this->errorRepository->findErrorTopUrls(100);
+        if ($this->errorRepository->isConsistent() === false) {
+            $this->addFlashMessage('Please execute the update script!', '', AbstractMessage::ERROR);
+        }
+
+        if ($demand === null) {
+            $demand = $this->objectManager->get(ErrorDemand::class);
+            $demand->setMinTime(strtotime(ErrorDemand::TIME_ONE_WEEK_AGO));
+            $demand->setLimit(100);
+        }
+
+        $demand->setType(ErrorDemand::TYPE_TOP_URLS);
+        $errors = $this->errorRepository->findDemanded($demand);
+
         $this->view->assign('errors', $errors);
+        $this->view->assign('demand', $demand);
+    }
+
+    protected function initializeListAction()
+    {
+        $this->allowAllProperties('demand');
     }
 
     /**
      * action list
      *
-     * @param string $demand
+     * @param \R3H6\Error404page\Domain\Model\Dto\ErrorDemand $demand
      * @return void
      */
-    public function listAction($demand = null)
+    public function listAction(ErrorDemand $demand)
     {
-        switch ($demand) {
-            case 'ErrorGroupedByDay':
-                $errors = $this->errorRepository->findErrorGroupedByDay();
-                break;
-            case 'ErrorTopUrls':
-                $errors = $this->errorRepository->findErrorTopUrls();
-                break;
-            default:
-                throw new \InvalidArgumentException(sprintf('Unknown demand "%s"', $demand), 1462195924);
-                break;
-        }
+        $errors = $this->errorRepository->findDemanded($demand);
         $this->view->assign('errors', $errors);
+        $this->view->assign('demand', $demand);
+    }
+
+    protected function initializeShowAction()
+    {
+        $this->allowAllProperties('demand');
+    }
+
+    /**
+     * action show
+     *
+     * @param \R3H6\Error404page\Domain\Model\Dto\ErrorDemand $demand
+     * @return void
+     */
+    public function showAction(ErrorDemand $demand)
+    {
+        $this->view->assign('error', $this->errorRepository->findOneByUrlHash($demand->getUrlHash()));
         $this->view->assign('demand', $demand);
     }
 
@@ -84,5 +102,12 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
         $this->errorRepository->deleteAll();
         $this->addFlashMessage('Truncated errors log.');
         $this->redirect('dashboard');
+    }
+
+    protected function allowAllProperties($argument)
+    {
+        $propertyMappingConfiguration = $this->arguments->getArgument($argument)->getPropertyMappingConfiguration();
+        $propertyMappingConfiguration->allowAllProperties();
+        $propertyMappingConfiguration->setTypeConverterOption(PersistentObjectConverter::class, PersistentObjectConverter::CONFIGURATION_CREATION_ALLOWED, true);
     }
 }
