@@ -25,19 +25,19 @@ use R3H6\Error404page\Domain\Repository\DomainRepository;
 class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
 {
     /**
-     * @var R3H6\Error404page\Domain\Repository\DomainRepository
+     * @var \R3H6\Error404page\Domain\Repository\DomainRepository
      * @inject
      */
     protected $domainRepository;
 
     /**
-     * @var TYPO3\CMS\Frontend\Page\PageRepository
+     * @var \TYPO3\CMS\Frontend\Page\PageRepository
      * @inject
      */
     protected $pageRepository;
 
     /**
-     * @var R3H6\Error404page\Configuration\ExtensionConfiguration
+     * @var \R3H6\Error404page\Configuration\ExtensionConfiguration
      * @inject
      */
     protected $extensionConfiguration;
