@@ -91,10 +91,10 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      * @param  string $host The domain name.
      * @return null|array Page record row on success.
      */
-    public function findErrorPageByHost($host)
+    public function findErrorPageByHost($host,$doktype)
     {
         $rootPageUid = $this->findRootPageByHost($host);
-        $errorPages = $this->getAccessibleErrorPages();
+        $errorPages = $this->getAccessibleErrorPages($doktype);
         if ($rootPageUid) {
             foreach ($errorPages as $errorPage) {
                 $rootLine = $this->pageRepository->getRootLine($errorPage['uid']);
@@ -117,9 +117,9 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      *
      * @return array
      */
-    protected function getAccessibleErrorPages()
+    protected function getAccessibleErrorPages($doktype)
     {
-        $doktype = $this->extensionConfiguration->get('doktypeError404page');
+        $doktype = $this->extensionConfiguration->get($doktype);
 
         $errorPages = (array) $this->getDatabaseConnection()->exec_SELECTgetRows(
             'uid',
@@ -128,6 +128,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
             '',
             'sorting'
         );
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($errorPages);
 
         $accessiblePages = [];
         foreach ($errorPages as $errorPage) {

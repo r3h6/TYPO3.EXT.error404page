@@ -12,6 +12,12 @@
             <trans-unit id="configuration.enableErrorLog">
                 <source>Log: Enable error log.</source>
             </trans-unit>
+            <trans-unit id="configuration.feature403">
+                <source>403: Enable special redirect for 403</source>
+            </trans-unit>
+            <trans-unit id="configuration.doktypeError403page">
+                <source>Doktype: Error page 403 doktype (10 &lt; x &lt; 200).</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

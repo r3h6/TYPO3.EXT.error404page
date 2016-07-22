@@ -8,6 +8,13 @@ if (!defined('TYPO3_MODE')) {
     \R3H6\Error404page\Configuration\ExtensionConfiguration::get('doktypeError404page'),
     'Error404page'
 );
+if (TYPO3_MODE === 'BE' && \R3H6\Error404page\Configuration\ExtensionConfiguration::get('doktypeError403page') && \R3H6\Error404page\Configuration\ExtensionConfiguration::get('feature403')) {
+	\R3H6\Error404page\Utility\CustomPageUtility::addDoktype(
+	    $_EXTKEY,
+	    \R3H6\Error404page\Configuration\ExtensionConfiguration::get('doktypeError403page'),
+	    'Error404page'
+	);
+}
 if (TYPO3_MODE === 'BE' && \R3H6\Error404page\Configuration\ExtensionConfiguration::get('enableErrorLog')) {
 
 	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup(
