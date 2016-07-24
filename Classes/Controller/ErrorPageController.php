@@ -32,25 +32,25 @@ class ErrorPageController
     const LOCALLANG = 'LLL:EXT:error404page/Resources/Private/Language/locallang.xlf';
 
     /**
-     * @var R3H6\Error404page\Domain\Repository\ErrorRepository
+     * @var \R3H6\Error404page\Domain\Repository\ErrorRepository
      * @inject
      */
     protected $errorRepository;
 
     /**
-     * @var R3H6\Error404page\Domain\Repository\PageRepository
+     * @var \R3H6\Error404page\Domain\Repository\PageRepository
      * @inject
      */
     protected $pageRepository;
 
     /**
-     * @var TYPO3\CMS\Core\Cache\CacheManager
+     * @var \TYPO3\CMS\Core\Cache\CacheManager
      * @inject
      */
     protected $cacheManager;
 
     /**
-     * @var TYPO3\CMS\Core\Cache\Frontend\FrontendInterface
+     * @var \TYPO3\CMS\Core\Cache\Frontend\FrontendInterface
      */
     protected $pageCache;
 
