@@ -65,7 +65,7 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         }
         if ($startDate === null) {
             $minTime = $endDate->getTimestamp() - 86400;
-            /** @var R3H6\Error404page\Domain\Model\Error */
+            /** @var \R3H6\Error404page\Domain\Model\Error */
             $error = $this->findEldestError();
             if ($error !== null) {
                 $minTime = min($error->getTimestamp(), $minTime);
@@ -81,7 +81,7 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
     public function findErrorGroupedByDay(\DateTime $startDate = null, \DateTime $endDate = null, $urlHash = null)
     {
         $this->normalizeDates($startDate, $endDate);
-        /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
+        /** @var \TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
         $query = $this->createQuery();
         $range = $endDate->diff($startDate);
         if ($range->days > 180) {
@@ -128,7 +128,7 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      */
     public function findEldestError()
     {
-        /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
+        /** @var \TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
         $query = $this->createQuery();
         $query->setOrderings(array('tstamp' => QueryInterface::ORDER_ASCENDING));
         return $query->execute()->getFirst();
@@ -154,7 +154,7 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
 
         $sql = sprintf('SELECT url_hash AS urlHash, url, count(*) AS counter FROM %s WHERE %s GROUP BY urlHash ORDER BY counter DESC LIMIT %d', static::$table, $where, $limit);
 
-        /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
+        /** @var \TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
         $query = $this->createQuery();
         $query->statement($sql);
         return $query->execute(true);
@@ -168,7 +168,7 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
     public function isConsistent()
     {
         if ($this->isConsistent === null) {
-            /** @var TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
+            /** @var \TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
             $query = $this->createQuery();
             $query->matching(
                 $query->logicalOr(
@@ -195,7 +195,7 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      */
     public function log($url, $rootPage, $reason, $referer, $userAgent, $ip)
     {
-        /** @var R3H6\Error404page\Domain\Model\Error $error */
+        /** @var \R3H6\Error404page\Domain\Model\Error $error */
         $error = $this->objectManager->get(Error::class);
         $error->setUrl($url);
         $error->setRootPage($rootPage);

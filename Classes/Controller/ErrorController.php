@@ -27,7 +27,7 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
     /**
      * ErrorRepository
      *
-     * @var R3H6\Error404page\Domain\Repository\ErrorRepository
+     * @var \R3H6\Error404page\Domain\Repository\ErrorRepository
      * @inject
      */
     protected $errorRepository = null;
