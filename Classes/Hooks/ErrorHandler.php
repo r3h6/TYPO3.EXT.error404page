@@ -15,7 +15,6 @@ namespace R3H6\Error404page\Hooks;
  * Public License for more details.                                       *
  *                                                                        */
 
-use Contemas\DeveloperTools\Utility\DebugUtility;
 use R3H6\Error404page\Controller\ErrorPageController;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
