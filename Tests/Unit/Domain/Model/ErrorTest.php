@@ -90,28 +90,27 @@ class ErrorTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 	/**
 	 * @test
 	 */
-	public function setUrlHashForStringSetsUrlHash()
+	public function getRootPageReturnsInitialValueForInt()
 	{
-		$this->subject->setUrlHash('Conceived at T3CON10');
-
-		$this->assertAttributeEquals(
-			'Conceived at T3CON10',
-			'urlHash',
-			$this->subject
+		$this->assertSame(
+			0,
+			$this->subject->getRootPage()
 		);
 	}
 
 	/**
 	 * @test
 	 */
-	public function getRootPageReturnsInitialValueForInt()
-	{	}
-
-	/**
-	 * @test
-	 */
 	public function setRootPageForIntSetsRootPage()
-	{	}
+	{
+		$this->subject->setRootPage(123);
+
+		$this->assertAttributeEquals(
+			123,
+			'rootPage',
+			$this->subject
+		);
+	}
 
 	/**
 	 * @test
@@ -142,13 +141,26 @@ class ErrorTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 	 * @test
 	 */
 	public function getCounterReturnsInitialValueForInt()
-	{	}
+	{
+		$this->assertSame(
+			0,
+			$this->subject->getCounter()
+		);
+	}
 
 	/**
 	 * @test
 	 */
 	public function setCounterForIntSetsCounter()
-	{	}
+	{
+		$this->subject->setCounter(123);
+
+		$this->assertAttributeEquals(
+			123,
+			'counter',
+			$this->subject
+		);
+	}
 
 	/**
 	 * @test
