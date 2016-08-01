@@ -77,6 +77,12 @@ class ErrorPageController
         if ($reason === null) {
             $reason = $params['reasonText'];
         }
+        // Define doktype
+        if (ExtensionConfiguration::get('feature403') && strpos($reason,'accessible')) {
+            $doktype = 'doktypeError403page';
+        }else{
+            $doktype = 'doktypeError404page';
+        }
 
         if (!isset($_GET['tx_error404page_request'])) {
 
@@ -91,10 +97,10 @@ class ErrorPageController
                 );
             }
 
-            $cacheIdentifier = sha1($host . '/' . $language);
+            $cacheIdentifier = sha1($host . '/' . $language . $doktype);
             $content = $this->pageCache->get($cacheIdentifier);
             if ($content === false) {
-                $errorPage = $this->pageRepository->findErrorPageByHost($host);
+                $errorPage = $this->pageRepository->findErrorPageByHost($host,$doktype);
                 if ($errorPage !== null) {
                     // Fallback to default language if the site has no translation.
                     $lParam = isset($errorPage['_PAGES_OVERLAY_LANGUAGE']) ? $errorPage['_PAGES_OVERLAY_LANGUAGE'] : 0;
