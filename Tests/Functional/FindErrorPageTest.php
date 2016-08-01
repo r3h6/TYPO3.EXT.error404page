@@ -26,6 +26,8 @@ class FindErrorPageTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
 {
     use \R3H6\Error404page\Tests\Functional\BasicFrontendEnvironmentTrait;
 
+    protected $backupGlobals = false;
+
     /**
      * @var R3H6\Error404page\Domain\Repository\PageRepository
      */

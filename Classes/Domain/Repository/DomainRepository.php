@@ -23,7 +23,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class DomainRepository implements \TYPO3\CMS\Core\SingletonInterface
 {
     /**
-     * @var TYPO3\CMS\Frontend\Page\PageRepository
+     * @var \TYPO3\CMS\Frontend\Page\PageRepository
      * @inject
      */
     protected $pageRepository;

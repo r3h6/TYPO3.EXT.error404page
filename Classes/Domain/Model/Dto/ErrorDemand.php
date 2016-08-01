@@ -34,7 +34,7 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     /**
      * ErrorRepository
      *
-     * @var R3H6\Error404page\Domain\Repository\ErrorRepository
+     * @var \R3H6\Error404page\Domain\Repository\ErrorRepository
      * @inject
      */
     protected $_errorRepository = null;
