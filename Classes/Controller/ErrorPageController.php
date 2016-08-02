@@ -17,6 +17,7 @@ namespace R3H6\Error404page\Controller;
 
 use R3H6\Error404page\Configuration\ExtensionConfiguration;
 use R3H6\Error404page\Domain\Repository\PageRepository;
+use R3H6\Error404page\Domain\Model\Error;
 use R3H6\Error404page\Http\Request;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Messaging\ErrorpageMessage;
@@ -65,36 +66,29 @@ class ErrorPageController
     /**
      * Renders the error page.
      *
-     * @param  array $params
-     * @param string $host Current host
-     * @param int $language System langauge uid
+     * @param  R3H6\Error404page\Domain\Model\Error $error
      * @return string Error page html.
      */
-    public function handleError(array $params, $host, $language)
+    public function handleError(Error $error)
     {
-        $currentUrl = $params['currentUrl'];
-        $reason = LocalizationUtility::translate('reasonText.' . sha1($params['reasonText']), 'error404page');
-        if ($reason === null) {
-            $reason = $params['reasonText'];
-        }
+        // $currentUrl = $params['currentUrl'];
+        // $reason = LocalizationUtility::translate('reasonText.' . sha1($params['reasonText']), 'error404page');
+        // if ($reason === null) {
+        //     $reason = $params['reasonText'];
+        // }
 
         if (!isset($_GET['tx_error404page_request'])) {
 
             if (ExtensionConfiguration::get('enableErrorLog')) {
-                $this->errorRepository->log(
-                    GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'),
-                    $this->pageRepository->findRootPageByHost($host),
-                    $params['reasonText'],
-                    GeneralUtility::getIndpEnv('HTTP_REFERER'),
-                    GeneralUtility::getIndpEnv('HTTP_USER_AGENT'),
-                    GeneralUtility::getIndpEnv('REMOTE_ADDR')
-                );
+                $this->errorRepository->log($error);
             }
 
-            $cacheIdentifier = sha1($host . '/' . $language);
+            $cacheIdentifier = ($error->getStatusCode() === Error::STATUS_CODE_FORBIDDEN) ?
+                sha1($error->getPid() . '/' . $error->getLanguage()): sha1($error->getHost() . '/' . $error->getLanguage());
+
             $content = $this->pageCache->get($cacheIdentifier);
             if ($content === false) {
-                $errorPage = $this->pageRepository->findErrorPageByHost($host);
+                $errorPage = $this->pageRepository->findErrorPageByError($error);
                 if ($errorPage !== null) {
                     // Fallback to default language if the site has no translation.
                     $lParam = isset($errorPage['_PAGES_OVERLAY_LANGUAGE']) ? $errorPage['_PAGES_OVERLAY_LANGUAGE'] : 0;

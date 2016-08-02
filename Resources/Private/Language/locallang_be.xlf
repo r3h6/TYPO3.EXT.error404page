@@ -4,13 +4,22 @@
         <header/>
         <body>
             <trans-unit id="pages.doktype.404">
-                <source>Error 404</source>
+                <source>Page 404: Not found</source>
+            </trans-unit>
+            <trans-unit id="pages.doktype.404">
+                <source>Page 403: Forbidden</source>
             </trans-unit>
             <trans-unit id="configuration.doktypeError404page">
-                <source>Doktype: Error page 404 doktype (10 &lt; x &lt; 200).</source>
+                <source>Doktype 404: Not found error page doktype (10 &lt; x &lt; 200).</source>
+            </trans-unit>
+            <trans-unit id="configuration.doktypeError403page">
+                <source>Doktype 403: Forbidden error page doktype (10 &lt; x &lt; 200).</source>
             </trans-unit>
             <trans-unit id="configuration.enableErrorLog">
                 <source>Log: Enable error log.</source>
+            </trans-unit>
+            <trans-unit id="configuration.feature403">
+                <source>Feature 403: Use own error page for handling 403 errors.</source>
             </trans-unit>
         </body>
     </file>

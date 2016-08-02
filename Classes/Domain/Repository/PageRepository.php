@@ -18,6 +18,7 @@ namespace R3H6\Error404page\Domain\Repository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use R3H6\Error404page\Configuration\ExtensionConfiguration;
 use R3H6\Error404page\Domain\Repository\DomainRepository;
+use R3H6\Error404page\Domain\Model\Error;
 
 /**
  * PageRepository
@@ -57,29 +58,71 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
     }
 
     /**
+     * [findErrorPageByError description]
+     *
+     * @param  \R3H6\Error404page\Domain\Model\Error $error
+     * @return null|array Page record row on success.
+     */
+    public function findErrorPageByError(Error $error)
+    {
+        if ($this->extensionConfiguration->get('feature403') && $error->getStatusCode() === Error::STATUS_CODE_NOT_FOUND) {
+            $errorPage = $this->find403PageByError($error);
+            if ($errorPage !== null) {
+                return $errorPage;
+            }
+        }
+        return $this->find404PageByError($error);
+    }
+
+    public function find403PageByError(Error $error)
+    {
+        $doktype = (int) $this->extensionConfiguration->get('doktype403page');
+        $rootLine = $this->pageRepository->getRootLine($error->getPid());
+        foreach ($rootLine as $pageRecord) {
+            if ($doktype === (int) $pageRecord['doktype']) {
+                return $pageRecord;
+            }
+        }
+        return null;
+    }
+
+    public function find404PageByError(Error $error)
+    {
+
+    }
+
+    public function findByIdentifier($identifier)
+    {
+        $page = $this->pageRepository->getPage((int) $identifier);
+        return empty($page) ? null: $page;
+    }
+
+    /**
      * Finds the root page uid for a given host.
      *
      * @param  string $host
-     * @return int
+     * @return array|null
      */
     public function findRootPageByHost($host)
     {
         if (!isset($this->rootPageHostMap[$host])) {
-            $rootPageUid = 0;
+            $rootPage = null;
             $domains = $this->domainRepository->findAllNonRedirectDomains();
             foreach ($domains as $domain) {
                 if (strpos($host, $domain['domainName']) === 0) {
-                    $rootPageUid = (int) $domain['pid'];
-                    break;
+                    $rootPage = $this->findByIdentifier($domain['pid']);
+                    if ($rootPage !== null) {
+                        break;
+                    }
                 }
             }
-            if ($rootPageUid === 0) {
+            if ($rootPage === null) {
                 $rootPages = $this->getDatabaseConnection()->exec_SELECTgetRows('uid', 'pages', 'pid=0 AND is_siteroot=1' . $this->pageRepository->enableFields('pages'));
                 if (count($rootPages) === 1) {
-                    $rootPageUid = (int) $rootPages[0]['uid'];
+                    $rootPage = $this->findByIdentifier($rootPages[0]['uid']);
                 }
             }
-            $this->rootPageHostMap[$host] = $rootPageUid;
+            $this->rootPageHostMap[$host] = $rootPage;
         }
 
         return $this->rootPageHostMap[$host];
@@ -91,25 +134,41 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      * @param  string $host The domain name.
      * @return null|array Page record row on success.
      */
-    public function findErrorPageByHost($host)
+    public function findOneByHostAndDoktype($host, $doktype)
     {
-        $rootPageUid = $this->findRootPageByHost($host);
-        $errorPages = $this->getAccessibleErrorPages();
-        if ($rootPageUid) {
-            foreach ($errorPages as $errorPage) {
-                $rootLine = $this->pageRepository->getRootLine($errorPage['uid']);
-                foreach ($rootLine as $page) {
-                    if ($rootPageUid === (int) $page['uid']) {
-                        return $errorPage;
+        $pages = $this->findAllByDoktype($doktype);
+        if (count($pages) === 1) {
+            return reset($pages);
+        }
+
+        $rootPage = $this->findRootPageByHost($host);
+        if ($rootPage !== null) {
+            foreach ($pages as $page) {
+                $rootLine = $this->pageRepository->getRootLine($page['uid']);
+                foreach ($rootLine as $parentPage) {
+                    if ($rootPageUid === (int) $parentPage['uid']) {
+                        return $page;
                     }
                 }
             }
         }
-        if (count($errorPages)) {
-            return reset($errorPages);
+
+        if (count($pages)) {
+            return reset($pages);
         }
 
         return null;
+    }
+
+    protected function checkPage(array $page)
+    {
+        $rootLine = (array) $this->pageRepository->getRootLine($page['uid']);
+        foreach ($rootLine as $parentPage) {
+            if (!$this->pageRepository->checkRecord('pages', (int) $parentPage['uid'])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -117,11 +176,11 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      *
      * @return array
      */
-    protected function getAccessibleErrorPages()
+    protected function findAllByDoktype($doktype)
     {
-        $doktype = $this->extensionConfiguration->get('doktypeError404page');
+        // $doktype = $this->extensionConfiguration->get('doktypeError404page');
 
-        $errorPages = (array) $this->getDatabaseConnection()->exec_SELECTgetRows(
+        $records = (array) $this->getDatabaseConnection()->exec_SELECTgetRows(
             'uid',
             'pages',
             sprintf('doktype=%d', $doktype) . $this->pageRepository->enableFields('pages'),
@@ -129,20 +188,14 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
             'sorting'
         );
 
-        $accessiblePages = [];
-        foreach ($errorPages as $errorPage) {
-            $page = $this->pageRepository->getPage($errorPage['uid']);
-            if (!empty($page)) {
-                $rootLine = $this->pageRepository->getRootLine($page['uid']);
-                foreach ($rootLine as $p) {
-                    if (!$this->pageRepository->checkRecord('pages', (int) $p['uid'])) {
-                        continue 2;
-                    }
-                }
-                $accessiblePages[] = $page;
+        $pages = [];
+        foreach ($records as $record) {
+            // $page = $this->pageRepository->getPage($record['uid']);
+            if ($this->checkPage($record['uid'])) {
+                $pages = $this->findByIdentifier($record['uid']);
             }
         }
-        return $accessiblePages;
+        return $pages;
     }
 
     /**

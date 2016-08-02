@@ -9,3 +9,12 @@ if (!defined('TYPO3_MODE')) {
     'Error404page',
     '404'
 );
+
+if (\R3H6\Error404page\Configuration\ExtensionConfiguration::get('feature403')) {
+    \R3H6\Error404page\Utility\CustomPageUtility::addDoktypeToPages(
+        \R3H6\Error404page\Configuration\ExtensionConfiguration::EXT_KEY,
+        \R3H6\Error404page\Configuration\ExtensionConfiguration::get('doktypeError403page'),
+        'Error403page',
+        '403'
+    );
+}

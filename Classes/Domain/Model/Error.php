@@ -21,6 +21,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
 {
+    const STATUS_CODE_NOT_FOUND = 404;
+    const STATUS_CODE_FORBIDDEN = 403;
 
     /**
      * Timestamp
@@ -90,6 +92,47 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     protected $urlHash = '';
 
     /**
+     * Language
+     *
+     * @var integer
+     */
+    protected $_language = 0;
+
+    /**
+     * Status code
+     *
+     * @var integer
+     */
+    protected $_statusCode = self::STATUS_CODE_NOT_FOUND;
+
+    /**
+     * Doktype
+     *
+     * @var integer
+     */
+    protected $_doktype = null;
+
+    /**
+     * Gets the language
+     *
+     * @return integer
+     */
+    public function getLanguage()
+    {
+        return $this->_language;
+    }
+
+    /**
+     * Sets the language
+     *
+     * @param integer $language
+     */
+    public function setLanguage($language)
+    {
+        $this->_language = $language;
+    }
+
+    /**
      * Returns the url
      *
      * @return string $url
@@ -137,6 +180,15 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
             $reason = 'Segment was not a keyword for a postVarSet as expected on page';
             $this->pid = (int) $matches[2];
         }
+
+        $extensionConfiguration = $this->getExtensionConfiguration();
+        if ($extensionConfiguration->get('feature403') && $reason === 'ID was not an accessible page') {
+            $this->_statusCode = self::STATUS_CODE_FORBIDDEN;
+            $this->_doktype = (int) $extensionConfiguration->get('_doktypeError403page');
+        } else {
+            $this->_doktype = (int) $extensionConfiguration->get('_doktypeError404page');
+        }
+
         $this->reason = $reason;
     }
 
@@ -262,6 +314,36 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     public function setTimestamp($timestamp)
     {
         $this->timestamp = $timestamp;
+    }
+
+    /**
+     * Gets the statusCode
+     *
+     * @return integer
+     */
+    public function getStatusCode()
+    {
+        return $this->_statusCode;
+    }
+
+    /**
+     * Sets the statusCode
+     *
+     * @param integer $statusCode
+     */
+    public function setStatusCode($statusCode)
+    {
+        $this->_statusCode = $statusCode;
+    }
+
+    public function getDoktype()
+    {
+        return $this->_doktype;
+    }
+
+    protected function getExtensionConfiguration()
+    {
+        return GeneralUtility::makeInstance(\R3H6\Error404page\Configuration\ExtensionConfiguration::class);
     }
 
     /**

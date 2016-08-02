@@ -16,6 +16,7 @@ namespace R3H6\Error404page\Hooks;
  *                                                                        */
 
 use R3H6\Error404page\Controller\ErrorPageController;
+use R3H6\Error404page\Domain\Model\Error;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -35,9 +36,26 @@ class ErrorHandler
      */
     public function pageNotFound(array $params, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe)
     {
-        $host = GeneralUtility::getIndpEnv('HTTP_HOST');
-        $language = $this->getSystemLanguage();
-        return GeneralUtility::makeInstance(ObjectManager::class)->get(ErrorPageController::class)->handleError($params, $host, $language);
+        // $host = GeneralUtility::getIndpEnv('HTTP_HOST');
+        // $language = $this->getSystemLanguage();
+
+        /** @var R3H6\Error404page\Domain\Model\Error $error */
+        $error = GeneralUtility::makeInstance(Error::class);
+        $error->setReason($params['reasonText']);
+        $error->setLanguage($this->getSystemLanguage());
+        $error->setUrl(GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'));
+        $error->setReferer(GeneralUtility::getIndpEnv('HTTP_REFERER'));
+        $error->setUserAgent(GeneralUtility::getIndpEnv('HTTP_USER_AGENT'));
+        $error->setIp(GeneralUtility::getIndpEnv('REMOTE_ADDR'));
+
+        if (false === empty($tsfe->page)) {
+            $error->setPid((int) $tsfe->page['uid']);
+        }
+
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($error);
+        // \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($tsfe);
+
+        // return GeneralUtility::makeInstance(ObjectManager::class)->get(ErrorPageController::class)->handleError($error);
     }
 
     /**
