@@ -41,12 +41,14 @@ class ErrorHandler
 
         /** @var R3H6\Error404page\Domain\Model\Error $error */
         $error = GeneralUtility::makeInstance(Error::class);
-        $error->setReason($params['reasonText']);
+        $error->setReasonText($params['reasonText']);
+        $error->setCurrentUrl($params['currentUrl']);
         $error->setLanguage($this->getSystemLanguage());
         $error->setUrl(GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'));
         $error->setReferer(GeneralUtility::getIndpEnv('HTTP_REFERER'));
         $error->setUserAgent(GeneralUtility::getIndpEnv('HTTP_USER_AGENT'));
         $error->setIp(GeneralUtility::getIndpEnv('REMOTE_ADDR'));
+        $error->setHost(GeneralUtility::getIndpEnv('HTTP_HOST'));
 
         if (false === empty($tsfe->page)) {
             $error->setPid((int) $tsfe->page['uid']);

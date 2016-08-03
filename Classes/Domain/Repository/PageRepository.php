@@ -46,7 +46,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
     /**
      * @var array
      */
-    protected $rootPageHostMap = [];
+    protected $cachedRootPagesByHost = [];
 
     /**
      * Initialize object
@@ -83,18 +83,22 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
                 return $pageRecord;
             }
         }
-        return null;
+        return $this->findOneByHostAndDoktype($error->getHost(), $doktype);
     }
 
     public function find404PageByError(Error $error)
     {
-
+        $doktype = (int) $this->extensionConfiguration->get('doktype404page');
+        return $this->findOneByHostAndDoktype($error->getHost(), $doktype);
     }
 
     public function findByIdentifier($identifier)
     {
         $page = $this->pageRepository->getPage((int) $identifier);
-        return empty($page) ? null: $page;
+        if (is_array($page) && isset($page['uid']) && $this->isAccessible($page['uid'])) {
+            return $page;
+        }
+        return null;
     }
 
     /**
@@ -105,11 +109,11 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      */
     public function findRootPageByHost($host)
     {
-        if (!isset($this->rootPageHostMap[$host])) {
+        if (!isset($this->cachedRootPagesByHost[$host])) {
             $rootPage = null;
-            $domains = $this->domainRepository->findAllNonRedirectDomains();
+            $domains = $this->domainRepository->findAll();
             foreach ($domains as $domain) {
-                if (strpos($host, $domain['domainName']) === 0) {
+                if (empty($domain['redirectTo']) && strpos($host, $domain['domainName']) === 0) {
                     $rootPage = $this->findByIdentifier($domain['pid']);
                     if ($rootPage !== null) {
                         break;
@@ -122,10 +126,10 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
                     $rootPage = $this->findByIdentifier($rootPages[0]['uid']);
                 }
             }
-            $this->rootPageHostMap[$host] = $rootPage;
+            $this->cachedRootPagesByHost[$host] = $rootPage;
         }
 
-        return $this->rootPageHostMap[$host];
+        return $this->cachedRootPagesByHost[$host];
     }
 
     /**
@@ -160,15 +164,18 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
         return null;
     }
 
-    protected function checkPage(array $page)
+    protected function isAccessible(array $page)
     {
         $rootLine = (array) $this->pageRepository->getRootLine($page['uid']);
-        foreach ($rootLine as $parentPage) {
-            if (!$this->pageRepository->checkRecord('pages', (int) $parentPage['uid'])) {
-                return false;
+        if (!empty($rootLine)) {
+            foreach ($rootLine as $parentPage) {
+                if (!$this->pageRepository->checkRecord('pages', (int) $parentPage['uid'])) {
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -180,7 +187,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
     {
         // $doktype = $this->extensionConfiguration->get('doktypeError404page');
 
-        $records = (array) $this->getDatabaseConnection()->exec_SELECTgetRows(
+        $result = (array) $this->getDatabaseConnection()->exec_SELECTquery(
             'uid',
             'pages',
             sprintf('doktype=%d', $doktype) . $this->pageRepository->enableFields('pages'),
@@ -189,10 +196,10 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
         );
 
         $pages = [];
-        foreach ($records as $record) {
-            // $page = $this->pageRepository->getPage($record['uid']);
-            if ($this->checkPage($record['uid'])) {
-                $pages = $this->findByIdentifier($record['uid']);
+        while ($record = $this->getDatabaseConnection()->sql_fetch_assoc($result)) {
+            $page = $this->findByIdentifier($record['uid']);
+            if ($page !== null) {
+                $pages[] = $page;
             }
         }
         return $pages;

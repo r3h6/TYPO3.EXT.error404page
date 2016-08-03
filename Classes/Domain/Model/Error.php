@@ -106,11 +106,24 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     protected $_statusCode = self::STATUS_CODE_NOT_FOUND;
 
     /**
-     * Doktype
+     * Host
      *
-     * @var integer
+     * @var string
      */
-    protected $_doktype = null;
+    protected $_host = null;
+
+    /**
+     * Reason text
+     *
+     * @var string
+     */
+    protected $_reasonText = '';
+
+    /**
+     * Current url
+     * @var string
+     */
+    protected $_currentUrl = '';
 
     /**
      * Gets the language
@@ -155,6 +168,27 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
+     * Gets the reasonText
+     *
+     * @return  string
+     */
+    public function getReasonText()
+    {
+        return $this->_reasonText;
+    }
+
+    /**
+     * Sets the reasonText
+     *
+     * @param   string $reasonText
+     */
+    public function setReasonText($reasonText)
+    {
+        $this->_reasonText = $reasonText;
+        $this->setReason($reasonText);
+    }
+
+    /**
      * Returns the reason
      *
      * @return string $reason
@@ -181,12 +215,8 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
             $this->pid = (int) $matches[2];
         }
 
-        $extensionConfiguration = $this->getExtensionConfiguration();
-        if ($extensionConfiguration->get('feature403') && $reason === 'ID was not an accessible page') {
+        if ($reason === 'ID was not an accessible page') {
             $this->_statusCode = self::STATUS_CODE_FORBIDDEN;
-            $this->_doktype = (int) $extensionConfiguration->get('_doktypeError403page');
-        } else {
-            $this->_doktype = (int) $extensionConfiguration->get('_doktypeError404page');
         }
 
         $this->reason = $reason;
@@ -336,14 +366,44 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
         $this->_statusCode = $statusCode;
     }
 
-    public function getDoktype()
+    /**
+     * Gets the host
+     *
+     * @return string
+     */
+    public function getHost()
     {
-        return $this->_doktype;
+        return $this->_host;
     }
 
-    protected function getExtensionConfiguration()
+    /**
+     * Sets the host
+     *
+     * @param string $host
+     */
+    public function setHost($host)
     {
-        return GeneralUtility::makeInstance(\R3H6\Error404page\Configuration\ExtensionConfiguration::class);
+        $this->_host = $host;
+    }
+
+    /**
+     * Gets the currentUrl
+     *
+     * @return  string
+     */
+    public function getCurrentUrl()
+    {
+        return $this->_currentUrl;
+    }
+
+    /**
+     * Sets the currentUrl
+     *
+     * @param   string $currentUrl
+     */
+    public function setCurrentUrl($currentUrl)
+    {
+        $this->_currentUrl = $currentUrl;
     }
 
     /**

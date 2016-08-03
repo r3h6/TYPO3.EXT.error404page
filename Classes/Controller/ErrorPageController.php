@@ -45,23 +45,16 @@ class ErrorPageController
     protected $pageRepository;
 
     /**
-     * @var \TYPO3\CMS\Core\Cache\CacheManager
+     * @var \R3H6\Error404page\Configuration\ExtensionConfiguration
      * @inject
      */
-    protected $cacheManager;
+    protected $extensionConfiguration;
 
     /**
-     * @var \TYPO3\CMS\Core\Cache\Frontend\FrontendInterface
+     * @var \R3H6\Error404page\Cache\PageCache
+     * @inject
      */
     protected $pageCache;
-
-    /**
-     * Initialize object.
-     */
-    public function initializeObject()
-    {
-        $this->pageCache = $this->cacheManager->getCache('cache_pages');
-    }
 
     /**
      * Renders the error page.
@@ -79,12 +72,11 @@ class ErrorPageController
 
         if (!isset($_GET['tx_error404page_request'])) {
 
-            if (ExtensionConfiguration::get('enableErrorLog')) {
+            if ($this->extensionConfiguration->get('enableErrorLog')) {
                 $this->errorRepository->log($error);
             }
 
-            $cacheIdentifier = ($error->getStatusCode() === Error::STATUS_CODE_FORBIDDEN) ?
-                sha1($error->getPid() . '/' . $error->getLanguage()): sha1($error->getHost() . '/' . $error->getLanguage());
+            $cacheIdentifier = $this->pageCache->buildEntryIdentifierFromError($error);
 
             $content = $this->pageCache->get($cacheIdentifier);
             if ($content === false) {
@@ -107,7 +99,7 @@ class ErrorPageController
             if (is_string($content)) {
                 return str_replace(
                     ['###CURRENT_URL###', '###REASON###'],
-                    [$currentUrl, $reason],
+                    [$error->getCurrentUrl(), $error->getReasonText()],
                     $content
                 );
             }
@@ -115,7 +107,7 @@ class ErrorPageController
 
         // Fallback to core error message.
         $title = 'Page Not Found';
-        $message = 'The page did not exist or was inaccessible.' . ($reason ? ' Reason: ' . htmlspecialchars($reason) : '');
+        $message = 'The page did not exist or was inaccessible.' . ($error->getReasonText() ? ' Reason: ' . htmlspecialchars($error->getReasonText()) : '');
         $messagePage = GeneralUtility::makeInstance(ErrorpageMessage::class, $message, $title);
         return $messagePage->render();
     }
