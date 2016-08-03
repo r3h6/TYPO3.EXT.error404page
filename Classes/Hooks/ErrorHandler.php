@@ -57,7 +57,16 @@ class ErrorHandler
         \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($error);
         // \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($tsfe);
 
-        // return GeneralUtility::makeInstance(ObjectManager::class)->get(ErrorPageController::class)->handleError($error);
+        $this->getErrorPageController()->handleError($error);
+    }
+
+    /**
+     * [getErrorPageController description]
+     * @return R3H6\Error404page\Controller\ErrorPageController
+     */
+    protected function getErrorPageController()
+    {
+        return GeneralUtility::makeInstance(ObjectManager::class)->get(ErrorPageController::class);
     }
 
     /**

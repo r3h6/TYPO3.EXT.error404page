@@ -80,7 +80,7 @@ class ErrorPageController
 
             $content = $this->pageCache->get($cacheIdentifier);
             if ($content === false) {
-                $errorPage = $this->pageRepository->findErrorPageByError($error);
+                $errorPage = $this->pageRepository->findOneByError($error);
                 if ($errorPage !== null) {
                     // Fallback to default language if the site has no translation.
                     $lParam = isset($errorPage['_PAGES_OVERLAY_LANGUAGE']) ? $errorPage['_PAGES_OVERLAY_LANGUAGE'] : 0;

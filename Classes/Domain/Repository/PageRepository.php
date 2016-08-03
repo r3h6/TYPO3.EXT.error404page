@@ -19,6 +19,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use R3H6\Error404page\Configuration\ExtensionConfiguration;
 use R3H6\Error404page\Domain\Repository\DomainRepository;
 use R3H6\Error404page\Domain\Model\Error;
+use R3H6\Error404page\Domain\Model\Page;
 
 /**
  * PageRepository
@@ -63,7 +64,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      * @param  \R3H6\Error404page\Domain\Model\Error $error
      * @return null|array Page record row on success.
      */
-    public function findErrorPageByError(Error $error)
+    public function findOneByError(Error $error)
     {
         if ($this->extensionConfiguration->get('feature403') && $error->getStatusCode() === Error::STATUS_CODE_NOT_FOUND) {
             $errorPage = $this->find403PageByError($error);
@@ -96,7 +97,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
     {
         $page = $this->pageRepository->getPage((int) $identifier);
         if (is_array($page) && isset($page['uid']) && $this->isAccessible($page['uid'])) {
-            return $page;
+            return $this->createDomainObject($page);
         }
         return null;
     }
@@ -181,7 +182,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
     /**
      * Returns all accessible error pages from all websites.
      *
-     * @return array
+     * @return array<\R3H6\Error404page\Domain\Model\Page>
      */
     protected function findAllByDoktype($doktype)
     {
@@ -203,6 +204,11 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
             }
         }
         return $pages;
+    }
+
+    protected function createDomainObject($data)
+    {
+        return GeneralUtility::makeInstance(Page::class, $data);
     }
 
     /**
