@@ -16,6 +16,7 @@ namespace R3H6\Error404page\Cache;
  *                                                                        */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use R3H6\Error404page\Domain\Model\Error;
 
 /**
  * PageCache
@@ -50,18 +51,18 @@ class PageCache implements \TYPO3\CMS\Core\SingletonInterface
     public function buildEntryIdentifierFromError(Error $error)
     {
         if ($this->extensionConfiguration->get('feature403') && $error->getStatusCode() === Error::STATUS_CODE_FORBIDDEN) {
-            sha1($error->getPid() . '/' . $error->getLanguage());
+            return sha1($error->getPid() . '/' . $error->getLanguage());
         }
         return sha1($error->getHost() . '/' . $error->getLanguage());
     }
 
     public function get($entryIdentifier)
     {
-        return $this->pageCache->get($cacheIdentifier);
+        return $this->pageCache->get($entryIdentifier);
     }
 
     public function set($entryIdentifier, $data, array $tags = array(), $lifetime = null)
     {
-        return $this->pageCache->get($cacheIdentifier, $content, $tags);
+        return $this->pageCache->get($entryIdentifier, $content, $tags);
     }
 }

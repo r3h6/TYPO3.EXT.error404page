@@ -66,7 +66,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      */
     public function findOneByError(Error $error)
     {
-        if ($this->extensionConfiguration->get('feature403') && $error->getStatusCode() === Error::STATUS_CODE_NOT_FOUND) {
+        if ($this->extensionConfiguration->get('feature403') && $error->getStatusCode() === Error::STATUS_CODE_FORBIDDEN) {
             $errorPage = $this->find403PageByError($error);
             if ($errorPage !== null) {
                 return $errorPage;
@@ -77,7 +77,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
 
     public function find403PageByError(Error $error)
     {
-        $doktype = (int) $this->extensionConfiguration->get('doktype403page');
+        $doktype = (int) $this->extensionConfiguration->get('doktypeError403page');
         $rootLine = $this->pageRepository->getRootLine($error->getPid());
         foreach ($rootLine as $pageRecord) {
             if ($doktype === (int) $pageRecord['doktype']) {
@@ -89,14 +89,14 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
 
     public function find404PageByError(Error $error)
     {
-        $doktype = (int) $this->extensionConfiguration->get('doktype404page');
+        $doktype = (int) $this->extensionConfiguration->get('doktypeError404page');
         return $this->findOneByHostAndDoktype($error->getHost(), $doktype);
     }
 
     public function findByIdentifier($identifier)
     {
         $page = $this->pageRepository->getPage((int) $identifier);
-        if (is_array($page) && isset($page['uid']) && $this->isAccessible($page['uid'])) {
+        if (is_array($page) && isset($page['uid']) && $this->isAccessible($page)) {
             return $this->createDomainObject($page);
         }
         return null;
@@ -167,16 +167,17 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
 
     protected function isAccessible(array $page)
     {
-        $rootLine = (array) $this->pageRepository->getRootLine($page['uid']);
-        if (!empty($rootLine)) {
-            foreach ($rootLine as $parentPage) {
-                if (!$this->pageRepository->checkRecord('pages', (int) $parentPage['uid'])) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
+        // $rootLine = (array) $this->pageRepository->getRootLine($page['uid']);
+        // if (!empty($rootLine)) {
+        //     foreach ($rootLine as $parentPage) {
+        //         if (!$this->pageRepository->checkRecord('pages', (int) $parentPage['uid'])) {
+        //             return false;
+        //         }
+        //     }
+        //     return true;
+        // }
+        // return false;
+        return true;
     }
 
     /**
@@ -188,7 +189,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
     {
         // $doktype = $this->extensionConfiguration->get('doktypeError404page');
 
-        $result = (array) $this->getDatabaseConnection()->exec_SELECTquery(
+        $result = $this->getDatabaseConnection()->exec_SELECTquery(
             'uid',
             'pages',
             sprintf('doktype=%d', $doktype) . $this->pageRepository->enableFields('pages'),

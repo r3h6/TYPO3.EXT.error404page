@@ -18,7 +18,6 @@ namespace R3H6\Error404page\Controller;
 use R3H6\Error404page\Configuration\ExtensionConfiguration;
 use R3H6\Error404page\Domain\Repository\PageRepository;
 use R3H6\Error404page\Domain\Model\Error;
-use R3H6\Error404page\Http\Request;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Messaging\ErrorpageMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -80,22 +79,28 @@ class ErrorPageController
 
             $content = $this->pageCache->get($cacheIdentifier);
             if ($content === false) {
+                // \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($error);
                 $errorPage = $this->pageRepository->findOneByError($error);
+                // \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($errorPage);
+                // throw new \Exception("Error Processing Request", 1);
+// exit;
                 if ($errorPage !== null) {
-                    // Fallback to default language if the site has no translation.
-                    $lParam = isset($errorPage['_PAGES_OVERLAY_LANGUAGE']) ? $errorPage['_PAGES_OVERLAY_LANGUAGE'] : 0;
-                    $url = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST') . '/index.php?id=' . $errorPage['uid'] . '&L=' . $lParam . '&tx_error404page_request=' . uniqid();
-                    $request = GeneralUtility::makeInstance(Request::class, $url);
-                    $content = $request->send();
+                    $content = $errorPage->getContent();
+
+                    // Should we redirect 403 errors?
+                    // Should we make a difference between logged in (404) and not logged in users (redirect)?
 
                     if ($content !== null) {
                         // Cache the error page.
                         // To delete the cache when the content gets changed,
                         // we add the same tag as the core does.
-                        $this->pageCache->set($cacheIdentifier, $content, ['pageId_' . $errorPage['uid']]);
+                        if ($errorPage->useCache()) {
+                            // $this->pageCache->set($cacheIdentifier, $content, ['pageId_' . $errorPage['uid']]);
+                        }
                     }
                 }
             }
+            // \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($content);exit;
             if (is_string($content)) {
                 return str_replace(
                     ['###CURRENT_URL###', '###REASON###'],

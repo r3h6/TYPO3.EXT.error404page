@@ -36,11 +36,15 @@ class ErrorHandler
      */
     public function pageNotFound(array $params, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe)
     {
+        // echo "<pre>";
+        // var_export($params);
+        // exit;
+        // \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($params);
         // $host = GeneralUtility::getIndpEnv('HTTP_HOST');
         // $language = $this->getSystemLanguage();
 
         /** @var R3H6\Error404page\Domain\Model\Error $error */
-        $error = GeneralUtility::makeInstance(Error::class);
+        $error = GeneralUtility::makeInstance(Error::class, $params);
         $error->setReasonText($params['reasonText']);
         $error->setCurrentUrl($params['currentUrl']);
         $error->setLanguage($this->getSystemLanguage());
@@ -50,14 +54,18 @@ class ErrorHandler
         $error->setIp(GeneralUtility::getIndpEnv('REMOTE_ADDR'));
         $error->setHost(GeneralUtility::getIndpEnv('HTTP_HOST'));
 
+        if (isset($params['pageAccessFailureReasons']['fe_group'])) {
+            $error->setStatusCode(Error::STATUS_CODE_FORBIDDEN);
+        }
+
         if (false === empty($tsfe->page)) {
             $error->setPid((int) $tsfe->page['uid']);
         }
 
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($error);
+        // \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($error);
         // \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($tsfe);
 
-        $this->getErrorPageController()->handleError($error);
+        return $this->getErrorPageController()->handleError($error);
     }
 
     /**

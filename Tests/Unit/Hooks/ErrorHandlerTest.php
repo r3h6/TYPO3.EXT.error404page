@@ -59,7 +59,96 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function pageNotFoundCallsHandleErrorOnErrorPageController()
     {
+        $this->errorPageControllerMock
+            ->expects($this->once())
+            ->method('handleError')
+            ->with(null);
 
-
+        $this->subject->pageNotFound()
     }
 }
+
+/*
+
+array (
+  'currentUrl' => '/index.php?id=10',
+  'reasonText' => 'ID was not an accessible page',
+  'pageAccessFailureReasons' =>
+  array (
+    'starttime' =>
+    array (
+      10 => '1501452000',
+    ),
+  ),
+)
+
+array (
+  'currentUrl' => '/index.php?id=9',
+  'reasonText' => 'ID was not an accessible page',
+  'pageAccessFailureReasons' =>
+  array (
+    'endtime' =>
+    array (
+      9 => '1470002400',
+    ),
+  ),
+)
+
+array (
+  'currentUrl' => '/index.php?id=7',
+  'reasonText' => 'ID was not an accessible page',
+  'pageAccessFailureReasons' =>
+  array (
+    'hidden' =>
+    array (
+      7 => true,
+    ),
+  ),
+)
+
+// Sys folder
+array (
+  'currentUrl' => '/index.php?id=5',
+  'reasonText' => 'ID was not an accessible page',
+  'pageAccessFailureReasons' =>
+  array (
+  ),
+)
+
+array (
+  'currentUrl' => '/index.php?id=6',
+  'reasonText' => 'ID was not an accessible page',
+  'pageAccessFailureReasons' =>
+  array (
+    'fe_group' =>
+    array (
+      6 => '1',
+    ),
+  ),
+)
+
+array (
+  'currentUrl' => '/index.php?id=3',
+  'reasonText' => 'ID was not an accessible page',
+  'pageAccessFailureReasons' =>
+  array (
+    'fe_group' =>
+    array (
+      3 => '-2',
+    ),
+  ),
+)
+
+array (
+  'currentUrl' => '/index.php?id=11',
+  'reasonText' => 'Subsection was found and not accessible',
+  'pageAccessFailureReasons' =>
+  array (
+    'fe_group' =>
+    array (
+      3 => '-2',
+    ),
+  ),
+)
+
+ */
