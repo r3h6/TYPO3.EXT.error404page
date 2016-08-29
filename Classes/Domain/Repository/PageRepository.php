@@ -66,13 +66,33 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      */
     public function findOneByError(Error $error)
     {
-        if ($this->extensionConfiguration->get('feature403') && $error->getStatusCode() === Error::STATUS_CODE_FORBIDDEN) {
+        if ($this->extensionConfiguration->get('enable403page') && $error->getStatusCode() === Error::STATUS_CODE_FORBIDDEN) {
             $errorPage = $this->find403PageByError($error);
             if ($errorPage !== null) {
                 return $errorPage;
             }
         }
         return $this->find404PageByError($error);
+    }
+
+    public function findLoginPageByError(Error $error)
+    {
+        $rows = $this->getDatabaseConnection()->exec_SELECTgetRows('pid', 'tt_content', "CType='login'" . $this->pageRepository->enableFields('tt_content'));
+        if (count($rows) === 1) {
+            return $this->findByIdentifier($rows[0]['pid']);
+        }
+
+        $rootLine = $this->pageRepository->getRootLine($error->getPid());
+
+        foreach ($rows as $row) {
+            foreach ($rootLine as $pageRecord) {
+                if ((int) $pageRecord['uid'] === (int) $row['pid']) {
+                    return $this->findByIdentifier($rows['pid']);
+                }
+            }
+        }
+
+        return null;
     }
 
     public function find403PageByError(Error $error)

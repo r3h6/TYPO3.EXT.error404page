@@ -18,7 +18,7 @@
             <trans-unit id="configuration.enableErrorLog">
                 <source>Log: Enable error log.</source>
             </trans-unit>
-            <trans-unit id="configuration.feature403">
+            <trans-unit id="configuration.enable403page">
                 <source>Feature 403: Use own error page for handling 403 errors.</source>
             </trans-unit>
         </body>

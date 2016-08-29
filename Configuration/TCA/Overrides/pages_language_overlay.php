@@ -10,7 +10,7 @@ if (!defined('TYPO3_MODE')) {
     '404'
 );
 
-if (\R3H6\Error404page\Configuration\ExtensionConfiguration::get('feature403')) {
+if (\R3H6\Error404page\Configuration\ExtensionConfiguration::get('enable403page')) {
     \R3H6\Error404page\Utility\CustomPageUtility::addDoktypeToPagesLanguageOverlay(
         \R3H6\Error404page\Configuration\ExtensionConfiguration::EXT_KEY,
         \R3H6\Error404page\Configuration\ExtensionConfiguration::get('doktypeError403page'),

@@ -50,7 +50,7 @@ class PageCache implements \TYPO3\CMS\Core\SingletonInterface
 
     public function buildEntryIdentifierFromError(Error $error)
     {
-        if ($this->extensionConfiguration->get('feature403') && $error->getStatusCode() === Error::STATUS_CODE_FORBIDDEN) {
+        if ($this->extensionConfiguration->get('enable403page') && $error->getStatusCode() === Error::STATUS_CODE_FORBIDDEN) {
             return sha1($error->getPid() . '/' . $error->getLanguage());
         }
         return sha1($error->getHost() . '/' . $error->getLanguage());

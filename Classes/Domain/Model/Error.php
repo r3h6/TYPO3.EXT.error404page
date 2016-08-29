@@ -215,9 +215,9 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
             $this->pid = (int) $matches[2];
         }
 
-        if ($reason === 'ID was not an accessible page') {
-            $this->_statusCode = self::STATUS_CODE_FORBIDDEN;
-        }
+        // if ($reason === 'ID was not an accessible page') {
+        //     $this->_statusCode = self::STATUS_CODE_FORBIDDEN;
+        // }
 
         $this->reason = $reason;
     }
