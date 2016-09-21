@@ -20,12 +20,14 @@ use R3H6\Error404page\Http\Request;
 /**
  * Page
  */
-class Page extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
+class Page extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 {
     protected $data;
 
     public function __construct($data)
     {
+        $this->uid = (int) $data['uid'];
+        $this->pid = (int) $data['pid'];
         $this->data = $data;
     }
 

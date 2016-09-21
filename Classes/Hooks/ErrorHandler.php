@@ -36,9 +36,9 @@ class ErrorHandler
      */
     public function pageNotFound(array $params, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe)
     {
-        // echo "<pre>";
-        // var_export($params);
-        // exit;
+        echo "<pre>";
+        var_export($params);
+        exit;
         // \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($params);
         // $host = GeneralUtility::getIndpEnv('HTTP_HOST');
         // $language = $this->getSystemLanguage();
@@ -87,3 +87,86 @@ class ErrorHandler
         return (int) GeneralUtility::_GP('L');
     }
 }
+/*
+
+//sysfolder
+array (
+  'currentUrl' => '/?id=5',
+  'reasonText' => 'ID was not an accessible page',
+  'pageAccessFailureReasons' =>
+  array (
+  ),
+)
+
+array (
+  'currentUrl' => '/?id=9',
+  'reasonText' => 'ID was not an accessible page',
+  'pageAccessFailureReasons' =>
+  array (
+    'endtime' =>
+    array (
+      9 => '1470002400',
+    ),
+  ),
+)
+
+array (
+  'currentUrl' => '/?id=10',
+  'reasonText' => 'ID was not an accessible page',
+  'pageAccessFailureReasons' =>
+  array (
+    'starttime' =>
+    array (
+      10 => '1501452000',
+    ),
+  ),
+)
+array (
+  'currentUrl' => '/?id=6',
+  'reasonText' => 'ID was not an accessible page',
+  'pageAccessFailureReasons' =>
+  array (
+    'fe_group' =>
+    array (
+      6 => '1',
+    ),
+  ),
+)
+
+array (
+  'currentUrl' => '/?id=7',
+  'reasonText' => 'ID was not an accessible page',
+  'pageAccessFailureReasons' =>
+  array (
+    'hidden' =>
+    array (
+      7 => true,
+    ),
+  ),
+)
+
+array (
+  'currentUrl' => '/?id=11',
+  'reasonText' => 'Subsection was found and not accessible',
+  'pageAccessFailureReasons' =>
+  array (
+    'fe_group' =>
+    array (
+      3 => '-2',
+    ),
+  ),
+)
+
+array (
+  'currentUrl' => '/?id=8',
+  'reasonText' => 'Subsection was found and not accessible',
+  'pageAccessFailureReasons' =>
+  array (
+    'hidden' =>
+    array (
+      7 => true,
+    ),
+  ),
+)
+
+ */

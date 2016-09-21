@@ -29,7 +29,7 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  */
 class ErrorPageController
 {
-    const LOCALLANG = 'LLL:EXT:error404page/Resources/Private/Language/locallang.xlf';
+    // const LOCALLANG = 'LLL:EXT:error404page/Resources/Private/Language/locallang.xlf';
 
     /**
      * @var \R3H6\Error404page\Domain\Repository\ErrorRepository

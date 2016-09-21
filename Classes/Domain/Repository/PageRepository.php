@@ -66,54 +66,61 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      */
     public function findOneByError(Error $error)
     {
-        if ($this->extensionConfiguration->get('enable403page') && $error->getStatusCode() === Error::STATUS_CODE_FORBIDDEN) {
-            $errorPage = $this->find403PageByError($error);
+        if ($this->extensionConfiguration->get('enable403redirect') && $error->getStatusCode() === Error::STATUS_CODE_FORBIDDEN) {
+            $errorPage = $this->findClosestLoginPageForError($error);
             if ($errorPage !== null) {
                 return $errorPage;
             }
         }
-        return $this->find404PageByError($error);
+        return $this->find404PageForError($error);
     }
 
-    public function findLoginPageByError(Error $error)
+    protected function findClosestLoginPageForError(Error $error)
     {
-        $rows = $this->getDatabaseConnection()->exec_SELECTgetRows('pid', 'tt_content', "CType='login'" . $this->pageRepository->enableFields('tt_content'));
-        if (count($rows) === 1) {
-            return $this->findByIdentifier($rows[0]['pid']);
-        }
+        if ($error->getPid()) {
+            $rows = $this->getDatabaseConnection()->exec_SELECTgetRows('pid', 'tt_content', "CType='login'" . $this->pageRepository->enableFields('tt_content'));
+            // Do not return a page if there is only one found, it could belong to an other domain!
+            $rootLine = $this->pageRepository->getRootLine($error->getPid());
 
-        $rootLine = $this->pageRepository->getRootLine($error->getPid());
+            // Search for a login page within the rootline from the requested page.
+            foreach ($rows as $row) {
+                foreach ($rootLine as $pageRecord) {
+                    if ((int) $pageRecord['uid'] === (int) $row['pid']) {
+                        return $this->findByIdentifier($rows['pid']);
+                    }
+                }
+            }
 
-        foreach ($rows as $row) {
-            foreach ($rootLine as $pageRecord) {
-                if ((int) $pageRecord['uid'] === (int) $row['pid']) {
-                    return $this->findByIdentifier($rows['pid']);
+            // Search first login page with same root page.
+            foreach ($rows as $row) {
+                $loginRootLine = $this->pageRepository->getRootLine();
+                if ($rootLine[0]['uid'] === $loginRootLine[0]['uid']) {
+                    return $this->findByIdentifier($row['pid']);
                 }
             }
         }
-
         return null;
     }
 
-    public function find403PageByError(Error $error)
-    {
-        $doktype = (int) $this->extensionConfiguration->get('doktypeError403page');
-        $rootLine = $this->pageRepository->getRootLine($error->getPid());
-        foreach ($rootLine as $pageRecord) {
-            if ($doktype === (int) $pageRecord['doktype']) {
-                return $pageRecord;
-            }
-        }
-        return $this->findOneByHostAndDoktype($error->getHost(), $doktype);
-    }
+    // public function find403PageByError(Error $error)
+    // {
+    //     $doktype = (int) $this->extensionConfiguration->get('doktypeError403page');
+    //     $rootLine = $this->pageRepository->getRootLine($error->getPid());
+    //     foreach ($rootLine as $pageRecord) {
+    //         if ($doktype === (int) $pageRecord['doktype']) {
+    //             return $pageRecord;
+    //         }
+    //     }
+    //     return $this->findFirstByHostAndDoktype($error->getHost(), $doktype);
+    // }
 
-    public function find404PageByError(Error $error)
+    protected function find404PageForError(Error $error)
     {
         $doktype = (int) $this->extensionConfiguration->get('doktypeError404page');
-        return $this->findOneByHostAndDoktype($error->getHost(), $doktype);
+        return $this->findFirstByHostAndDoktype($error->getHost(), $doktype);
     }
 
-    public function findByIdentifier($identifier)
+    protected function findByIdentifier($identifier)
     {
         $page = $this->pageRepository->getPage((int) $identifier);
         if (is_array($page) && isset($page['uid']) && $this->isAccessible($page)) {
@@ -126,10 +133,11 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      * Finds the root page uid for a given host.
      *
      * @param  string $host
-     * @return array|null
+     * @return \R3H6\Error404page\Domain\Model\Page|null
      */
-    public function findRootPageByHost($host)
+    protected function findRootPageByHost($host)
     {
+        $this->getLogger()->debug(__FUNCTION__, ['host' => $host]);
         if (!isset($this->cachedRootPagesByHost[$host])) {
             $rootPage = null;
             $domains = $this->domainRepository->findAll();
@@ -157,28 +165,26 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      * Finds a error page for a host (domain).
      *
      * @param  string $host The domain name.
-     * @return null|array Page record row on success.
+     * @return null|\R3H6\Error404page\Domain\Model\Page Page record row on success.
      */
-    public function findOneByHostAndDoktype($host, $doktype)
+    protected function findFirstByHostAndDoktype($host, $doktype)
     {
+        /** @var array<\R3H6\Error404page\Domain\Model\Page> $pages */
         $pages = $this->findAllByDoktype($doktype);
-        if (count($pages) === 1) {
-            return reset($pages);
-        }
 
+        /** @var \R3H6\Error404page\Domain\Model\Page $rootPage */
         $rootPage = $this->findRootPageByHost($host);
+
         if ($rootPage !== null) {
             foreach ($pages as $page) {
-                $rootLine = $this->pageRepository->getRootLine($page['uid']);
+                $rootLine = $this->pageRepository->getRootLine($page->getUid());
                 foreach ($rootLine as $parentPage) {
-                    if ($rootPageUid === (int) $parentPage['uid']) {
+                    if ($rootPage->getUid() === (int) $parentPage['uid']) {
                         return $page;
                     }
                 }
             }
-        }
-
-        if (count($pages)) {
+        } else if (count($pages)) {
             return reset($pages);
         }
 
@@ -207,6 +213,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      */
     protected function findAllByDoktype($doktype)
     {
+        $this->getLogger()->debug(__FUNCTION__, ['doktype' => $doktype]);
         // $doktype = $this->extensionConfiguration->get('doktypeError404page');
 
         $result = $this->getDatabaseConnection()->exec_SELECTquery(
@@ -248,5 +255,15 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
     protected function getDatabaseConnection()
     {
         return $GLOBALS['TYPO3_DB'];
+    }
+
+    /**
+     * Get class logger
+     *
+     * @return TYPO3\CMS\Core\Log\Logger
+     */
+    protected function getLogger()
+    {
+        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Log\\LogManager')->getLogger(__CLASS__);
     }
 }

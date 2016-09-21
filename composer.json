@@ -17,10 +17,10 @@
     },
     "license": "GPL-3.0+",
     "require": {
-        "typo3/cms-core": "^6.2.14 || ^7.6.0"
+        "typo3/cms": "^6.2.14 || ^7.6.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.7.0"
+        "phpunit/phpunit": "~4.8.0"
     },
     "autoload": {
         "psr-4": {
@@ -46,8 +46,8 @@
     },
     "scripts": {
         "post-autoload-dump": [
-            "mkdir -p .Build/Web/typo3conf/ext/",
-            "[ -L .Build/Web/typo3conf/ext/error404page ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/error404page"
+            "mkdir -p .Build/web/typo3conf/ext/",
+            "[ -L .Build/web/typo3conf/ext/error404page ] || ln -snvf ../../../../. .Build/web/typo3conf/ext/error404page"
         ]
     },
     "extra": {
@@ -56,7 +56,7 @@
         },
         "typo3/cms": {
             "cms-package-dir": "{$vendor-dir}/typo3/cms",
-            "web-dir": ".Build/Web"
+            "web-dir": ".Build/web"
         }
     }
 }
