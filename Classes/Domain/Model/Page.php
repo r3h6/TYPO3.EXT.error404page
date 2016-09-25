@@ -47,10 +47,31 @@ class Page extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 
     protected function fetchContent($url)
     {
-        $content = GeneralUtility::getUrl($url);
-        if ($content === false) {
-            return null;
+        $content = null;
+
+        /** @var \TYPO3\CMS\Core\Http\HttpRequest $request */
+        $request = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Http\\HttpRequest', $url);
+        $request->setCookieJar(true);
+
+        // TYPO3 uses user-agent for authentification
+        $request->setHeader('user-agent', GeneralUtility::getIndpEnv('HTTP_USER_AGENT'));
+
+        if (isset($_COOKIE) && !empty($_COOKIE)) {
+            foreach ($_COOKIE as $cookieName => $cookieValue) {
+                $request->addCookie($cookieName, $cookieValue);
+            }
         }
+
+        try {
+             /** @var \HTTP_Request2_Response $response */
+            $response = $request->send();
+            if ($response->getStatus() === 200) {
+                $content = $response->getBody();
+            }
+        } catch (\Exception $exception) {
+            // Ignore...
+        }
+
         return $content;
     }
 }

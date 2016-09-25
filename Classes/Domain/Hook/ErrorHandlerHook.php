@@ -1,6 +1,6 @@
 <?php
 
-namespace R3H6\Error404page\Hooks;
+namespace R3H6\Error404page\Domain\Hook;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -15,7 +15,7 @@ namespace R3H6\Error404page\Hooks;
  * Public License for more details.                                       *
  *                                                                        */
 
-use R3H6\Error404page\Controller\ErrorPageController;
+use R3H6\Error404page\Domain\Handler\ErrorHandler;
 use R3H6\Error404page\Domain\Model\Error;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -25,10 +25,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * This is a bridge class for using extbase dependency injection.
  */
-class ErrorHandler
+class ErrorHandlerHook implements \TYPO3\CMS\Core\SingletonInterface
 {
     /**
-     * [pageNotFound description]
+     * Hook
+     *
      * @param  array                                                       $params
      * @param  \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe
      * @return string
@@ -36,15 +37,8 @@ class ErrorHandler
      */
     public function pageNotFound(array $params, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe)
     {
-        echo "<pre>";
-        var_export($params);
-        exit;
-        // \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($params);
-        // $host = GeneralUtility::getIndpEnv('HTTP_HOST');
-        // $language = $this->getSystemLanguage();
-
         /** @var R3H6\Error404page\Domain\Model\Error $error */
-        $error = GeneralUtility::makeInstance(Error::class, $params);
+        $error = GeneralUtility::makeInstance(Error::class);
         $error->setReasonText($params['reasonText']);
         $error->setCurrentUrl($params['currentUrl']);
         $error->setLanguage($this->getSystemLanguage());
@@ -62,19 +56,17 @@ class ErrorHandler
             $error->setPid((int) $tsfe->page['uid']);
         }
 
-        // \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($error);
-        // \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($tsfe);
-
-        return $this->getErrorPageController()->handleError($error);
+        return $this->getErrorHandler()->handleError($error);
     }
 
     /**
-     * [getErrorPageController description]
-     * @return R3H6\Error404page\Controller\ErrorPageController
+     * Returns the error handler.
+     *
+     * @return R3H6\Error404page\Domain\Handler\ErrorHandler
      */
-    protected function getErrorPageController()
+    protected function getErrorHandler()
     {
-        return GeneralUtility::makeInstance(ObjectManager::class)->get(ErrorPageController::class);
+        return GeneralUtility::makeInstance(ObjectManager::class)->get(ErrorHandler::class);
     }
 
     /**
@@ -87,86 +79,3 @@ class ErrorHandler
         return (int) GeneralUtility::_GP('L');
     }
 }
-/*
-
-//sysfolder
-array (
-  'currentUrl' => '/?id=5',
-  'reasonText' => 'ID was not an accessible page',
-  'pageAccessFailureReasons' =>
-  array (
-  ),
-)
-
-array (
-  'currentUrl' => '/?id=9',
-  'reasonText' => 'ID was not an accessible page',
-  'pageAccessFailureReasons' =>
-  array (
-    'endtime' =>
-    array (
-      9 => '1470002400',
-    ),
-  ),
-)
-
-array (
-  'currentUrl' => '/?id=10',
-  'reasonText' => 'ID was not an accessible page',
-  'pageAccessFailureReasons' =>
-  array (
-    'starttime' =>
-    array (
-      10 => '1501452000',
-    ),
-  ),
-)
-array (
-  'currentUrl' => '/?id=6',
-  'reasonText' => 'ID was not an accessible page',
-  'pageAccessFailureReasons' =>
-  array (
-    'fe_group' =>
-    array (
-      6 => '1',
-    ),
-  ),
-)
-
-array (
-  'currentUrl' => '/?id=7',
-  'reasonText' => 'ID was not an accessible page',
-  'pageAccessFailureReasons' =>
-  array (
-    'hidden' =>
-    array (
-      7 => true,
-    ),
-  ),
-)
-
-array (
-  'currentUrl' => '/?id=11',
-  'reasonText' => 'Subsection was found and not accessible',
-  'pageAccessFailureReasons' =>
-  array (
-    'fe_group' =>
-    array (
-      3 => '-2',
-    ),
-  ),
-)
-
-array (
-  'currentUrl' => '/?id=8',
-  'reasonText' => 'Subsection was found and not accessible',
-  'pageAccessFailureReasons' =>
-  array (
-    'hidden' =>
-    array (
-      7 => true,
-    ),
-  ),
-)
-
- */

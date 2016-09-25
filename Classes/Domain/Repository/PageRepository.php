@@ -59,23 +59,11 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
     }
 
     /**
-     * [findErrorPageByError description]
      *
-     * @param  \R3H6\Error404page\Domain\Model\Error $error
-     * @return null|array Page record row on success.
+     * @param  Error  $error [description]
+     * @return \R3H6\Error404page\Domain\Model\Page|null
      */
-    public function findOneByError(Error $error)
-    {
-        if ($this->extensionConfiguration->get('enable403redirect') && $error->getStatusCode() === Error::STATUS_CODE_FORBIDDEN) {
-            $errorPage = $this->findClosestLoginPageForError($error);
-            if ($errorPage !== null) {
-                return $errorPage;
-            }
-        }
-        return $this->find404PageForError($error);
-    }
-
-    protected function findClosestLoginPageForError(Error $error)
+    public function findLoginPageForError(Error $error)
     {
         if ($error->getPid()) {
             $rows = $this->getDatabaseConnection()->exec_SELECTgetRows('pid', 'tt_content', "CType='login'" . $this->pageRepository->enableFields('tt_content'));
@@ -93,7 +81,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
 
             // Search first login page with same root page.
             foreach ($rows as $row) {
-                $loginRootLine = $this->pageRepository->getRootLine();
+                $loginRootLine = $this->pageRepository->getRootLine($row['pid']);
                 if ($rootLine[0]['uid'] === $loginRootLine[0]['uid']) {
                     return $this->findByIdentifier($row['pid']);
                 }
@@ -102,19 +90,12 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
         return null;
     }
 
-    // public function find403PageByError(Error $error)
-    // {
-    //     $doktype = (int) $this->extensionConfiguration->get('doktypeError403page');
-    //     $rootLine = $this->pageRepository->getRootLine($error->getPid());
-    //     foreach ($rootLine as $pageRecord) {
-    //         if ($doktype === (int) $pageRecord['doktype']) {
-    //             return $pageRecord;
-    //         }
-    //     }
-    //     return $this->findFirstByHostAndDoktype($error->getHost(), $doktype);
-    // }
-
-    protected function find404PageForError(Error $error)
+    /**
+     * [find404PageForError description]
+     * @param  Error  $error [description]
+     * @return \R3H6\Error404page\Domain\Model\Page|null
+     */
+    public function find404PageForError(Error $error)
     {
         $doktype = (int) $this->extensionConfiguration->get('doktypeError404page');
         return $this->findFirstByHostAndDoktype($error->getHost(), $doktype);

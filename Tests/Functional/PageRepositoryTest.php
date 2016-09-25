@@ -146,7 +146,7 @@ class FindErrorPageTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
         $this->importDataSet('sys_domain');
         $this->importPageRecord([
             'uid' => 400,
-            'title' => 'Error Page',
+            'title' => 'Error Page For Other Domain',
             'pid' => 2,
             'doktype' => 104,
         ]);

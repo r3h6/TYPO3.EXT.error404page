@@ -41,6 +41,12 @@ class PageCache implements \TYPO3\CMS\Core\SingletonInterface
     protected $pageCache;
 
     /**
+     * @var \R3H6\Error404page\Facade\FrontendUser
+     * @inject
+     */
+    protected $frontendUser;
+
+    /**
      * Initialize object.
      */
     public function initializeObject()
@@ -50,10 +56,10 @@ class PageCache implements \TYPO3\CMS\Core\SingletonInterface
 
     public function buildEntryIdentifierFromError(Error $error)
     {
-        if ($this->extensionConfiguration->get('enable403page') && $error->getStatusCode() === Error::STATUS_CODE_FORBIDDEN) {
-            return sha1($error->getPid() . '/' . $error->getLanguage());
-        }
-        return sha1($error->getHost() . '/' . $error->getLanguage());
+        // if ($this->extensionConfiguration->get('enable403page') && $error->getStatusCode() === Error::STATUS_CODE_FORBIDDEN) {
+        //     return sha1($error->getPid() . '/' . $error->getLanguage());
+        // }
+        return sha1($error->getHost() . ':' . $error->getLanguage() . ':' . $this->getFrontendUserGroups());
     }
 
     public function get($entryIdentifier)
@@ -61,8 +67,13 @@ class PageCache implements \TYPO3\CMS\Core\SingletonInterface
         return $this->pageCache->get($entryIdentifier);
     }
 
-    public function set($entryIdentifier, $data, array $tags = array(), $lifetime = null)
+    public function set($entryIdentifier, $data, $pageUid, array $tags = array(), $lifetime = null)
     {
-        return $this->pageCache->get($entryIdentifier, $content, $tags);
+        $tags = array_merge($tags, ['pageId_' . $pageUid]);
+        // return $this->pageCache->set($entryIdentifier, $content, $tags);
+    }
+    protected function getFrontendUserGroups()
+    {
+        return join(',', $this->frontendUser->getUserGroups());
     }
 }
