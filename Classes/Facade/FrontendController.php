@@ -58,7 +58,6 @@ class FrontendController
     public function typoLink(array $parameters)
     {
         $this->initialize();
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($this);
         return $this->typoScriptFrontendController->cObj->typoLink_URL($parameters);
     }
 

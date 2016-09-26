@@ -22,56 +22,41 @@ use R3H6\Error404page\Http\Request;
  */
 class Page extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 {
+    /**
+     * Record data
+     *
+     * @var array
+     */
     protected $data;
 
-    public function __construct($data)
+    public function __construct(array $data)
     {
         $this->uid = (int) $data['uid'];
         $this->pid = (int) $data['pid'];
         $this->data = $data;
     }
 
+    /**
+     * Returns if page allows caching.
+     *
+     * @return  boolean
+     */
     public function useCache()
     {
         return (false === (bool) $this->data['no_cache']);
     }
 
-    public function getContent()
+    /**
+     * Returns the TYPO3 url for the page.
+     *
+     * @return  string
+     */
+    public function getUrl()
     {
         // Fallback to default language if the site has no translation.
         $lParam = isset($this->data['_PAGES_OVERLAY_LANGUAGE']) ? $this->data['_PAGES_OVERLAY_LANGUAGE'] : 0;
         $url = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST') . '/index.php?id=' . $this->data['uid'] . '&L=' . $lParam . '&tx_error404page_request=' . uniqid() . '&return_url=' . GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL');
 
-        return $this->fetchContent($url);
-    }
-
-    protected function fetchContent($url)
-    {
-        $content = null;
-
-        /** @var \TYPO3\CMS\Core\Http\HttpRequest $request */
-        $request = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Http\\HttpRequest', $url);
-        $request->setCookieJar(true);
-
-        // TYPO3 uses user-agent for authentification
-        $request->setHeader('user-agent', GeneralUtility::getIndpEnv('HTTP_USER_AGENT'));
-
-        if (isset($_COOKIE) && !empty($_COOKIE)) {
-            foreach ($_COOKIE as $cookieName => $cookieValue) {
-                $request->addCookie($cookieName, $cookieValue);
-            }
-        }
-
-        try {
-             /** @var \HTTP_Request2_Response $response */
-            $response = $request->send();
-            if ($response->getStatus() === 200) {
-                $content = $response->getBody();
-            }
-        } catch (\Exception $exception) {
-            // Ignore...
-        }
-
-        return $content;
+        return $url;
     }
 }

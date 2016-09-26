@@ -38,7 +38,7 @@ class PageTsConfig
         return isset($this->configuration[$key]) ? $this->configuration[$key]: null;
     }
 
-    public function has($key)
+    public function is($key)
     {
         return empty($this->get($key)) === false;
     }

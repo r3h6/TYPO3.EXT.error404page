@@ -186,24 +186,12 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
     }
 
     /**
-     * @param $url
-     * @param $rootPage
-     * @param $reason
-     * @param $referer
-     * @param $userAgent
-     * @param $ip
+     * Log error.
+     *
+     * @param \R3H6\Error404page\Domain\Model\Error $error
      */
-    public function log($url, $rootPage, $reason, $referer, $userAgent, $ip)
+    public function log(Error $error)
     {
-        /** @var \R3H6\Error404page\Domain\Model\Error $error */
-        $error = $this->objectManager->get(Error::class);
-        $error->setUrl($url);
-        $error->setRootPage($rootPage);
-        $error->setReason($reason);
-        $error->setReferer($referer);
-        $error->setUserAgent($userAgent);
-        $error->setIp($ip);
-
         $values = $error->toArray();
         $this->getDatabaseConnection()->debugOutput = false;
         $count = $this->getDatabaseConnection()->exec_SELECTcountRows('*', self::$table);

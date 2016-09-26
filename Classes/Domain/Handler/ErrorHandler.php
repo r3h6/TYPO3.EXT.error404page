@@ -73,6 +73,12 @@ class ErrorHandler
     protected $frontendController;
 
     /**
+     * @var \R3H6\Error404page\Service\HttpService
+     * @inject
+     */
+    protected $httpService;
+
+    /**
      * Renders the error page.
      *
      * @param  R3H6\Error404page\Domain\Model\Error $error
@@ -81,7 +87,7 @@ class ErrorHandler
     public function handleError(Error $error)
     {
         if (!isset($_GET['tx_error404page_request'])) {
-            if ($this->extensionConfiguration->get('enableErrorLog')) {
+            if ($this->extensionConfiguration->is('enableErrorLog')) {
                 $this->errorRepository->log($error);
             }
 
@@ -94,7 +100,7 @@ class ErrorHandler
 
                 // Get redirect link if it is a 403 error and user is not logged in and redirect is configured.
                 if ($error->getStatusCode() === Error::STATUS_CODE_FORBIDDEN && !$this->frontendUser->isLoggedIn() &&
-                    $pageTsConfig->has('redirectError403To')) {
+                    $pageTsConfig->is('redirectError403To')) {
                     $parameter = (string) $pageTsConfig->get('redirectError403To');
 
                     if ($parameter === 'auto') {
@@ -117,13 +123,17 @@ class ErrorHandler
 
                     if ($parameter) {
                         $content = 'REDIRECT:' . $this->frontendController->typoLink(['parameter' => $parameter, 'forceAbsoluteUrl' => true]);
+
+                        $content .= (strpos($content, '?') === false) ? '?': '&';
+                        $content .= 'redirect_url=' . $error->getUrl();
+
                         $this->pageCache->set($cacheIdentifier, $content, $error->getPid());
                     }
                 // Otherwise try to find a 404 page and display it.
                 } else {
                     $errorPage = $this->pageRepository->find404PageForError($error);
                     if ($errorPage !== null) {
-                        $content = $errorPage->getContent();
+                        $content = $this->httpService->readUrl($errorPage->getUrl());
                         if ($content !== null && $errorPage->useCache()) {
                             $this->pageCache->set($cacheIdentifier, $content, $errorPage->getUid());
                         }

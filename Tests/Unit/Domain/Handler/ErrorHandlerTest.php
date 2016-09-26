@@ -17,19 +17,19 @@ namespace R3H6\Error404page\Tests\Unit\Controller;
 
 // require_once __DIR__ . '/../Fixtures/Request.php';
 
-use R3H6\Error404page\Controller\ErrorPageController;
+use R3H6\Error404page\Domain\Handler\ErrorHandler;
 use R3H6\Error404page\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Unit test for the ErrorPageController.
+ * Unit test for the ErrorHandler.
  */
-class ErrorPageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 {
     /**
-     * @var R3H6\Error404page\Controller\ErrorPageController
+     * @var R3H6\Error404page\Domain\Handler\ErrorHandler
      */
     protected $subject;
 
@@ -59,7 +59,7 @@ class ErrorPageControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     {
         parent::setUp();
 
-        $this->subject = new ErrorPageController();
+        $this->subject = new ErrorHandler();
 
         $this->pageRepository = $this->getMock(PageRepository::class, [], [], '', false);
         $this->inject($this->subject, 'pageRepository', $this->pageRepository);
