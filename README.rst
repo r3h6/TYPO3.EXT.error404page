@@ -32,21 +32,28 @@ Installation
 
 Through `TER <https://typo3.org/extensions/repository/view/error404page/>`_ or with `composer <https://composer.typo3.org/satis.html#!/error404page>`_ (typo3-ter/error404page).
 
-Usage
------
+
+Integration
+-----------
 
 Simply install the extension and create a new page with your error message.
+
+* No TypoScript setup to include.
 
 You can use following markers in your content.
 
 :###CURRENT_URL###: The url of the called page.
 :###REASON###: A text why the error occured.
 
+If you like redirect non logged in users on an 403 (forbidden) error,
+simply include the available "Page TSConfig" or define by yourself:
+
+``tx_error404page.redirectError403To = auto|url|uid``
+
 
 Configuration
 -------------
 
-* No TypoScript setup to include.
 * You can enable the error log and statistic backend modul in the extension configuration.
 * If required, you can change the page type in the extension configuration.
 
