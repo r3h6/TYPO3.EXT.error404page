@@ -22,9 +22,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
- * Functional test case for the FindErrorPage.
+ * Functional test case for the PageRepository.
  */
-class FindErrorPageTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
+class PageRepositoryTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
 {
     use \R3H6\Error404page\Tests\Functional\BasicFrontendEnvironmentTrait;
 
@@ -63,17 +63,17 @@ class FindErrorPageTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
     /**
      * @test
      */
-    public function findErrorPageByErrorReturnsNullForError404IfThereIsNoPage404()
+    public function find404PageForErrorReturnsNullForError404IfThereIsNoPage404()
     {
         $this->importDataSet('pages');
-        $errorPage = $this->pageRepository->findOneByError($this->createError());
+        $errorPage = $this->pageRepository->find404PageForError($this->createError());
         $this->assertSame(null, $errorPage);
     }
 
     /**
      * @test
      */
-    public function findErrorPageByErrorReturnsPage404ForError404()
+    public function find404PageForErrorReturnsPage404ForError404()
     {
         $expected = 404;
         $this->importDataSet('pages');
@@ -83,7 +83,7 @@ class FindErrorPageTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
             'pid' => 1,
             'doktype' => 104,
         ]);
-        $errorPage = $this->pageRepository->findOneByError($this->createError());
+        $errorPage = $this->pageRepository->find404PageForError($this->createError());
         $this->assertInstanceOf(Page::class, $errorPage);
         $this->assertSame($expected, $errorPage->getUid());
     }
@@ -91,7 +91,7 @@ class FindErrorPageTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
     /**
      * @test
      */
-    public function findErrorPageByErrorReturnsNullBecausePage404IsHidden()
+    public function find404PageForErrorReturnsNullBecausePage404IsHidden()
     {
         $this->importDataSet('pages');
         $this->importPageRecord([
@@ -100,14 +100,14 @@ class FindErrorPageTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
             'doktype' => 104,
             'hidden' => 1,
         ]);
-        $errorPage = $this->pageRepository->findOneByError($this->createError());
+        $errorPage = $this->pageRepository->find404PageForError($this->createError());
         $this->assertSame(null, $errorPage);
     }
 
     /**
      * @test
      */
-    public function findErrorPageByErrorReturnsNullBecausePage404IsRestricted()
+    public function find404PageForErrorReturnsNullBecausePage404IsRestricted()
     {
         $this->importDataSet('pages');
         $this->importPageRecord([
@@ -116,14 +116,14 @@ class FindErrorPageTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
             'doktype' => 104,
             'fe_group' => '1',
         ]);
-        $errorPage = $this->pageRepository->findOneByError($this->createError());
+        $errorPage = $this->pageRepository->find404PageForError($this->createError());
         $this->assertSame(null, $errorPage);
     }
 
     /**
      * @test
      */
-    public function findErrorPageByErrorReturnsNullBecausePage404HasDifferentHost()
+    public function find404PageForErrorReturnsNullBecausePage404HasDifferentHost()
     {
         $this->importDataSet('pages');
         $this->importDataSet('sys_domain');
@@ -132,14 +132,14 @@ class FindErrorPageTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
             'pid' => 2,
             'doktype' => 104,
         ]);
-        $errorPage = $this->pageRepository->findOneByError($this->createError());
+        $errorPage = $this->pageRepository->find404PageForError($this->createError());
         $this->assertSame(null, $errorPage);
     }
 
     /**
      * @test
      */
-    public function findErrorPageByErrorReturnsPage404ForDomain()
+    public function find404PageForErrorReturnsPage404ForDomain()
     {
         $expected = 404;
         $this->importDataSet('pages');
@@ -156,9 +156,51 @@ class FindErrorPageTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
             'pid' => 3,
             'doktype' => 104,
         ]);
-        $errorPage = $this->pageRepository->findOneByError($this->createError('typo3.org'));
+        $errorPage = $this->pageRepository->find404PageForError($this->createError('typo3.org'));
         $this->assertInstanceOf(Page::class, $errorPage);
         $this->assertSame($expected, $errorPage->getUid());
+    }
+
+    /**
+     * @test
+     */
+    public function find404PageForErrorWillReturnLocalizedErrorPage()
+    {
+        /** @var R3H6\Error404page\Domain\Model\Error $errorFixture */
+        $errorFixture = $this->createError();
+        $errorFixture->setLanguage(1);
+
+        $pageRepository = $this->getInaccessibleProperty($this->pageRepository, 'pageRepository');
+        $pageRepository->sys_language_uid = 1;
+
+        $this->importDataSet('pages');
+        $this->importDataSet('sys_language');
+        $this->importPageRecord([
+            'uid' => 400,
+            'title' => 'Error Page',
+            'pid' => 1,
+            'doktype' => 104,
+        ]);
+        $this->importPageLanguageOverlayRecord([
+            'uid' => 1,
+            'title' => 'Fehler Seite',
+            'pid' => 400,
+            'doktype' => 104,
+            'sys_language_uid' => 1,
+            't3_origuid' => 0,
+        ]);
+
+        $errorPage = $this->pageRepository->find404PageForError($errorFixture);
+        $this->assertInstanceOf(Page::class, $errorPage);
+        $this->assertEquals('Fehler Seite', $errorPage->getTitle(), 'Wrong page found!');
+    }
+
+    protected function getInaccessibleProperty($object, $propertyName)
+    {
+        $reflectionObject = new \ReflectionObject($object);
+        $reflectionProperty = $reflectionObject->getProperty($propertyName);
+        $reflectionProperty->setAccessible(true);
+        return $reflectionProperty->getValue($object);
     }
 
     /**
@@ -177,6 +219,10 @@ class FindErrorPageTest extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
     protected function importPageRecord(array $record)
     {
         $this->getDatabaseConnection()->exec_INSERTquery('pages', $record);
+    }
+    protected function importPageLanguageOverlayRecord(array $record)
+    {
+        $this->getDatabaseConnection()->exec_INSERTquery('pages_language_overlay', $record);
     }
 
 

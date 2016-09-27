@@ -21,7 +21,6 @@ use R3H6\Error404page\Domain\Model\Error;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Messaging\ErrorpageMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\HttpUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
@@ -86,8 +85,15 @@ class ErrorHandler
      */
     public function handleError(Error $error)
     {
+        $this->getLogger()->debug('Handle error...', [
+            'pid' => $error->getPid(),
+            'statusCode' => $error->getStatusCode(),
+            'reasonText' => $error->getReasonText(),
+        ]);
+
         if (!isset($_GET['tx_error404page_request'])) {
             if ($this->extensionConfiguration->is('enableErrorLog')) {
+                $this->getLogger()->debug('Log error...');
                 $this->errorRepository->log($error);
             }
 
@@ -95,25 +101,32 @@ class ErrorHandler
             $content = $this->pageCache->get($cacheIdentifier);
 
             if ($content === false) {
+                $this->getLogger()->debug('No cache entry found...');
+
                 /** @var R3H6\Error404page\Configuration\PageTsConfig $pageTsConfig */
                 $pageTsConfig = $this->pageTsConfigManager->getPageTsConfig($error->getPid());
 
                 // Get redirect link if it is a 403 error and user is not logged in and redirect is configured.
                 if ($error->getStatusCode() === Error::STATUS_CODE_FORBIDDEN && !$this->frontendUser->isLoggedIn() &&
                     $pageTsConfig->is('redirectError403To')) {
+
+                    $this->getLogger()->debug('Redirect mode on...');
+
                     $parameter = (string) $pageTsConfig->get('redirectError403To');
 
                     if ($parameter === 'auto') {
                         $loginPage = $this->pageRepository->findLoginPageForError($error);
+
                         if ($loginPage !== null) {
                             $parameter = (string) $loginPage->getUid();
                         } else {
                             $parameter = null;
                         }
+                        $this->getLogger()->debug('Find login page...', ['parameter' => $parameter]);
                     }
 
                     if (MathUtility::canBeInterpretedAsInteger($parameter)) {
-                        if (!$this->frontendController->isDefaultType()) {
+                        if ($this->frontendController->isDefaultType() === false) {
                             $parameter .= ','.$this->frontendController->getType();
                         }
                         if (GeneralUtility::_GP('L') !== null || $this->frontendController->isDefaultGetVar('L')) {
@@ -122,6 +135,8 @@ class ErrorHandler
                     }
 
                     if ($parameter) {
+                        $this->getLogger()->debug('Create redirect...', ['parameter' => $parameter]);
+
                         $content = 'REDIRECT:' . $this->frontendController->typoLink(['parameter' => $parameter, 'forceAbsoluteUrl' => true]);
 
                         $content .= (strpos($content, '?') === false) ? '?': '&';
@@ -129,8 +144,10 @@ class ErrorHandler
 
                         $this->pageCache->set($cacheIdentifier, $content, $error->getPid());
                     }
+                }
                 // Otherwise try to find a 404 page and display it.
-                } else {
+                if ($content === false) {
+                    $this->getLogger()->debug('Find error 404 page...');
                     $errorPage = $this->pageRepository->find404PageForError($error);
                     if ($errorPage !== null) {
                         $content = $this->httpService->readUrl($errorPage->getUrl());
@@ -143,23 +160,35 @@ class ErrorHandler
 
             if (is_string($content) && strlen($content)) {
                 if (strpos($content, 'REDIRECT:') === 0) {
-                    HttpUtility::redirect(substr($content, 9));
+                    $this->getLogger()->debug('Redirect...', ['content' => $content]);
+                    return $this->httpService->redirect(substr($content, 9));
                 }
 
+                $this->getLogger()->debug('Return error 404 page...');
                 $replaceMap = [
                     '###CURRENT_URL###' => $error->getCurrentUrl(),
                     '###REASON###' => $error->getReasonText(),
                     '###ERROR_STATUS_CODE###' => $error->getStatusCode(),
                 ];
-
                 return str_replace(array_keys($replaceMap), array_values($replaceMap), $content);
             }
         }
 
         // Fallback to core error message.
+        $this->getLogger()->debug('Fallback...');
         $title = 'Page Not Found';
         $message = 'The page did not exist or was inaccessible.' . ($error->getReasonText() ? ' Reason: ' . htmlspecialchars($error->getReasonText()) : '');
         $messagePage = GeneralUtility::makeInstance(ErrorpageMessage::class, $message, $title);
         return $messagePage->render();
+    }
+
+    /**
+     * Get class logger
+     *
+     * @return TYPO3\CMS\Core\Log\Logger
+     */
+    protected function getLogger()
+    {
+        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Log\LogManager::class)->getLogger(__CLASS__);
     }
 }

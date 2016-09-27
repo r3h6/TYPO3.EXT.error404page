@@ -15,6 +15,9 @@
             <trans-unit id="configuration.basicAuthentication">
                 <source>Basic Authentication: Usefull for protected staging environments. Format is "name:password".</source>
             </trans-unit>
+            <trans-unit id="configuration.debug">
+                <source>Debug: Enable debug log (typo3temp/logs/debug.log).</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

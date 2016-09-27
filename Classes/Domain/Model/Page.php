@@ -36,6 +36,11 @@ class Page extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         $this->data = $data;
     }
 
+    public function getTitle()
+    {
+        return $this->data['title'];
+    }
+
     /**
      * Returns if page allows caching.
      *
@@ -54,8 +59,10 @@ class Page extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     public function getUrl()
     {
         // Fallback to default language if the site has no translation.
-        $lParam = isset($this->data['_PAGES_OVERLAY_LANGUAGE']) ? $this->data['_PAGES_OVERLAY_LANGUAGE'] : 0;
-        $url = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST') . '/index.php?id=' . $this->data['uid'] . '&L=' . $lParam . '&tx_error404page_request=' . uniqid() . '&return_url=' . GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL');
+        $language = (int) isset($this->data['_PAGES_OVERLAY_LANGUAGE']) ? $this->data['_PAGES_OVERLAY_LANGUAGE'] : 0;
+        $type = (int) GeneralUtility::_GP('type');
+
+        $url = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST') . '/index.php?id=' . $this->data['uid'] . '&type=' . $type . '&L=' . $language . '&tx_error404page_request=' . uniqid();
 
         return $url;
     }

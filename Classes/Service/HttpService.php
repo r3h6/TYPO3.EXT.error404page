@@ -16,6 +16,7 @@ namespace R3H6\Error404page\Service;
  *                                                                        */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\HttpUtility;
 
 /**
  * Error handler
@@ -29,6 +30,16 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
      * @inject
      */
     protected $extensionConfiguration;
+
+    /**
+     * Redirect to url.
+     *
+     * @param  string $url [description]
+     */
+    public function redirect($url)
+    {
+        HttpUtility::redirect($url);
+    }
 
     /**
      * Reads and returns the content of the url.

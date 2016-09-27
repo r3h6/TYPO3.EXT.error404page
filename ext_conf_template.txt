@@ -6,3 +6,6 @@ enableErrorLog = 0
 
 # cat=error404page//30; type=string; label=LLL:EXT:error404page/Resources/Private/Language/locallang_be.xlf:configuration.basicAuthentication
 basicAuthentication =
+
+# cat=error404page//40; type=boolean; label=LLL:EXT:error404page/Resources/Private/Language/locallang_be.xlf:configuration.debug
+debug = 0

@@ -104,7 +104,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
     protected function findByIdentifier($identifier)
     {
         $page = $this->pageRepository->getPage((int) $identifier);
-        if (is_array($page) && isset($page['uid']) && $this->isAccessible($page)) {
+        if (is_array($page) && isset($page['uid'])) {
             return $this->createDomainObject($page);
         }
         return null;
@@ -170,21 +170,6 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
         }
 
         return null;
-    }
-
-    protected function isAccessible(array $page)
-    {
-        // $rootLine = (array) $this->pageRepository->getRootLine($page['uid']);
-        // if (!empty($rootLine)) {
-        //     foreach ($rootLine as $parentPage) {
-        //         if (!$this->pageRepository->checkRecord('pages', (int) $parentPage['uid'])) {
-        //             return false;
-        //         }
-        //     }
-        //     return true;
-        // }
-        // return false;
-        return true;
     }
 
     /**

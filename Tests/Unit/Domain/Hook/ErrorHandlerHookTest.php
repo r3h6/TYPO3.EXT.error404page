@@ -20,6 +20,7 @@ namespace R3H6\Error404page\Tests\Unit\Hooks;
 use R3H6\Error404page\Domain\Hook\ErrorHandlerHook;
 use R3H6\Error404page\Domain\Handler\ErrorHandler;
 use R3H6\Error404page\Domain\Model\Error;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Unit test for the ErrorHandlerHook.
@@ -60,20 +61,89 @@ class ErrorHandlerHookTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function pageNotFoundCallsHandleErrorOnErrorHandlerAndReturnsTheResult()
     {
+        $tsfeFixture = $this->getMock(\TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController::class, [], [], '', false);
+        $paramsFixture = array (
+            'currentUrl' => '/index.php?id=5',
+            'reasonText' => 'ID was not an accessible page',
+            'pageAccessFailureReasons' =>array (),
+        );
+
         $this->errorHandlerMock
             ->expects($this->once())
             ->method('handleError')
-            ->with($this->callback(function ($error) {
-                return $error instanceof Error;
+            ->with($this->callback(function ($error) use ($paramsFixture) {
+                if (!$error instanceof Error) {
+                    return false;
+                }
+                if ($error->getCurrentUrl() !== $paramsFixture['currentUrl']) {
+                    return false;
+                }
+                if ($error->getReasonText() !== $paramsFixture['reasonText']) {
+                    return false;
+                }
+                if ($error->getLanguage() !== 1) {
+                    return false;
+                }
+                if ($error->getUrl() !== GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL')) {
+                    return false;
+                }
+                if ($error->getReferer() !== GeneralUtility::getIndpEnv('HTTP_REFERER')) {
+                    return false;
+                }
+                if ($error->getUserAgent() !== GeneralUtility::getIndpEnv('HTTP_USER_AGENT')) {
+                    return false;
+                }
+                if ($error->getIp() !== GeneralUtility::getIndpEnv('REMOTE_ADDR')) {
+                    return false;
+                }
+                if ($error->getHost() !== GeneralUtility::getIndpEnv('HTTP_HOST')) {
+                    return false;
+                }
+                if ($error->getStatusCode() !== Error::STATUS_CODE_NOT_FOUND) {
+                    return false;
+                }
+                if ($error->getPid() !== null) {
+                    return false;
+                }
+                return true;
             }))
             ->will($this->returnValue('test'));
 
-        $tsfeFixture = $this->getMock(\TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController::class, [], [], '', false);
-        $paramsFixture = [];
+        $this->subject
+            ->expects($this->once())
+            ->method('getSystemLanguage')
+            ->will($this->returnValue(1));
 
         $this->assertSame('test', $this->subject->pageNotFound($paramsFixture, $tsfeFixture));
     }
 
+    /**
+     * @test
+     */
+    public function pageNotFoundSetsPidOnError()
+    {
+        $tsfeFixture = $this->getMock(\TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController::class, [], [], '', false);
+        $tsfeFixture->page = ['uid' => '123'];
+
+        $paramsFixture = array (
+            'currentUrl' => '/index.php?id=3',
+            'reasonText' => 'ID was not an accessible page',
+            'pageAccessFailureReasons' => array (
+                'fe_group' => array (
+                    3 => '-2',
+                ),
+            ),
+        );
+
+        $this->errorHandlerMock
+            ->expects($this->once())
+            ->method('handleError')
+            ->with($this->callback(function ($error) use ($tsfeFixture) {
+                return $error->getPid() === (int)$tsfeFixture->page['uid'];
+            }));
+
+        $this->subject->pageNotFound($paramsFixture, $tsfeFixture);
+    }
 
     /**
      * @test
