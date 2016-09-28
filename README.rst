@@ -6,7 +6,7 @@
 
 .. _start:
 
-.. image:: https://travis-ci.org/r3h6/TYPO3.EXT.error404page.svg?branch=feature%2F403
+.. image:: https://travis-ci.org/r3h6/TYPO3.EXT.error404page.svg?branch=master
     :target: https://travis-ci.org/r3h6/TYPO3.EXT.error404page
 
 =============
@@ -74,15 +74,31 @@ If log is enabled, the last 10'000 errors are logged and listed in the backend m
 FAQ
 ---
 
+Update from 1.3.0 to 2?
+    As long you didn't do any xclasses you should be safe to update.
+
 How it works?
    The error handler makes a request to fetch the error page and returns it.
 
 Instead of the error page, the home page is shown?
    Perhaps you have some htaccess rules that redirects the error handler's request.
-   Make sure it is possible to call your error page directly (ex. http://typo3.request.host/index.php?id=123&L=0&tx_error404page_request=ab12cd34de56).
-
+   Make sure it is possible to call your error page directly (ex. http://typo3.request.host/index.php?id=123&type=0&L=0&tx_error404page_request=ab12cd34de56).
 
 Contributing
 ------------
 
 Bug reports and pull request are welcome through `GitHub <https://github.com/r3h6/TYPO3.EXT.error404page/>`_.
+
+Pull request
+^^^^^^^^^^^^
+
+Pull request to the master branch will be ignored. Please pull to the develop branch.
+
+Changelog
+---------
+
+2.0.0 Refactoring, Feature 403 redirects
+1.3.0 Updated backend modul
+1.2.0 TYPO3 6.2 compatibility
+1.1.0 Feature error log
+1.0.0 First release
