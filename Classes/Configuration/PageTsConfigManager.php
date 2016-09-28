@@ -27,7 +27,7 @@ class PageTsConfigManager implements \TYPO3\CMS\Core\SingletonInterface
 {
     const TSCONFIG_KEY = 'tx_error404page';
 
-    protected $pageTsConfig = [];
+    protected $pageTsConfig = array();
 
     /**
      * TypoScriptService
@@ -49,12 +49,12 @@ class PageTsConfigManager implements \TYPO3\CMS\Core\SingletonInterface
         if (!isset($this->pageTsConfig[$pageUid])) {
 
             $pageTsConfig = $this->typoScriptService->convertTypoScriptArrayToPlainArray(BackendUtility::getPagesTSconfig($pageUid));
-            $configuration = [];
+            $configuration = array();
             if (isset($pageTsConfig[self::TSCONFIG_KEY])) {
                 $configuration = (array) $pageTsConfig[self::TSCONFIG_KEY];
             }
 
-            $this->pageTsConfig[$pageUid] = GeneralUtility::makeInstance(PageTsConfig::class, $configuration, $pageUid);
+            $this->pageTsConfig[$pageUid] = GeneralUtility::makeInstance('R3H6\\Error404page\\Configuration\\PageTsConfig', $configuration, $pageUid);
         }
         return $this->pageTsConfig[$pageUid];
     }

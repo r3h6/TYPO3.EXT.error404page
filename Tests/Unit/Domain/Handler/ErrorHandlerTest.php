@@ -81,13 +81,6 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     protected $httpServiceMock;
 
-    protected $params = [
-        'reasonText' => 'Unit test',
-        'currentUrl' => '/invalid/path/',
-    ];
-
-    protected $host = 'localhost';
-
     public function setUp()
     {
         parent::setUp();
@@ -95,39 +88,39 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         $this->subject = new ErrorHandler();
 
         // Mock dependencies
-        $this->errorRepositoryMock = $this->getMock(ErrorRepository::class, get_class_methods(ErrorRepository::class), [], '', false);
+        $this->errorRepositoryMock = $this->getMock('R3H6\\Error404page\\Domain\\Repository\\ErrorRepository', get_class_methods('R3H6\\Error404page\\Domain\\Repository\\ErrorRepository'), array(), '', false);
         $this->inject($this->subject, 'errorRepository', $this->errorRepositoryMock);
 
-        $this->pageRepositoryMock = $this->getMock(PageRepository::class, get_class_methods(PageRepository::class), [], '', false);
+        $this->pageRepositoryMock = $this->getMock('R3H6\\Error404page\\Domain\\Repository\\PageRepository', get_class_methods('R3H6\\Error404page\\Domain\\Repository\\PageRepository'), array(), '', false);
         $this->inject($this->subject, 'pageRepository', $this->pageRepositoryMock);
 
-        $this->extensionConfigurationMock = $this->getMock(ExtensionConfiguration::class, get_class_methods(ExtensionConfiguration::class), [], '', false);
+        $this->extensionConfigurationMock = $this->getMock('R3H6\\Error404page\\Configuration\\ExtensionConfiguration', get_class_methods('R3H6\\Error404page\\Configuration\\ExtensionConfiguration'), array(), '', false);
         $this->inject($this->subject, 'extensionConfiguration', $this->extensionConfigurationMock);
 
-        $this->pageTsConfigManagerMock = $this->getMock(PageTsConfigManager::class, get_class_methods(pageTsConfigManager::class), [], '', false);
+        $this->pageTsConfigManagerMock = $this->getMock('R3H6\\Error404page\\Configuration\\PageTsConfigManager', get_class_methods('R3H6\\Error404page\\Configuration\\PageTsConfigManager'), array(), '', false);
         $this->inject($this->subject, 'pageTsConfigManager', $this->pageTsConfigManagerMock);
 
-        $this->pageCacheMock = $this->getMock(PageCache::class, get_class_methods(PageCache::class), [], '', false);
+        $this->pageCacheMock = $this->getMock('R3H6\\Error404page\\Cache\\PageCache', get_class_methods('R3H6\\Error404page\\Cache\\PageCache'), array(), '', false);
         $this->inject($this->subject, 'pageCache', $this->pageCacheMock);
 
-        $this->frontendUserMock = $this->getMock(FrontendUser::class, get_class_methods(FrontendUser::class), [], '', false);
+        $this->frontendUserMock = $this->getMock('R3H6\\Error404page\\Facade\\FrontendUser', get_class_methods('R3H6\\Error404page\\Facade\\FrontendUser'), array(), '', false);
         $this->inject($this->subject, 'frontendUser', $this->frontendUserMock);
 
-        $this->frontendControllerMock = $this->getMock(FrontendController::class, get_class_methods(FrontendController::class), [], '', false);
+        $this->frontendControllerMock = $this->getMock('R3H6\\Error404page\\Facade\\FrontendController', get_class_methods('R3H6\\Error404page\\Facade\\FrontendController'), array(), '', false);
         $this->inject($this->subject, 'frontendController', $this->frontendControllerMock);
 
-        $this->httpServiceMock = $this->getMock(HttpService::class, get_class_methods(HttpService::class), [], '', false);
+        $this->httpServiceMock = $this->getMock('R3H6\\Error404page\\Service\\HttpService', get_class_methods('R3H6\\Error404page\\Service\\HttpService'), array(), '', false);
         $this->inject($this->subject, 'httpService', $this->httpServiceMock);
 
         // Mock TYPO3 objects
-        $GLOBALS['TYPO3_DB'] = $this->getMock(\TYPO3\CMS\Core\Database\DatabaseConnection::class, get_class_methods(\TYPO3\CMS\Core\Database\DatabaseConnection::class), [], '', false);
+        $GLOBALS['TYPO3_DB'] = $this->getMock('TYPO3\\CMS\\Core\\Database\\DatabaseConnection', get_class_methods('TYPO3\\CMS\\Core\\Database\\DatabaseConnection'), array(), '', false);
 
-        $configurationManager = $this->getMock(\TYPO3\CMS\Extbase\Configuration\ConfigurationManager::class, get_class_methods(\TYPO3\CMS\Extbase\Configuration\ConfigurationManager::class), [], '', false);
-        GeneralUtility::setSingletonInstance(\TYPO3\CMS\Extbase\Configuration\ConfigurationManager::class, $configurationManager);
+        $configurationManager = $this->getMock('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager', get_class_methods('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager'), array(), '', false);
+        GeneralUtility::setSingletonInstance('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager', $configurationManager);
 
         $GLOBALS['TSFE'] = new \stdClass();
         $GLOBALS['TSFE']->sys_language_uid = 0;
-        $GLOBALS['TSFE']->csConvObj = $this->getMock(\TYPO3\CMS\Core\Charset\CharsetConverter::class, get_class_methods(\TYPO3\CMS\Core\Charset\CharsetConverter::class), [], '', false);
+        $GLOBALS['TSFE']->csConvObj = $this->getMock('TYPO3\\CMS\\Core\\Charset\\CharsetConverter', get_class_methods('TYPO3\\CMS\\Core\\Charset\\CharsetConverter'), array(), '', false);
     }
 
     public function tearDown()
@@ -218,15 +211,15 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         $errorFixture->setUrl('http://www.typo3.org/forbidden.html');
 
         /** @var R3H6\Error404page\Domain\Model\Error $pageFixture */
-        $pageFixture = new Page([
+        $pageFixture = new Page(array(
             'uid' => 123,
             'pid' => 1,
-        ]);
+        ));
 
         $expected = $redirectFixture.'?redirect_url='.$errorFixture->getUrl();
         $cacheIdentifierFixture = uniqid();
 
-        $pageTsConfigMock = $this->getMock(PageTsConfig::class, ['is', 'get'], [], '', false);
+        $pageTsConfigMock = $this->getMock('R3H6\\Error404page\\Configuration\\PageTsConfig', array('is', 'get'), array(), '', false);
         $pageTsConfigMock
             ->expects($this->once())
             ->method('is')
@@ -278,10 +271,10 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         $this->frontendControllerMock
             ->expects($this->once())
             ->method('typoLink')
-            ->with($this->equalTo([
+            ->with($this->equalTo(array(
                 'parameter' => '123',
                 'forceAbsoluteUrl' => true,
-            ]))
+            )))
             ->will($this->returnValue($redirectFixture));
 
         $this->httpServiceMock
@@ -324,11 +317,11 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         $errorFixture = new Error();
 
         /** @var R3H6\Error404page\Domain\Model\Error $pageFixture */
-        $pageFixture = new Page([
+        $pageFixture = new Page(array(
             'uid' => 123,
             'pid' => 1,
 
-        ]);
+        ));
 
         $cacheIdentifierFixture = uniqid();
 

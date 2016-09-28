@@ -40,6 +40,7 @@ class PageTsConfig
 
     public function is($key)
     {
-        return empty($this->get($key)) === false;
+        $value = $this->get($key);
+        return empty($value) === false;
     }
 }

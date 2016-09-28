@@ -53,25 +53,27 @@ class ExtensionConfiguration implements \TYPO3\CMS\Core\SingletonInterface
 
     private function _use($key)
     {
-        return !empty($this->_get($key));
+        $value = $this->_get($key);
+        return !empty($value);
     }
 
     private function _is($key)
     {
-        return !empty($this->_get($key));
+        $value = $this->_get($key);
+        return !empty($value);
     }
 
     public function __call($method, $arguments)
     {
         if (method_exists($this, '_' . $method)) {
-            return call_user_func_array([$this, '_' . $method], $arguments);
+            return call_user_func_array(array($this, '_' . $method), $arguments);
         }
         throw new \RuntimeException("Method $method doesn't exist", 1461958193);
     }
 
     public static function __callStatic($method, $arguments)
     {
-        $instance = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(self::class);
-        return call_user_func_array([$instance, $method], $arguments);
+        $instance = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('R3H6\\Error404page\\Configuration\\ExtensionConfiguration');
+        return call_user_func_array(array($instance, $method), $arguments);
     }
 }

@@ -85,11 +85,11 @@ class ErrorHandler
      */
     public function handleError(Error $error)
     {
-        $this->getLogger()->debug('Handle error...', [
+        $this->getLogger()->debug('Handle error...', array(
             'pid' => $error->getPid(),
             'statusCode' => $error->getStatusCode(),
             'reasonText' => $error->getReasonText(),
-        ]);
+        ));
 
         if (!isset($_GET['tx_error404page_request'])) {
             if ($this->extensionConfiguration->is('enableErrorLog')) {
@@ -122,7 +122,7 @@ class ErrorHandler
                         } else {
                             $parameter = null;
                         }
-                        $this->getLogger()->debug('Find login page...', ['parameter' => $parameter]);
+                        $this->getLogger()->debug('Find login page...', array('parameter' => $parameter));
                     }
 
                     if (MathUtility::canBeInterpretedAsInteger($parameter)) {
@@ -135,9 +135,9 @@ class ErrorHandler
                     }
 
                     if ($parameter) {
-                        $this->getLogger()->debug('Create redirect...', ['parameter' => $parameter]);
+                        $this->getLogger()->debug('Create redirect...', array('parameter' => $parameter));
 
-                        $content = 'REDIRECT:' . $this->frontendController->typoLink(['parameter' => $parameter, 'forceAbsoluteUrl' => true]);
+                        $content = 'REDIRECT:' . $this->frontendController->typoLink(array('parameter' => $parameter, 'forceAbsoluteUrl' => true));
 
                         $content .= (strpos($content, '?') === false) ? '?': '&';
                         $content .= 'redirect_url=' . $error->getUrl();
@@ -160,16 +160,16 @@ class ErrorHandler
 
             if (is_string($content) && strlen($content)) {
                 if (strpos($content, 'REDIRECT:') === 0) {
-                    $this->getLogger()->debug('Redirect...', ['content' => $content]);
+                    $this->getLogger()->debug('Redirect...', array('content' => $content));
                     return $this->httpService->redirect(substr($content, 9));
                 }
 
                 $this->getLogger()->debug('Return error 404 page...');
-                $replaceMap = [
+                $replaceMap = array(
                     '###CURRENT_URL###' => $error->getCurrentUrl(),
                     '###REASON###' => $error->getReasonText(),
                     '###ERROR_STATUS_CODE###' => $error->getStatusCode(),
-                ];
+                );
                 return str_replace(array_keys($replaceMap), array_values($replaceMap), $content);
             }
         }
@@ -178,7 +178,7 @@ class ErrorHandler
         $this->getLogger()->debug('Fallback...');
         $title = 'Page Not Found';
         $message = 'The page did not exist or was inaccessible.' . ($error->getReasonText() ? ' Reason: ' . htmlspecialchars($error->getReasonText()) : '');
-        $messagePage = GeneralUtility::makeInstance(ErrorpageMessage::class, $message, $title);
+        $messagePage = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Messaging\\ErrorpageMessage', $message, $title);
         return $messagePage->render();
     }
 
@@ -189,6 +189,6 @@ class ErrorHandler
      */
     protected function getLogger()
     {
-        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Log\LogManager::class)->getLogger(__CLASS__);
+        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Log\\LogManager')->getLogger(__CLASS__);
     }
 }

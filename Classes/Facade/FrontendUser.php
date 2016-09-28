@@ -43,7 +43,7 @@ class FrontendUser
             sort($groups);
             return $groups;
         }
-        return [];
+        return array();
         // $this->frontendUserAuthentication->fetchGroupData();
         // \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($this);
         // $this->frontendUserAuthentication->groupData;

@@ -19,9 +19,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
 /**
- * BasicFrontendEnvironmentTrait.
+ * FunctionalTestCase.
  */
-trait BasicFrontendEnvironmentTrait
+abstract class FunctionalTestCase extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
 {
     /**
      * Minimal frontent environment to satisfy Extbase Typo3DbBackend.

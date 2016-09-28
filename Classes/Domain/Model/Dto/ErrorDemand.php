@@ -178,7 +178,7 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     {
         $eldestError = $this->_errorRepository->findEldestError();
 
-        $options = [];
+        $options = array();
 
         if ($eldestError !== null) {
             $minTime = strtotime(self::TIME_ONE_WEEK_AGO);

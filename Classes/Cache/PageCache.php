@@ -69,7 +69,7 @@ class PageCache implements \TYPO3\CMS\Core\SingletonInterface
 
     public function set($entryIdentifier, $data, $pageUid, array $tags = array(), $lifetime = null)
     {
-        $tags = array_merge($tags, ['pageId_' . $pageUid]);
+        $tags = array_merge($tags, array('pageId_' . $pageUid));
         // return $this->pageCache->set($entryIdentifier, $content, $tags);
     }
     protected function getFrontendUserGroups()

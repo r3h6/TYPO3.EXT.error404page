@@ -41,9 +41,9 @@ class ErrorHandlerHookTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     {
         parent::setUp();
 
-        $this->errorHandlerMock = $this->getMock(ErrorHandler::class, ['handleError'], [], '', false);
+        $this->errorHandlerMock = $this->getMock('R3H6\\Error404page\\Domain\\Handler\\ErrorHandler', array('handleError'), array(), '', false);
 
-        $this->subject = $this->getMock(ErrorHandlerHook::class, ['getErrorHandler', 'getSystemLanguage'], [], '', false);
+        $this->subject = $this->getMock('R3H6\\Error404page\\Domain\\Hook\\ErrorHandlerHook', array('getErrorHandler', 'getSystemLanguage'), array(), '', false);
         $this->subject
             ->expects($this->any())
             ->method('getErrorHandler')
@@ -61,7 +61,7 @@ class ErrorHandlerHookTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function pageNotFoundCallsHandleErrorOnErrorHandlerAndReturnsTheResult()
     {
-        $tsfeFixture = $this->getMock(\TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController::class, [], [], '', false);
+        $tsfeFixture = $this->getMock('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController', array(), array(), '', false);
         $paramsFixture = array (
             'currentUrl' => '/index.php?id=5',
             'reasonText' => 'ID was not an accessible page',
@@ -122,8 +122,8 @@ class ErrorHandlerHookTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function pageNotFoundSetsPidOnError()
     {
-        $tsfeFixture = $this->getMock(\TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController::class, [], [], '', false);
-        $tsfeFixture->page = ['uid' => '123'];
+        $tsfeFixture = $this->getMock('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController', array(), array(), '', false);
+        $tsfeFixture->page = array('uid' => '123');
 
         $paramsFixture = array (
             'currentUrl' => '/index.php?id=3',
@@ -157,7 +157,7 @@ class ErrorHandlerHookTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
                 return $error->getStatusCode() === Error::STATUS_CODE_FORBIDDEN;
             }));
 
-        $tsfeFixture = $this->getMock(\TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController::class, [], [], '', false);
+        $tsfeFixture = $this->getMock('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController', array(), array(), '', false);
         $paramsFixture = array (
             'currentUrl' => '/index.php?id=3',
             'reasonText' => 'ID was not an accessible page',

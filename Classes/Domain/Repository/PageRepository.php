@@ -47,7 +47,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
     /**
      * @var array
      */
-    protected $cachedRootPagesByHost = [];
+    protected $cachedRootPagesByHost = array();
 
     /**
      * Initialize object
@@ -118,7 +118,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      */
     protected function findRootPageByHost($host)
     {
-        $this->getLogger()->debug(__FUNCTION__, ['host' => $host]);
+        $this->getLogger()->debug(__FUNCTION__, array('host' => $host));
         if (!isset($this->cachedRootPagesByHost[$host])) {
             $rootPage = null;
             $domains = $this->domainRepository->findAll();
@@ -179,7 +179,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      */
     protected function findAllByDoktype($doktype)
     {
-        $this->getLogger()->debug(__FUNCTION__, ['doktype' => $doktype]);
+        $this->getLogger()->debug(__FUNCTION__, array('doktype' => $doktype));
         // $doktype = $this->extensionConfiguration->get('doktypeError404page');
 
         $result = $this->getDatabaseConnection()->exec_SELECTquery(
@@ -190,7 +190,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
             'sorting'
         );
 
-        $pages = [];
+        $pages = array();
         while ($record = $this->getDatabaseConnection()->sql_fetch_assoc($result)) {
             $page = $this->findByIdentifier($record['uid']);
             if ($page !== null) {
@@ -202,7 +202,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
 
     protected function createDomainObject($data)
     {
-        return GeneralUtility::makeInstance(Page::class, $data);
+        return GeneralUtility::makeInstance('R3H6\\Error404page\\Domain\\Model\\Page', $data);
     }
 
     /**
