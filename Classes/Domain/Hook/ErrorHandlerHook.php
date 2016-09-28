@@ -37,6 +37,8 @@ class ErrorHandlerHook implements \TYPO3\CMS\Core\SingletonInterface
      */
     public function pageNotFound(array $params, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe)
     {
+        $this->getLogger()->debug('Handle error...', array('params' => $params, 'page' => empty($tsfe->page)));
+
         /** @var R3H6\Error404page\Domain\Model\Error $error */
         $error = GeneralUtility::makeInstance('R3H6\\Error404page\\Domain\\Model\\Error');
         $error->setReasonText($params['reasonText']);
@@ -48,12 +50,12 @@ class ErrorHandlerHook implements \TYPO3\CMS\Core\SingletonInterface
         $error->setIp(GeneralUtility::getIndpEnv('REMOTE_ADDR'));
         $error->setHost(GeneralUtility::getIndpEnv('HTTP_HOST'));
 
-        if (isset($params['pageAccessFailureReasons']['fe_group'])) {
-            $error->setStatusCode(Error::STATUS_CODE_FORBIDDEN);
-        }
-
         if (false === empty($tsfe->page)) {
             $error->setPid((int) $tsfe->page['uid']);
+            // Access error can only happen if the page is known.
+            if (isset($params['pageAccessFailureReasons']['fe_group'])) {
+                $error->setStatusCode(Error::STATUS_CODE_FORBIDDEN);
+            }
         }
 
         return $this->getErrorHandler()->handleError($error);
@@ -77,5 +79,15 @@ class ErrorHandlerHook implements \TYPO3\CMS\Core\SingletonInterface
     protected function getSystemLanguage()
     {
         return (int) GeneralUtility::_GP('L');
+    }
+
+    /**
+     * Get class logger
+     *
+     * @return TYPO3\CMS\Core\Log\Logger
+     */
+    protected function getLogger()
+    {
+        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Log\\LogManager')->getLogger(__CLASS__);
     }
 }

@@ -120,7 +120,7 @@ class ErrorHandlerHookTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     /**
      * @test
      */
-    public function pageNotFoundSetsPidOnError()
+    public function pageNotFoundSetsPidAndStatusCodeOnError()
     {
         $tsfeFixture = $this->getMock('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController', array(), array(), '', false);
         $tsfeFixture->page = array('uid' => '123');
@@ -139,25 +139,52 @@ class ErrorHandlerHookTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
             ->expects($this->once())
             ->method('handleError')
             ->with($this->callback(function ($error) use ($tsfeFixture) {
-                return $error->getPid() === (int)$tsfeFixture->page['uid'];
+                if ($error->getPid() !== (int)$tsfeFixture->page['uid']) {
+                    return false;
+                }
+                if ($error->getStatusCode() !== Error::STATUS_CODE_FORBIDDEN) {
+                    return false;
+                }
+                return true;
             }));
 
         $this->subject->pageNotFound($paramsFixture, $tsfeFixture);
     }
+
+    public function pageNotFoundSetsNotStatusCodeOnError()
+    {
+        $tsfeFixture = $this->getMock('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController', array(), array(), '', false);
+
+        $paramsFixture = array (
+            'currentUrl' => '/invalid/path/',
+            'reasonText' => 'Segment "path" was not a keyword for a postVarSet as expected on page with id=1.',
+            'pageAccessFailureReasons' => array (
+                'fe_group' => array (
+                    '' => 0,
+                    ),
+                ),
+            );
+
+        $this->errorHandlerMock
+            ->expects($this->once())
+            ->method('handleError')
+            ->with($this->callback(function ($error) {
+                return $error->getStatusCode() !== Error::STATUS_CODE_FORBIDDEN;
+            }));
+
+        $this->subject->pageNotFound($paramsFixture, $tsfeFixture);
+    }
+
+
 
     /**
      * @test
      */
     public function pageNotFoundSetsStatusForbiddenOnError()
     {
-        $this->errorHandlerMock
-            ->expects($this->once())
-            ->method('handleError')
-            ->with($this->callback(function ($error) {
-                return $error->getStatusCode() === Error::STATUS_CODE_FORBIDDEN;
-            }));
-
         $tsfeFixture = $this->getMock('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController', array(), array(), '', false);
+        $tsfeFixture->page = array('uid' => '123');
+
         $paramsFixture = array (
             'currentUrl' => '/index.php?id=3',
             'reasonText' => 'ID was not an accessible page',
@@ -167,6 +194,13 @@ class ErrorHandlerHookTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
                 ),
             ),
         );
+
+        $this->errorHandlerMock
+            ->expects($this->once())
+            ->method('handleError')
+            ->with($this->callback(function ($error) {
+                return $error->getStatusCode() === Error::STATUS_CODE_FORBIDDEN;
+            }));
 
         $this->subject->pageNotFound($paramsFixture, $tsfeFixture);
     }
@@ -251,6 +285,19 @@ array (
     'fe_group' =>
     array (
       3 => '-2',
+    ),
+  ),
+)
+
+
+array (
+  'currentUrl' => '/invalid/path/',
+  'reasonText' => 'Segment "path" was not a keyword for a postVarSet as expected on page with id=1.',
+  'pageAccessFailureReasons' =>
+  array (
+    'fe_group' =>
+    array (
+      '' => 0,
     ),
   ),
 )
