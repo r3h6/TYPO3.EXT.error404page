@@ -22,7 +22,7 @@ class FrontendUser
     /**
      * FrontendUserAuthentication
      *
-     * @var TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication
+     * @var \TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication
      */
     protected $frontendUserAuthentication = null;
 

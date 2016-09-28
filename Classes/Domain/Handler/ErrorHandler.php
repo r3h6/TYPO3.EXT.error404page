@@ -103,7 +103,7 @@ class ErrorHandler
             if ($content === false) {
                 $this->getLogger()->debug('No cache entry found...');
 
-                /** @var R3H6\Error404page\Configuration\PageTsConfig $pageTsConfig */
+                /** @var \R3H6\Error404page\Configuration\PageTsConfig $pageTsConfig */
                 $pageTsConfig = $this->pageTsConfigManager->getPageTsConfig($error->getPid());
 
                 // Get redirect link if it is a 403 error and user is not logged in and redirect is configured.

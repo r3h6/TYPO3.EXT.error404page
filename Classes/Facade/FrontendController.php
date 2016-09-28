@@ -24,7 +24,7 @@ class FrontendController
     /**
      * TypoScriptFrontendController
      *
-     * @var TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
+     * @var \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
      */
     protected $typoScriptFrontendController;
 

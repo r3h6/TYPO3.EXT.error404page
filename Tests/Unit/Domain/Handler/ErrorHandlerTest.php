@@ -37,7 +37,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 {
     /**
-     * @var R3H6\Error404page\Domain\Handler\ErrorHandler
+     * @var \R3H6\Error404page\Domain\Handler\ErrorHandler
      */
     protected $subject;
 
@@ -146,7 +146,7 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function handleErrorReturnsStandardErrorpageMessageWhenGetParamIsSet()
     {
-        /** @var R3H6\Error404page\Domain\Model\Error $errorFixture */
+        /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
         $errorFixture = new Error();
 
         $_GET['tx_error404page_request'] = uniqid();
@@ -159,7 +159,7 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function handleErrorDisplaysPageFromCache()
     {
-        /** @var R3H6\Error404page\Domain\Model\Error $errorFixture */
+        /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
         $errorFixture = new Error();
 
         $expected = 'Cache';
@@ -178,7 +178,7 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function handleErrorRedirectsToUrlFromCache()
     {
-        /** @var R3H6\Error404page\Domain\Model\Error $errorFixture */
+        /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
         $errorFixture = new Error();
 
         $expected = 'http://www.typo3.org/';
@@ -204,13 +204,13 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     {
         $redirectFixture = 'http://www.typo3.org/login.html';
 
-        /** @var R3H6\Error404page\Domain\Model\Error $errorFixture */
+        /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
         $errorFixture = new Error();
         $errorFixture->setPid(9);
         $errorFixture->setStatusCode(Error::STATUS_CODE_FORBIDDEN);
         $errorFixture->setUrl('http://www.typo3.org/forbidden.html');
 
-        /** @var R3H6\Error404page\Domain\Model\Error $pageFixture */
+        /** @var \R3H6\Error404page\Domain\Model\Error $pageFixture */
         $pageFixture = new Page(array(
             'uid' => 123,
             'pid' => 1,
@@ -290,7 +290,7 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function handleErrorReturnsStandardErrorPageWhenCacheIsFalseAndNoErrorPageWasFound()
     {
-        /** @var R3H6\Error404page\Domain\Model\Error $errorFixture */
+        /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
         $errorFixture = new Error();
 
         $this->pageCacheMock
@@ -313,10 +313,10 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function handleErrorWillFindAndCacheAndReturnErrorPage()
     {
-        /** @var R3H6\Error404page\Domain\Model\Error $errorFixture */
+        /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
         $errorFixture = new Error();
 
-        /** @var R3H6\Error404page\Domain\Model\Error $pageFixture */
+        /** @var \R3H6\Error404page\Domain\Model\Error $pageFixture */
         $pageFixture = new Page(array(
             'uid' => 123,
             'pid' => 1,
@@ -369,7 +369,7 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     protected function getErrorFixture($statusCode = Err)
     {
-        /** @var R3H6\Error404page\Domain\Model\Error $errorFixture */
+        /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
         $errorFixture = new Error();
         $errorFixture->setStatusCode($statusCode);
     }

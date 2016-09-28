@@ -39,7 +39,7 @@ class ErrorHandlerHook implements \TYPO3\CMS\Core\SingletonInterface
     {
         $this->getLogger()->debug('Handle error...', array('params' => $params, 'page' => empty($tsfe->page)));
 
-        /** @var R3H6\Error404page\Domain\Model\Error $error */
+        /** @var \R3H6\Error404page\Domain\Model\Error $error */
         $error = GeneralUtility::makeInstance('R3H6\\Error404page\\Domain\\Model\\Error');
         $error->setReasonText($params['reasonText']);
         $error->setCurrentUrl($params['currentUrl']);

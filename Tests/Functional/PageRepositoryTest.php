@@ -26,10 +26,10 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 class PageRepositoryTest extends FunctionalTestCase
 {
-    // use \R3H6\Error404page\Tests\Functional\BasicFrontendEnvironmentTrait;
+    // use R3H6\Error404page\Tests\Functional\BasicFrontendEnvironmentTrait;
 
     /**
-     * @var R3H6\Error404page\Domain\Repository\PageRepository
+     * @var \R3H6\Error404page\Domain\Repository\PageRepository
      */
     protected $pageRepository;
 
@@ -163,7 +163,7 @@ class PageRepositoryTest extends FunctionalTestCase
      */
     public function find404PageForErrorWillReturnLocalizedErrorPage()
     {
-        /** @var R3H6\Error404page\Domain\Model\Error $errorFixture */
+        /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
         $errorFixture = $this->createError();
         $errorFixture->setLanguage(1);
 
@@ -205,7 +205,7 @@ class PageRepositoryTest extends FunctionalTestCase
      */
     protected function createError($host = 'www.typo3.org', $statusCode = Error::STATUS_CODE_NOT_FOUND, $pid = null)
     {
-        /** @var R3H6\Error404page\Domain\Model\Error   $error */
+        /** @var \R3H6\Error404page\Domain\Model\Error   $error */
         $error = new Error();
         $error->setStatusCode($statusCode);
         $error->setPid($pid);

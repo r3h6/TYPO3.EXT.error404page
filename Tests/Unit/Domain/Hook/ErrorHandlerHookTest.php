@@ -28,12 +28,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class ErrorHandlerHookTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 {
     /**
-     * @var R3H6\Error404page\Domain\Hook\ErrorHandlerHook
+     * @var \R3H6\Error404page\Domain\Hook\ErrorHandlerHook
      */
     protected $subject;
 
     /**
-     * @var R3H6\Error404page\Domain\Handler\ErrorHandler;
+     * @var \R3H6\Error404page\Domain\Handler\ErrorHandler;
      */
     protected $errorHandlerMock;
 
