@@ -6,6 +6,9 @@
 
 .. _start:
 
+.. image:: https://travis-ci.org/r3h6/TYPO3.EXT.error404page.svg?branch=feature%2F403
+    :target: https://travis-ci.org/r3h6/TYPO3.EXT.error404page
+
 =============
 Documentation
 =============
