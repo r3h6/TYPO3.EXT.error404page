@@ -1,6 +1,6 @@
 <?php
 
-namespace R3H6\Error404page\Domain\Repository;
+namespace R3H6\Error404page\Configuration;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -15,39 +15,32 @@ namespace R3H6\Error404page\Domain\Repository;
  * Public License for more details.                                       *
  *                                                                        */
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * DomainRepository
+ * PageTsConfiguration
+ *
+ * API to access extension configuration (ext_conf_template.txt).
  */
-class DomainRepository implements \TYPO3\CMS\Core\SingletonInterface
+class PageTsConfig
 {
-    /**
-     * @var \TYPO3\CMS\Frontend\Page\PageRepository
-     * @inject
-     */
-    protected $pageRepository;
+    protected $configuration = null;
+    protected $pageUid = null;
 
-    /**
-     * Find all
-     *
-     * @return array Domain records
-     */
-    public function findAll()
+    public function __construct(array $configuration, $pageUid)
     {
-        $domains = $this->getDatabaseConnection()->exec_SELECTgetRows(
-            '*',
-            'sys_domain',
-            "1=1" . $this->pageRepository->enableFields('sys_domain')
-        );
-        return (array) $domains;
+        $this->configuration = $configuration;
+        $this->pageUid = $pageUid;
+
     }
 
-    /**
-     * @return \TYPO3\CMS\Core\Database\DatabaseConnection
-     */
-    protected function getDatabaseConnection()
+    public function get($key)
     {
-        return $GLOBALS['TYPO3_DB'];
+        return isset($this->configuration[$key]) ? $this->configuration[$key]: null;
+    }
+
+    public function is($key)
+    {
+        $value = $this->get($key);
+        return empty($value) === false;
     }
 }
