@@ -38,7 +38,7 @@ class PageRepositoryTest extends FunctionalTestCase
     protected $configurationToUseInTestInstance = array(
         'EXT' => array(
             'extConf' => array(
-                'error404page' => 'a:3:{s:19:"doktypeError404page";i:104;s:14:"enableErrorLog";i:0;s:17:"enable403redirect";i:0;}',
+                'error404page' => 'a:3:{s:19:"doktypeError404page";i:104;s:14:"enableErrorLog";i:0;s:5:"debug";i:1;}',
             ),
         ),
     );
@@ -153,6 +153,35 @@ class PageRepositoryTest extends FunctionalTestCase
             'pid' => 3,
             'doktype' => 104,
         ));
+        $errorPage = $this->pageRepository->find404PageForError($this->createError('typo3.org'));
+        $this->assertInstanceOf('R3H6\\Error404page\\Domain\\Model\\Page', $errorPage);
+        $this->assertSame($expected, $errorPage->getUid());
+    }
+
+    /**
+     * @test
+     */
+    public function find404PageForErrorReturnsGenerallPage404()
+    {
+        $expected = 404;
+
+        $this->importDataSet('pages');
+        $this->importDataSet('sys_domain');
+
+        $this->importPageRecord(array(
+            'uid' => 400,
+            'title' => 'Error Page For Other Domain',
+            'pid' => 2,
+            'doktype' => 104,
+        ));
+
+        $this->importPageRecord(array(
+            'uid' => $expected,
+            'title' => 'Error Page',
+            'pid' => 4,
+            'doktype' => 104,
+        ));
+
         $errorPage = $this->pageRepository->find404PageForError($this->createError('typo3.org'));
         $this->assertInstanceOf('R3H6\\Error404page\\Domain\\Model\\Page', $errorPage);
         $this->assertSame($expected, $errorPage->getUid());

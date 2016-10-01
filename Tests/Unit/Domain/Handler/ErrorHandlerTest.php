@@ -60,6 +60,8 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 
         $this->subject = new ErrorHandler();
 
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['error404page']['errorHandlers'][] = 'R3H6\\Error404page\\Tests\\Unit\\Fixtures\\TestErrorHandler';
+
         // Mock dependencies
         $this->errorRepositoryMock = $this->getMock('R3H6\\Error404page\\Domain\\Repository\\ErrorRepository', get_class_methods('R3H6\\Error404page\\Domain\\Repository\\ErrorRepository'), array(), '', false);
         $this->inject($this->subject, 'errorRepository', $this->errorRepositoryMock);
@@ -112,7 +114,7 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         $this->subject->handleError($errorFixture);
     }
 
-     /**
+    /**
      * @test
      * @expectedException Exception
      */
@@ -132,6 +134,57 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     /**
      * @test
      */
+    public function handleErrorCachesErrorHandler()
+    {
+        /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
+        $errorFixture = new Error();
+
+
+        $cacheIdentifierFixture = sha1(uniqid());
+        $this->errorHandlerCacheMock
+            ->expects($this->once())
+            ->method('calculateCacheIdentifier')
+            ->will($this->returnValue($cacheIdentifierFixture));
+
+        $errorHandlerMock = $this->mockGetErrorHandlers();
+        $errorHandlerMock
+            ->expects($this->once())
+            ->method('handleError')
+            ->with($errorFixture)
+            ->will($this->returnValue(true));
+
+        $this->errorHandlerCacheMock
+            ->expects($this->once())
+            ->method('set')
+            ->with($cacheIdentifierFixture, $errorHandlerMock);
+
+        $this->subject->handleError($errorFixture);
+    }
+
+    /**
+     * @test
+     */
+    public function handleErrorWillNotCacheErrorHandler()
+    {
+        /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
+        $errorFixture = new Error();
+
+        $errorHandlerMock = $this->mockGetErrorHandlers();
+        $errorHandlerMock
+            ->expects($this->any())
+            ->method('handleError')
+            ->with($errorFixture)
+            ->will($this->returnValue(false));
+
+        $this->errorHandlerCacheMock
+            ->expects($this->never())
+            ->method('set');
+
+        $this->subject->handleError($errorFixture);
+    }
+    /**
+     * @test
+     */
     public function handleErrorDoesNotLogErrorWhenConfigurationIsNotSet()
     {
         /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
@@ -142,6 +195,30 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         $this->errorRepositoryMock
             ->expects($this->never())
             ->method('log');
+
+        $this->subject->handleError($errorFixture);
+    }
+
+    /**
+     * @test
+     */
+    public function getErrorHandlers()
+    {
+        /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
+        $errorFixture = new Error();
+
+        $this->objectManagerMock
+            ->expects($this->any())
+            ->method('get')
+            ->withConsecutive(
+                array($this->equalTo('R3H6\\Error404page\\Tests\\Unit\\Fixtures\\TestErrorHandler')),
+                array($this->equalTo('R3H6\\Error404page\\Domain\\Handler\\RedirectErrorHandler')),
+                array($this->equalTo('R3H6\\Error404page\\Domain\\Handler\\Page404ErrorHandler')),
+                array($this->equalTo('R3H6\\Error404page\\Domain\\Handler\\DefaultErrorHandler'))
+            )
+            ->will($this->returnValue(
+                $this->getMock('R3H6\\Error404page\\Domain\\Handler\\ErrorHandlerInterface')
+            ));
 
         $this->subject->handleError($errorFixture);
     }
@@ -181,11 +258,13 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 
     protected function mockGetErrorHandlers()
     {
+        $errorHandlerMock = $this->getMock('R3H6\\Error404page\\Domain\\Handler\\ErrorHandlerInterface');
+
          $this->objectManagerMock
             ->expects($this->any())
             ->method('get')
-            ->will($this->returnValue(
-                $this->getMock('R3H6\\Error404page\\Domain\\Handler\\ErrorHandlerInterface')
-            ));
+            ->will($this->returnValue($errorHandlerMock));
+
+        return $errorHandlerMock;
     }
 }

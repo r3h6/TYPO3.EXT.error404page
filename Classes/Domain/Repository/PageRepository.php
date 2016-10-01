@@ -49,6 +49,12 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      */
     protected $cachedRootPagesByHost = array();
 
+
+    /**
+     * @var array
+     */
+    protected $cachedPagesByDoktype = array();
+
     /**
      * Initialize object
      */
@@ -98,7 +104,11 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
     public function find404PageForError(Error $error)
     {
         $doktype = (int) $this->extensionConfiguration->get('doktypeError404page');
-        return $this->findFirstByHostAndDoktype($error->getHost(), $doktype);
+        $page = $this->findFirstByHostAndDoktype($error->getHost(), $doktype);
+        if ($page === null) {
+            $page = $this->findFirstWithoutHostByDoktype($doktype);
+        }
+        return $page;
     }
 
     protected function findByIdentifier($identifier)
@@ -118,16 +128,13 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      */
     protected function findRootPageByHost($host)
     {
-        $this->getLogger()->debug(__FUNCTION__, array('host' => $host));
         if (!isset($this->cachedRootPagesByHost[$host])) {
             $rootPage = null;
-            $domains = $this->domainRepository->findAll();
+            $domains = $this->domainRepository->findByDomainName($host);
             foreach ($domains as $domain) {
-                if (empty($domain['redirectTo']) && strpos($host, $domain['domainName']) === 0) {
-                    $rootPage = $this->findByIdentifier($domain['pid']);
-                    if ($rootPage !== null) {
-                        break;
-                    }
+                $rootPage = $this->findByIdentifier($domain['pid']);
+                if ($rootPage !== null) {
+                    break;
                 }
             }
             if ($rootPage === null) {
@@ -136,6 +143,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
                     $rootPage = $this->findByIdentifier($rootPages[0]['uid']);
                 }
             }
+
             $this->cachedRootPagesByHost[$host] = $rootPage;
         }
 
@@ -172,6 +180,30 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
         return null;
     }
 
+    protected function findFirstWithoutHostByDoktype($doktype)
+    {
+        /** @var array<\R3H6\Error404page\Domain\Model\Page> $pages */
+        $pages = $this->findAllByDoktype($doktype);
+
+        $domains = $this->domainRepository->findAll();
+
+        $blackList = array();
+        foreach ($domains as $domain) {
+            $blackList[] = $domain['pid'];
+        }
+
+        foreach ($pages as $page) {
+            $rootLine = $this->pageRepository->getRootLine($page->getUid());
+            foreach ($rootLine as $parentPage) {
+                if (in_array($parentPage['uid'], $blackList)) {
+                    continue 2; // It's not this page, try next!
+                }
+            }
+            return $page;
+        }
+        return null;
+    }
+
     /**
      * Returns all accessible error pages from all websites.
      *
@@ -179,25 +211,28 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      */
     protected function findAllByDoktype($doktype)
     {
-        $this->getLogger()->debug(__FUNCTION__, array('doktype' => $doktype));
-        // $doktype = $this->extensionConfiguration->get('doktypeError404page');
+        if (!isset($this->cachedPagesByDoktype[$doktype])) {
+            $result = $this->getDatabaseConnection()->exec_SELECTquery(
+                'uid',
+                'pages',
+                sprintf('doktype=%d', $doktype) . $this->pageRepository->enableFields('pages'),
+                '',
+                'sorting'
+            );
 
-        $result = $this->getDatabaseConnection()->exec_SELECTquery(
-            'uid',
-            'pages',
-            sprintf('doktype=%d', $doktype) . $this->pageRepository->enableFields('pages'),
-            '',
-            'sorting'
-        );
-
-        $pages = array();
-        while ($record = $this->getDatabaseConnection()->sql_fetch_assoc($result)) {
-            $page = $this->findByIdentifier($record['uid']);
-            if ($page !== null) {
-                $pages[] = $page;
+            $pages = array();
+            while ($record = $this->getDatabaseConnection()->sql_fetch_assoc($result)) {
+                $page = $this->findByIdentifier($record['uid']);
+                if ($page !== null) {
+                    $pages[] = $page;
+                }
             }
+
+            $this->getLogger()->debug(sprintf('Found "%d" pages for doktype "%d"', count($pages), $doktype));
+
+            $this->cachedPagesByDoktype[$doktype] = $pages;
         }
-        return $pages;
+        return $this->cachedPagesByDoktype[$doktype];
     }
 
     protected function createDomainObject($data)

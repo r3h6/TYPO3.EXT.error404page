@@ -13,9 +13,17 @@
 Documentation
 =============
 
-Custom error 404 pages made simple. Use TYPO3 pages for display error documents. Works for multi domain and multilingual installations.
+Custom error 404 pages made simple.
+
+Use TYPO3 pages for display 404 errors. Optional error 403 redirect handling. Works for multi domain and multilingual installations.
+
+
+How it works
+------------
 
 This extension adds a new custom page type for rendering 404 documents.
+
+This extensions overrides the "['FE']['pageNotFound_handling']" configuration with its own configuration.
 
 
 Screenshots
@@ -35,6 +43,11 @@ Installation
 
 Through `TER <https://typo3.org/extensions/repository/view/error404page/>`_ or with `composer <https://composer.typo3.org/satis.html#!/error404page>`_ (typo3-ter/error404page).
 
+Update from 1.3 to 2
+^^^^^^^^^^^^^^^^^^^^
+
+As long you didn't do any xclasses you should be safe to update.
+
 
 Integration
 -----------
@@ -45,10 +58,11 @@ Simply install the extension and create a new page with your error message.
 
 You can use following markers in your content.
 
-:###CURRENT_URL###: The url of the called page.
-:###REASON###: A text why the error occured.
+.. only:: html
+  :###CURRENT_URL###: The url of the called page.
+  :###REASON###: A text why the error occured.
 
-If you like redirect non logged in users on an 403 (forbidden) error,
+If you like redirect non logged in users when a 403 (forbidden) error occurs,
 simply include the available "Page TSConfig" or define by yourself:
 
 ``tx_error404page.redirectError403To = auto|url|uid``
@@ -68,14 +82,11 @@ Configuration
 Log and statistic
 -----------------
 
-If log is enabled, the last 10'000 errors are logged and listed in the backend modul "Error statistic".
+If log is enabled, the last 10'000 errors are logged and listed in the backend modul "Errors".
 
 
 FAQ
 ---
-
-Update from 1.3.0 to 2?
-    As long you didn't do any xclasses you should be safe to update.
 
 How it works?
    The error handler makes a request to fetch the error page and returns it.
@@ -83,6 +94,7 @@ How it works?
 Instead of the error page, the home page is shown?
    Perhaps you have some htaccess rules that redirects the error handler's request.
    Make sure it is possible to call your error page directly (ex. http://typo3.request.host/index.php?id=123&type=0&L=0&tx_error404page_request=ab12cd34de56).
+
 
 Contributing
 ------------
@@ -93,6 +105,7 @@ Pull request
 ^^^^^^^^^^^^
 
 Pull request to the master branch will be ignored. Please pull to the develop branch.
+
 
 Changelog
 ---------

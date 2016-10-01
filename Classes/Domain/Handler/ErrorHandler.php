@@ -65,6 +65,7 @@ class ErrorHandler
     public function handleError(\R3H6\Error404page\Domain\Model\Error $error)
     {
         if ($this->httpService->isOwnRequest()) {
+            $this->getLogger()->debug("Throw exception 1475311053");
             throw new \Exception("Error processing request", 1475311053);
         }
 
@@ -77,8 +78,9 @@ class ErrorHandler
         if ($errorHandler === null) {
             foreach ($this->getErrorHandlers() as $errorHandler) {
                 try {
+                    $this->getLogger()->debug('Try handle error with ' . get_class($errorHandler));
                     if ($errorHandler->handleError($error)) {
-                        // $this->errorHandlerCache->set($cacheIdentifier, $errorHandler);
+                        $this->errorHandlerCache->set($cacheIdentifier, $errorHandler);
                         break;
                     }
                 } catch (\Exception $exception) {
@@ -87,6 +89,8 @@ class ErrorHandler
             }
         }
 
+        $this->getLogger()->debug('Get error handler output of ' . get_class($errorHandler));
+
         return $errorHandler->getOutput($error);
     }
 
@@ -94,6 +98,7 @@ class ErrorHandler
     {
         $errorHandlers = array();
 
+        $registeredErrorHandlers = (array) $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['error404page']['errorHandlers'];
         $registeredErrorHandlers[] = 'R3H6\\Error404page\\Domain\\Handler\\RedirectErrorHandler';
         $registeredErrorHandlers[] = 'R3H6\\Error404page\\Domain\\Handler\\Page404ErrorHandler';
         $registeredErrorHandlers[] = 'R3H6\\Error404page\\Domain\\Handler\\DefaultErrorHandler';

@@ -98,14 +98,4 @@ class Page404ErrorHandler implements ErrorHandlerInterface
     {
         return $this->cacheTags;
     }
-
-    /**
-     * Get class logger
-     *
-     * @return \TYPO3\CMS\Core\Log\Logger
-     */
-    protected function getLogger()
-    {
-        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Log\\LogManager')->getLogger(__CLASS__);
-    }
 }

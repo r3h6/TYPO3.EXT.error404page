@@ -38,7 +38,17 @@ class DomainRepository implements \TYPO3\CMS\Core\SingletonInterface
         $domains = $this->getDatabaseConnection()->exec_SELECTgetRows(
             '*',
             'sys_domain',
-            "1=1" . $this->pageRepository->enableFields('sys_domain')
+            "redirectTo=''" . $this->pageRepository->enableFields('sys_domain')
+        );
+        return (array) $domains;
+    }
+
+    public function findByDomainName($domainName)
+    {
+        $domains = $this->getDatabaseConnection()->exec_SELECTgetRows(
+            '*',
+            'sys_domain',
+            "redirectTo='' AND domainName=" . $this->getDatabaseConnection()->fullQuoteStr($domainName, 'sys_domain') . " " . $this->pageRepository->enableFields('sys_domain')
         );
         return (array) $domains;
     }

@@ -18,7 +18,7 @@ namespace R3H6\Error404page\Domain\Handler;
 /**
  * ErrorHandlerInterface.
  */
-interface ErrorHandlerInterface extends \R3H6\Error404page\Cache\CachableInterface
+interface ErrorHandlerInterface extends \R3H6\Error404page\Domain\Cache\CachableInterface
 {
     /**
      * Handle error.

@@ -52,7 +52,8 @@ class ErrorHandlerCache implements \TYPO3\CMS\Core\SingletonInterface
      */
     public function initializeObject()
     {
-        $this->cacheInstance = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Cache\\CacheManager')->getCache(self::IDENTIFIER);
+        // $this->cacheInstance = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Cache\\CacheManager')->getCache(self::IDENTIFIER);
+        $this->cacheInstance = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Cache\\CacheManager')->getCache('cache_pages');
     }
 
     /**

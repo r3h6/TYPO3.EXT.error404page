@@ -50,7 +50,7 @@
 		<pid>0</pid>
 		<title>Test Page 2</title>
 		<doktype>1</doktype>
-		<sorting>1</sorting>
+		<sorting>2</sorting>
 		<is_siteroot>1</is_siteroot>
 	</pages>
 	<pages>
@@ -58,7 +58,14 @@
 		<pid>0</pid>
 		<title>Test Page 3</title>
 		<doktype>1</doktype>
-		<sorting>1</sorting>
+		<sorting>3</sorting>
 		<is_siteroot>1</is_siteroot>
+	</pages>
+	<pages>
+		<uid>4</uid>
+		<pid>0</pid>
+		<title>Storage folder</title>
+		<doktype>254</doktype>
+		<sorting>4</sorting>
 	</pages>
 </dataset>

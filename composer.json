@@ -1,7 +1,7 @@
 {
     "name": "r3h6/error404page",
     "type": "typo3-cms-extension",
-    "description": "Custom error 404 pages made simple. Use TYPO3 pages for display error documents. Works for multi domain and multilingual installations.",
+    "description": "Use TYPO3 pages for display 404 errors. Optional error 403 redirect handling. Works for multi domain and multilingual installations.",
     "keywords": [
         "TYPO3",
         "extension",

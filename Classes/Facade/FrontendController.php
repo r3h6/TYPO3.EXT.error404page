@@ -64,7 +64,7 @@ class FrontendController
     public function isDefaultGetVar($getVar)
     {
         $this->initialize();
-        return isset($this->typoScriptFrontendController->config['config']['defaultGetVars'][$getVar]);
+        return isset($this->typoScriptFrontendController->config['config']['defaultGetVars.'][$getVar]);
     }
 
     protected function initialize()

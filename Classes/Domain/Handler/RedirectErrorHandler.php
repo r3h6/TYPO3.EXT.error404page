@@ -105,6 +105,8 @@ class RedirectErrorHandler implements ErrorHandlerInterface
             }
         }
 
+        $this->getLogger()->debug(sprintf('Redirect parameter "%s"', $parameter));
+
         if ($parameter) {
             $this->redirect = '';
             $this->redirect .= $this->frontendController->typoLink(array('parameter' => $parameter, 'forceAbsoluteUrl' => true));
