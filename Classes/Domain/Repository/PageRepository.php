@@ -226,7 +226,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
     /**
      * Get class logger
      *
-     * @return TYPO3\CMS\Core\Log\Logger
+     * @return \TYPO3\CMS\Core\Log\Logger
      */
     protected function getLogger()
     {

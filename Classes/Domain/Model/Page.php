@@ -62,7 +62,7 @@ class Page extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         $language = (int) isset($this->data['_PAGES_OVERLAY_LANGUAGE']) ? $this->data['_PAGES_OVERLAY_LANGUAGE'] : 0;
         $type = (int) GeneralUtility::_GP('type');
 
-        $url = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST') . '/index.php?id=' . $this->data['uid'] . '&type=' . $type . '&L=' . $language . '&tx_error404page_request=' . uniqid();
+        $url = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST') . '/index.php?id=' . $this->data['uid'] . '&type=' . $type . '&L=' . $language;
 
         return $url;
     }

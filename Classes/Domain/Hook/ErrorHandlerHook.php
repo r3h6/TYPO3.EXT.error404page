@@ -37,7 +37,9 @@ class ErrorHandlerHook implements \TYPO3\CMS\Core\SingletonInterface
      */
     public function pageNotFound(array $params, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe)
     {
-        $this->getLogger()->debug('Handle error...', array('params' => $params, 'page' => empty($tsfe->page)));
+
+
+        // $this->getLogger()->debug('Handle error...', array('params' => $params, 'page' => empty($tsfe->page)));
 
         /** @var \R3H6\Error404page\Domain\Model\Error $error */
         $error = GeneralUtility::makeInstance('R3H6\\Error404page\\Domain\\Model\\Error');
@@ -64,7 +66,7 @@ class ErrorHandlerHook implements \TYPO3\CMS\Core\SingletonInterface
     /**
      * Returns the error handler.
      *
-     * @return R3H6\Error404page\Domain\Handler\ErrorHandler
+     * @return \R3H6\Error404page\Domain\Handler\ErrorHandler
      */
     protected function getErrorHandler()
     {
@@ -84,7 +86,7 @@ class ErrorHandlerHook implements \TYPO3\CMS\Core\SingletonInterface
     /**
      * Get class logger
      *
-     * @return TYPO3\CMS\Core\Log\Logger
+     * @return \TYPO3\CMS\Core\Log\Logger
      */
     protected function getLogger()
     {

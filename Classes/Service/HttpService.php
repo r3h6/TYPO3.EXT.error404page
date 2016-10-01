@@ -67,6 +67,11 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
         return $content;
     }
 
+    public function isOwnRequest()
+    {
+        return GeneralUtility::_GP('tx_error404page_request') !== null;
+    }
+
     /**
      * Creates a http request
      *
@@ -75,6 +80,9 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
      */
     protected function getHttpRequest($url)
     {
+        $url .= (strpos($url, '?') === false) ? '?': '&';
+        $url .= '&tx_error404page_request=' . uniqid();
+
         /** @var \TYPO3\CMS\Core\Http\HttpRequest $request */
         $request = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Http\\HttpRequest', $url);
 

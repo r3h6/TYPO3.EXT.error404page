@@ -124,7 +124,7 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
     /**
      * Returns eldest error
      *
-     * @return R3H6\Error404page\Domain\Model\Error
+     * @return \R3H6\Error404page\Domain\Model\Error
      */
     public function findEldestError()
     {
@@ -217,7 +217,7 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
     }
 
     /**
-     * @return TYPO3\CMS\Core\Database\DatabaseConnection
+     * @return \TYPO3\CMS\Core\Database\DatabaseConnection
      */
     protected function getDatabaseConnection()
     {

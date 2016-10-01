@@ -1,6 +1,6 @@
 <?php
 
-namespace R3H6\Error404page\Tests\Unit\Controller;
+namespace R3H6\Error404page\Tests\Unit\Domain\Handler;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -15,21 +15,8 @@ namespace R3H6\Error404page\Tests\Unit\Controller;
  * Public License for more details.                                       *
  *                                                                        */
 
-// require_once __DIR__ . '/../Fixtures/Request.php';
-
-use R3H6\Error404page\Domain\Model\Error;
-use R3H6\Error404page\Domain\Model\Page;
-use R3H6\Error404page\Domain\Repository\ErrorRepository;
-use R3H6\Error404page\Domain\Repository\PageRepository;
-use R3H6\Error404page\Configuration\ExtensionConfiguration;
-use R3H6\Error404page\Configuration\PageTsConfigManager;
-use R3H6\Error404page\Configuration\PageTsConfig;
 use R3H6\Error404page\Domain\Handler\ErrorHandler;
-use R3H6\Error404page\Cache\PageCache;
-use R3H6\Error404page\Facade\FrontendUser;
-use R3H6\Error404page\Facade\FrontendController;
-use R3H6\Error404page\Service\HttpService;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use R3H6\Error404page\Domain\Model\Error;
 
 /**
  * Unit test for the ErrorHandler.§
@@ -47,39 +34,25 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     protected $errorRepositoryMock;
 
     /**
-     * @var \R3H6\Error404page\Domain\Repository\PageRepository
-     */
-    protected $pageRepositoryMock;
-
-    /**
      * @var \R3H6\Error404page\Configuration\ExtensionConfiguration
      */
     protected $extensionConfigurationMock;
 
     /**
-     * @var \R3H6\Error404page\Configuration\PageTsConfigManager
+     * @var \R3H6\Error404page\Domain\Cache\ErrorHandlerCache
      */
-    protected $pageTsConfigManagerMock;
+    protected $errorHandlerCacheMock;
 
     /**
-     * @var \R3H6\Error404page\Cache\PageCache
+     * @var \TYPO3\CMS\Extbase\Object\ObjectManager
      */
-    protected $pageCacheMock;
-
-    /**
-     * @var \R3H6\Error404page\Facade\FrontendUser
-     */
-    protected $frontendUserMock;
-
-    /**
-     * @var \R3H6\Error404page\Facade\FrontendController
-     */
-    protected $frontendControllerMock;
+    protected $objectManagerMock;
 
     /**
      * @var \R3H6\Error404page\Service\HttpService
      */
     protected $httpServiceMock;
+
 
     public function setUp()
     {
@@ -91,36 +64,17 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         $this->errorRepositoryMock = $this->getMock('R3H6\\Error404page\\Domain\\Repository\\ErrorRepository', get_class_methods('R3H6\\Error404page\\Domain\\Repository\\ErrorRepository'), array(), '', false);
         $this->inject($this->subject, 'errorRepository', $this->errorRepositoryMock);
 
-        $this->pageRepositoryMock = $this->getMock('R3H6\\Error404page\\Domain\\Repository\\PageRepository', get_class_methods('R3H6\\Error404page\\Domain\\Repository\\PageRepository'), array(), '', false);
-        $this->inject($this->subject, 'pageRepository', $this->pageRepositoryMock);
-
-        $this->extensionConfigurationMock = $this->getMock('R3H6\\Error404page\\Configuration\\ExtensionConfiguration', get_class_methods('R3H6\\Error404page\\Configuration\\ExtensionConfiguration'), array(), '', false);
+        $this->extensionConfigurationMock = $this->getMock('R3H6\\Error404page\\Configuration\\ExtensionConfiguration', array('is', 'get'), array(), '', false);
         $this->inject($this->subject, 'extensionConfiguration', $this->extensionConfigurationMock);
 
-        $this->pageTsConfigManagerMock = $this->getMock('R3H6\\Error404page\\Configuration\\PageTsConfigManager', get_class_methods('R3H6\\Error404page\\Configuration\\PageTsConfigManager'), array(), '', false);
-        $this->inject($this->subject, 'pageTsConfigManager', $this->pageTsConfigManagerMock);
+        $this->errorHandlerCacheMock = $this->getMock('R3H6\\Error404page\\Domain\\Cache\\ErrorHandlerCache', get_class_methods('R3H6\\Error404page\\Domain\\Cache\\ErrorHandlerCache'), array(), '', false);
+        $this->inject($this->subject, 'errorHandlerCache', $this->errorHandlerCacheMock);
 
-        $this->pageCacheMock = $this->getMock('R3H6\\Error404page\\Cache\\PageCache', get_class_methods('R3H6\\Error404page\\Cache\\PageCache'), array(), '', false);
-        $this->inject($this->subject, 'pageCache', $this->pageCacheMock);
-
-        $this->frontendUserMock = $this->getMock('R3H6\\Error404page\\Facade\\FrontendUser', get_class_methods('R3H6\\Error404page\\Facade\\FrontendUser'), array(), '', false);
-        $this->inject($this->subject, 'frontendUser', $this->frontendUserMock);
-
-        $this->frontendControllerMock = $this->getMock('R3H6\\Error404page\\Facade\\FrontendController', get_class_methods('R3H6\\Error404page\\Facade\\FrontendController'), array(), '', false);
-        $this->inject($this->subject, 'frontendController', $this->frontendControllerMock);
+        $this->objectManagerMock = $this->getMock('TYPO3\\CMS\\Extbase\\Object\\ObjectManager', get_class_methods('TYPO3\\CMS\\Extbase\\Object\\ObjectManager'), array(), '', false);
+        $this->inject($this->subject, 'objectManager', $this->objectManagerMock);
 
         $this->httpServiceMock = $this->getMock('R3H6\\Error404page\\Service\\HttpService', get_class_methods('R3H6\\Error404page\\Service\\HttpService'), array(), '', false);
         $this->inject($this->subject, 'httpService', $this->httpServiceMock);
-
-        // Mock TYPO3 objects
-        $GLOBALS['TYPO3_DB'] = $this->getMock('TYPO3\\CMS\\Core\\Database\\DatabaseConnection', get_class_methods('TYPO3\\CMS\\Core\\Database\\DatabaseConnection'), array(), '', false);
-
-        $configurationManager = $this->getMock('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager', get_class_methods('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager'), array(), '', false);
-        GeneralUtility::setSingletonInstance('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManager', $configurationManager);
-
-        $GLOBALS['TSFE'] = new \stdClass();
-        $GLOBALS['TSFE']->sys_language_uid = 0;
-        $GLOBALS['TSFE']->csConvObj = $this->getMock('TYPO3\\CMS\\Core\\Charset\\CharsetConverter', get_class_methods('TYPO3\\CMS\\Core\\Charset\\CharsetConverter'), array(), '', false);
     }
 
     public function tearDown()
@@ -129,158 +83,48 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         unset(
             $this->subject,
             $this->errorRepositoryMock,
-            $this->pageRepositoryMock,
             $this->extensionConfigurationMock,
-            $this->pageTsConfigManagerMock,
-            $this->pageCacheMock,
-            $this->frontendUserMock,
-            $this->frontendControllerMock,
-            $this->httpServiceMock,
-            $GLOBALS['TYPO3_DB'],
-            $GLOBALS['TSFE']
+            $this->pageCacheMock
         );
     }
 
     /**
      * @test
      */
-    public function handleErrorReturnsStandardErrorpageMessageWhenGetParamIsSet()
+    public function handleErrorLogsErrorWhenConfigurationIsSet()
     {
         /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
         $errorFixture = new Error();
 
-        $_GET['tx_error404page_request'] = uniqid();
-        $response = $this->subject->handleError($errorFixture);
-        $this->assertRegExp('#<title>Page Not Found</title>#i', $response, 'Response is not a standard error message.');
-    }
+        $this->mockGetErrorHandlers();
 
-    /**
-     * @test
-     */
-    public function handleErrorDisplaysPageFromCache()
-    {
-        /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
-        $errorFixture = new Error();
-
-        $expected = 'Cache';
-
-        $this->pageCacheMock
-            ->expects($this->once())
-            ->method('get')
-            ->will($this->returnValue($expected));
-
-        $response = $this->subject->handleError($errorFixture);
-        $this->assertSame($expected, $response, 'Content is not taken from cache!');
-    }
-
-    /**
-     * @test
-     */
-    public function handleErrorRedirectsToUrlFromCache()
-    {
-        /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
-        $errorFixture = new Error();
-
-        $expected = 'http://www.typo3.org/';
-
-        $this->pageCacheMock
-            ->expects($this->once())
-            ->method('get')
-            ->will($this->returnValue('REDIRECT:'.$expected));
-
-        $this->httpServiceMock
-            ->expects($this->once())
-            ->method('redirect')
-            ->with($this->equalTo($expected));
-
-        $this->assertNull($this->subject->handleError($errorFixture));
-    }
-
-
-    /**
-     * @test
-     */
-    public function handleErrorRedirectsToUrl()
-    {
-        $redirectFixture = 'http://www.typo3.org/login.html';
-
-        /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
-        $errorFixture = new Error();
-        $errorFixture->setPid(9);
-        $errorFixture->setStatusCode(Error::STATUS_CODE_FORBIDDEN);
-        $errorFixture->setUrl('http://www.typo3.org/forbidden.html');
-
-        /** @var \R3H6\Error404page\Domain\Model\Error $pageFixture */
-        $pageFixture = new Page(array(
-            'uid' => 123,
-            'pid' => 1,
-        ));
-
-        $expected = $redirectFixture.'?redirect_url='.$errorFixture->getUrl();
-        $cacheIdentifierFixture = uniqid();
-
-        $pageTsConfigMock = $this->getMock('R3H6\\Error404page\\Configuration\\PageTsConfig', array('is', 'get'), array(), '', false);
-        $pageTsConfigMock
+        $this->extensionConfigurationMock
             ->expects($this->once())
             ->method('is')
-            ->with('redirectError403To')
+            ->with($this->equalTo('enableErrorLog'))
             ->will($this->returnValue(true));
 
-        $pageTsConfigMock
+        $this->errorRepositoryMock
             ->expects($this->once())
-            ->method('get')
-            ->with('redirectError403To')
-            ->will($this->returnValue('auto'));
+            ->method('log')
+            ->with($errorFixture);
 
-        $this->pageTsConfigManagerMock
-            ->expects($this->once())
-            ->method('getPageTsConfig')
-            ->with($errorFixture->getPid())
-            ->will($this->returnValue($pageTsConfigMock));
+        $this->subject->handleError($errorFixture);
+    }
 
-        $this->frontendUserMock
-            ->expects($this->once())
-            ->method('isLoggedIn')
-            ->will($this->returnValue(false));
-
-        $this->pageRepositoryMock
-            ->expects($this->once())
-            ->method('findLoginPageForError')
-            ->with($this->equalTo($errorFixture))
-            ->will($this->returnValue($pageFixture));
-
-        $this->pageCacheMock
-            ->expects($this->once())
-            ->method('buildEntryIdentifierFromError')
-            ->with($this->equalTo($errorFixture))
-            ->will($this->returnValue($cacheIdentifierFixture));
-
-        $this->pageCacheMock
-            ->expects($this->any())
-            ->method('get')
-            ->will($this->returnValue(false));
-
-        $this->pageCacheMock
-            ->expects($this->once())
-            ->method('set')
-            ->with(
-                $this->equalTo($cacheIdentifierFixture),
-                $this->equalTo('REDIRECT:'.$expected)
-            );
-
-        $this->frontendControllerMock
-            ->expects($this->once())
-            ->method('typoLink')
-            ->with($this->equalTo(array(
-                'parameter' => '123',
-                'forceAbsoluteUrl' => true,
-            )))
-            ->will($this->returnValue($redirectFixture));
+     /**
+     * @test
+     * @expectedException Exception
+     */
+    public function handleErrorThrowsExceptionForOwnRequests()
+    {
+        /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
+        $errorFixture = new Error();
 
         $this->httpServiceMock
             ->expects($this->once())
-            ->method('redirect')
-            ->with($this->equalTo($expected));
+            ->method('isOwnRequest')
+            ->will($this->returnValue(true));
 
         $this->subject->handleError($errorFixture);
     }
@@ -288,89 +132,60 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     /**
      * @test
      */
-    public function handleErrorReturnsStandardErrorPageWhenCacheIsFalseAndNoErrorPageWasFound()
+    public function handleErrorDoesNotLogErrorWhenConfigurationIsNotSet()
     {
         /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
         $errorFixture = new Error();
 
-        $this->pageCacheMock
-            ->expects($this->any())
-            ->method('get')
-            ->will($this->returnValue(false));
+        $this->mockGetErrorHandlers();
 
-        $this->pageRepositoryMock
-            ->expects($this->once())
-            ->method('find404PageForError')
-            ->with($this->equalTo($errorFixture))
-            ->will($this->returnValue(null));
+        $this->errorRepositoryMock
+            ->expects($this->never())
+            ->method('log');
 
-        $response = $this->subject->handleError($errorFixture);
-        $this->assertRegExp('#<title>Page Not Found</title>#i', $response, 'Response is not a standard error message.');
+        $this->subject->handleError($errorFixture);
     }
 
     /**
      * @test
      */
-    public function handleErrorWillFindAndCacheAndReturnErrorPage()
+    public function handleErrorGetsOutputFromCache()
     {
+        $expected = 'TYPO3';
+
         /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
         $errorFixture = new Error();
 
-        /** @var \R3H6\Error404page\Domain\Model\Error $pageFixture */
-        $pageFixture = new Page(array(
-            'uid' => 123,
-            'pid' => 1,
+        $cacheIdentifierFixture = sha1(uniqid());
 
-        ));
-
-        $cacheIdentifierFixture = uniqid();
-
-        $expectedUrl = '/index.php?id=';
-        $expected = 'Error';
-
-        $this->pageRepositoryMock
+        $errorHandlerMock = $this->getMock('R3H6\\Error404page\\Domain\\Handler\\ErrorHandlerInterface');
+        $errorHandlerMock
             ->expects($this->once())
-            ->method('find404PageForError')
-            ->with($this->equalTo($errorFixture))
-            ->will($this->returnValue($pageFixture));
-
-        $this->pageCacheMock
-            ->expects($this->once())
-            ->method('buildEntryIdentifierFromError')
-            ->with($this->equalTo($errorFixture))
-            ->will($this->returnValue($cacheIdentifierFixture));
-
-        $this->pageCacheMock
-            ->expects($this->once())
-            ->method('get')
-            ->with($this->equalTo($cacheIdentifierFixture))
-            ->will($this->returnValue(false));
-
-        $this->pageCacheMock
-            ->expects($this->once())
-            ->method('set')
-            ->with(
-                $this->equalTo($cacheIdentifierFixture),
-                $this->equalTo($expected)
-            );
-
-        $this->httpServiceMock
-            ->expects($this->once())
-            ->method('readUrl')
-            ->with($this->matchesRegularExpression('#/index\.php\?id=123&type=0&L=0&tx_error404page_request=.+$#'))
+            ->method('getOutput')
             ->will($this->returnValue($expected));
 
+        $this->errorHandlerCacheMock
+            ->expects($this->once())
+            ->method('calculateCacheIdentifier')
+            ->with($errorFixture)
+            ->will($this->returnValue($cacheIdentifierFixture));
 
-        $this->subject->handleError($errorFixture);
+        $this->errorHandlerCacheMock
+            ->expects($this->once())
+            ->method('get')
+            ->with($cacheIdentifierFixture)
+            ->will($this->returnValue($errorHandlerMock));
+
+        $this->assertSame($expected, $this->subject->handleError($errorFixture));
     }
 
-    /**
-     * @return R3H6\Error404page\Domain\Model\Error
-     */
-    protected function getErrorFixture($statusCode = Err)
+    protected function mockGetErrorHandlers()
     {
-        /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
-        $errorFixture = new Error();
-        $errorFixture->setStatusCode($statusCode);
+         $this->objectManagerMock
+            ->expects($this->any())
+            ->method('get')
+            ->will($this->returnValue(
+                $this->getMock('R3H6\\Error404page\\Domain\\Handler\\ErrorHandlerInterface')
+            ));
     }
 }

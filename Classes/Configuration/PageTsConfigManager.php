@@ -41,7 +41,7 @@ class PageTsConfigManager implements \TYPO3\CMS\Core\SingletonInterface
      * Returns a PageTsConfig instance for a given page.
      *
      * @param  int $pageUid
-     * @return R3H6\Error404page\Configuration\PageTsConfig
+     * @return \R3H6\Error404page\Configuration\PageTsConfig
      */
     public function getPageTsConfig($pageUid)
     {
