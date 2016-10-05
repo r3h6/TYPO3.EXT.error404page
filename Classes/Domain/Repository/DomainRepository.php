@@ -29,16 +29,26 @@ class DomainRepository implements \TYPO3\CMS\Core\SingletonInterface
     protected $pageRepository;
 
     /**
-     * findAllNonRedirectDomains
+     * Find all
      *
      * @return array Domain records
      */
-    public function findAllNonRedirectDomains()
+    public function findAll()
     {
         $domains = $this->getDatabaseConnection()->exec_SELECTgetRows(
             '*',
             'sys_domain',
             "redirectTo=''" . $this->pageRepository->enableFields('sys_domain')
+        );
+        return (array) $domains;
+    }
+
+    public function findByDomainName($domainName)
+    {
+        $domains = $this->getDatabaseConnection()->exec_SELECTgetRows(
+            '*',
+            'sys_domain',
+            "redirectTo='' AND domainName=" . $this->getDatabaseConnection()->fullQuoteStr($domainName, 'sys_domain') . " " . $this->pageRepository->enableFields('sys_domain')
         );
         return (array) $domains;
     }

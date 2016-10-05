@@ -4,13 +4,19 @@
         <header/>
         <body>
             <trans-unit id="pages.doktype.404">
-                <source>Error 404</source>
+                <source>Page 404: Not found</source>
             </trans-unit>
             <trans-unit id="configuration.doktypeError404page">
-                <source>Doktype: Error page 404 doktype (10 &lt; x &lt; 200).</source>
+                <source>Doktype 404: Not found error page doktype (10 &lt; x &lt; 200).</source>
             </trans-unit>
             <trans-unit id="configuration.enableErrorLog">
                 <source>Log: Enable error log.</source>
+            </trans-unit>
+            <trans-unit id="configuration.basicAuthentication">
+                <source>Basic Authentication: Usefull for protected staging environments. Format is "name:password".</source>
+            </trans-unit>
+            <trans-unit id="configuration.debug">
+                <source>Debug: Enable debug log (typo3temp/logs/debug.log).</source>
             </trans-unit>
         </body>
     </file>

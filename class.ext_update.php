@@ -40,16 +40,16 @@ class ext_update
         $result = $this->getDatabasConnection()->sql_query($query);
 
         if ($this->getDatabasConnection()->sql_errno()) {
-            $this->messageArray[] = [FlashMessage::ERROR, $title, 'Please update your database first through the install tool or deactivate and activate the extension once!'];
+            $this->messageArray[] = array(FlashMessage::ERROR, $title, 'Please update your database first through the install tool or deactivate and activate the extension once!');
             return;
         }
 
         $count = $this->getDatabasConnection()->sql_affected_rows($result);
 
         if ($count > 0) {
-            $this->messageArray[] = [FlashMessage::OK, $title, sprintf('Updated %s records!', $count)];
+            $this->messageArray[] = array(FlashMessage::OK, $title, sprintf('Updated %s records!', $count));
         } else {
-            $this->messageArray[] = [FlashMessage::INFO, $title, 'Nothing to do!'];
+            $this->messageArray[] = array(FlashMessage::INFO, $title, 'Nothing to do!');
         }
     }
 

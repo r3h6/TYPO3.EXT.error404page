@@ -1,0 +1,62 @@
+{
+    "name": "r3h6/error404page",
+    "type": "typo3-cms-extension",
+    "description": "Use TYPO3 pages for display 404 errors. Optional error 403 redirect handling. Works for multi domain and multilingual installations.",
+    "keywords": [
+        "TYPO3",
+        "extension",
+        "404",
+        "403",
+        "page",
+        "error",
+        "pagenotfound"
+    ],
+    "homepage": "https://github.com/r3h6/TYPO3.EXT.error404page",
+    "support": {
+        "issues": "https://github.com/r3h6/TYPO3.EXT.error404page/issues"
+    },
+    "license": "GPL-3.0+",
+    "require": {
+        "typo3/cms": "^6.2.14 || ^7.6.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "R3H6\\Error404page\\": "Classes"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "R3H6\\Error404page\\Tests\\": "Tests",
+            "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/"
+        }
+    },
+    "replace": {
+        "error404page": "self.version",
+        "typo3-ter/error404page": "self.version"
+    },
+    "config": {
+        "vendor-dir": ".Build/vendor",
+        "bin-dir": ".Build/bin",
+        "preferred-install": {
+            "typo3/cms": "source"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "mkdir -p .Build/web/typo3conf/ext/",
+            "[ -L .Build/web/typo3conf/ext/error404page ] || ln -snvf ../../../../. .Build/web/typo3conf/ext/error404page"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        },
+        "typo3/cms": {
+            "cms-package-dir": "{$vendor-dir}/typo3/cms",
+            "web-dir": ".Build/web"
+        }
+    }
+}

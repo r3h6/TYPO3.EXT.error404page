@@ -21,6 +21,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
 {
+    const STATUS_CODE_NOT_FOUND = 404;
+    const STATUS_CODE_FORBIDDEN = 403;
 
     /**
      * Timestamp
@@ -90,6 +92,60 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     protected $urlHash = '';
 
     /**
+     * Language
+     *
+     * @var integer
+     */
+    protected $_language = 0;
+
+    /**
+     * Status code
+     *
+     * @var integer
+     */
+    protected $_statusCode = self::STATUS_CODE_NOT_FOUND;
+
+    /**
+     * Host
+     *
+     * @var string
+     */
+    protected $_host = null;
+
+    /**
+     * Reason text
+     *
+     * @var string
+     */
+    protected $_reasonText = '';
+
+    /**
+     * Current url
+     * @var string
+     */
+    protected $_currentUrl = '';
+
+    /**
+     * Gets the language
+     *
+     * @return integer
+     */
+    public function getLanguage()
+    {
+        return $this->_language;
+    }
+
+    /**
+     * Sets the language
+     *
+     * @param integer $language
+     */
+    public function setLanguage($language)
+    {
+        $this->_language = $language;
+    }
+
+    /**
      * Returns the url
      *
      * @return string $url
@@ -109,6 +165,27 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     {
         $this->url = $url;
         $this->urlHash = sha1($url);
+    }
+
+    /**
+     * Gets the reasonText
+     *
+     * @return  string
+     */
+    public function getReasonText()
+    {
+        return $this->_reasonText;
+    }
+
+    /**
+     * Sets the reasonText
+     *
+     * @param   string $reasonText
+     */
+    public function setReasonText($reasonText)
+    {
+        $this->_reasonText = $reasonText;
+        $this->setReason($reasonText);
     }
 
     /**
@@ -137,6 +214,11 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
             $reason = 'Segment was not a keyword for a postVarSet as expected on page';
             $this->pid = (int) $matches[2];
         }
+
+        // if ($reason === 'ID was not an accessible page') {
+        //     $this->_statusCode = self::STATUS_CODE_FORBIDDEN;
+        // }
+
         $this->reason = $reason;
     }
 
@@ -262,6 +344,66 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     public function setTimestamp($timestamp)
     {
         $this->timestamp = $timestamp;
+    }
+
+    /**
+     * Gets the statusCode
+     *
+     * @return integer
+     */
+    public function getStatusCode()
+    {
+        return $this->_statusCode;
+    }
+
+    /**
+     * Sets the statusCode
+     *
+     * @param integer $statusCode
+     */
+    public function setStatusCode($statusCode)
+    {
+        $this->_statusCode = $statusCode;
+    }
+
+    /**
+     * Gets the host
+     *
+     * @return string
+     */
+    public function getHost()
+    {
+        return $this->_host;
+    }
+
+    /**
+     * Sets the host
+     *
+     * @param string $host
+     */
+    public function setHost($host)
+    {
+        $this->_host = $host;
+    }
+
+    /**
+     * Gets the currentUrl
+     *
+     * @return  string
+     */
+    public function getCurrentUrl()
+    {
+        return $this->_currentUrl;
+    }
+
+    /**
+     * Sets the currentUrl
+     *
+     * @param   string $currentUrl
+     */
+    public function setCurrentUrl($currentUrl)
+    {
+        $this->_currentUrl = $currentUrl;
     }
 
     /**

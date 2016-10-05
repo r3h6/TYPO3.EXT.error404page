@@ -45,7 +45,7 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
         }
 
         if ($demand === null) {
-            $demand = $this->objectManager->get(ErrorDemand::class);
+            $demand = $this->objectManager->get('R3H6\\Error404page\\Domain\\Model\\Dto\\ErrorDemand');
             $demand->setMinTime(strtotime(ErrorDemand::TIME_ONE_WEEK_AGO));
             $demand->setLimit(100);
         }
@@ -108,6 +108,6 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
     {
         $propertyMappingConfiguration = $this->arguments->getArgument($argument)->getPropertyMappingConfiguration();
         $propertyMappingConfiguration->allowAllProperties();
-        $propertyMappingConfiguration->setTypeConverterOption(PersistentObjectConverter::class, PersistentObjectConverter::CONFIGURATION_CREATION_ALLOWED, true);
+        $propertyMappingConfiguration->setTypeConverterOption('TYPO3\\CMS\\Extbase\\Property\\TypeConverter\\PersistentObjectConverter', PersistentObjectConverter::CONFIGURATION_CREATION_ALLOWED, true);
     }
 }

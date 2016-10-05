@@ -1,6 +1,5 @@
 <?php
-
-namespace R3H6\Error404page\Http;
+namespace R3H6\Error404page\Facade;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -15,33 +14,38 @@ namespace R3H6\Error404page\Http;
  * Public License for more details.                                       *
  *                                                                        */
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 /**
- * Request
- *
- * This is wrapper class for sending a http request.
+ * FrontendUser
  */
-class Request
+class FrontendUser
 {
-    protected $url;
+    /**
+     * FrontendUserAuthentication
+     *
+     * @var \TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication
+     */
+    protected $frontendUserAuthentication = null;
 
-    public function __construct($url)
+    public function __construct()
     {
-        $this->url = $url;
+        $this->frontendUserAuthentication = $GLOBALS['TSFE']->fe_user;
     }
 
-    public function getUrl()
+    public function isLoggedIn()
     {
-        return $this->url;
+        return $this->frontendUserAuthentication->user !== null;
     }
 
-    public function send()
+    public function getUserGroups()
     {
-        $content = GeneralUtility::getUrl($this->url);
-        if ($content === false) {
-            return null;
+        if (!empty($this->frontendUserAuthentication->groupData['uid'])) {
+            $groups = array_values($this->frontendUserAuthentication->groupData['uid']);
+            sort($groups);
+            return $groups;
         }
-        return $content;
+        return array();
+        // $this->frontendUserAuthentication->fetchGroupData();
+        // \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($this);
+        // $this->frontendUserAuthentication->groupData;
     }
 }
