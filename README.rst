@@ -95,6 +95,9 @@ Instead of the error page, the home page is shown?
    Perhaps you have some htaccess rules that redirects the error handler's request.
    Make sure it is possible to call your error page directly (ex. http://typo3.request.host/index.php?id=123&type=0&L=0&tx_error404page_request=ab12cd34de56).
 
+How to redirect 403 (Forbidden) errors to a login page?
+   Read the section "Integration".
+
 
 Contributing
 ------------
