@@ -85,13 +85,12 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
 
         /** @var \TYPO3\CMS\Core\Http\HttpRequest $request */
         $request = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Http\\HttpRequest', $url);
+        $FEcookieName = $GLOBALS['TYPO3_CONF_VARS']['FE']['cookieName'];
 
         // Forward cookies.
         $request->setCookieJar(true);
-        if (isset($_COOKIE) && !empty($_COOKIE)) {
-            foreach ($_COOKIE as $cookieName => $cookieValue) {
-                $request->addCookie($cookieName, $cookieValue);
-            }
+        if (isset($_COOKIE[$FEcookieName]) && !empty($_COOKIE[$FEcookieName])) {
+                $request->addCookie($FEcookieName, $_COOKIE[$FEcookieName]);
         }
 
         // TYPO3 uses user-agent for authentification.
