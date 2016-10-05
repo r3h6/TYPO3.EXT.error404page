@@ -70,7 +70,7 @@ class ErrorHandlerCacheTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     /**
      * @test
      */
-    public function calculateCacheIdentifierIgnoresPidForPageNotFoundErrors()
+    public function calculateCacheIdentifierIgnoresCurrentUrlForPageNotFoundErrors()
     {
         /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
         $errorFixture = new Error();
@@ -78,7 +78,7 @@ class ErrorHandlerCacheTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 
         $cacheIdentifier1 = $this->subject->calculateCacheIdentifier($errorFixture);
 
-        $errorFixture->setPid(123);
+        $errorFixture->setCurrentUrl('page/not/found.html');
         $cacheIdentifier2 = $this->subject->calculateCacheIdentifier($errorFixture);
 
         $this->assertEquals($cacheIdentifier1, $cacheIdentifier2);
@@ -87,7 +87,7 @@ class ErrorHandlerCacheTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     /**
      * @test
      */
-    public function calculateCacheIdentifierRespectsPidForForbiddenErrors()
+    public function calculateCacheIdentifierRespectsCurrentUrlForForbiddenErrors()
     {
         /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
         $errorFixture = new Error();
@@ -95,7 +95,7 @@ class ErrorHandlerCacheTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 
         $cacheIdentifier1 = $this->subject->calculateCacheIdentifier($errorFixture);
 
-        $errorFixture->setPid(123);
+        $errorFixture->setCurrentUrl('page/not/found.html');
         $cacheIdentifier2 = $this->subject->calculateCacheIdentifier($errorFixture);
 
         $this->assertNotEquals($cacheIdentifier1, $cacheIdentifier2);

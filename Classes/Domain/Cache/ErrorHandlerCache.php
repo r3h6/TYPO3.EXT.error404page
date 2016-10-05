@@ -71,7 +71,7 @@ class ErrorHandlerCache implements \TYPO3\CMS\Core\SingletonInterface
         $parts[] = join(',', (array) $this->frontendUser->getUserGroups());
 
         if ($error->getStatusCode() === Error::STATUS_CODE_FORBIDDEN) {
-            $parts[] = $error->getPid();
+            $parts[] = $error->getCurrentUrl();
         }
 
         return sha1(join('---', $parts));
