@@ -57,11 +57,12 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
         try {
              /** @var \HTTP_Request2_Response $response */
             $response = $request->send();
-            if ($response->getStatus() === 200) {
-                $content = $response->getBody();
+            if ($response->getStatus() !== 200) {
+                throw new \RuntimeException($response->getReasonPhrase(), 1477079525);
             }
+            $content = $response->getBody();
         } catch (\Exception $exception) {
-            // Ignore...
+            $this->getLogger()->debug('Could not read url "' . $url . '" ' . $exception->getMessage());
         }
 
         return $content;
@@ -81,10 +82,12 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
     protected function getHttpRequest($url)
     {
         $url .= (strpos($url, '?') === false) ? '?': '&';
-        $url .= '&tx_error404page_request=' . uniqid();
+        $url .= 'tx_error404page_request=' . uniqid();
 
         /** @var \TYPO3\CMS\Core\Http\HttpRequest $request */
-        $request = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Http\\HttpRequest', $url);
+        $request = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Http\\HttpRequest');
+        $request->setUrl($url); // For testing purpose not set in constructor!
+
         $feCookieName = $GLOBALS['TYPO3_CONF_VARS']['FE']['cookieName'];
 
         // Forward cookies.
@@ -103,5 +106,15 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
         }
 
         return $request;
+    }
+
+    /**
+     * Get class logger
+     *
+     * @return \TYPO3\CMS\Core\Log\Logger
+     */
+    protected function getLogger()
+    {
+        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Log\\LogManager')->getLogger(__CLASS__);
     }
 }
