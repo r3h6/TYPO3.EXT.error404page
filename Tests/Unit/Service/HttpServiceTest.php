@@ -114,7 +114,7 @@ class HttpServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 
     protected function createResponseMock($status, $body)
     {
-        $responseMock = $this->getMock('HTTP_Request2_Response', array('getStatus', 'getBody'), array(), '', false);
+        $responseMock = $this->getMock('HTTP_Request2_Response', array('getStatus', 'getBody', 'getReasonPhrase'), array(), '', false);
         $responseMock
             ->expects($this->any())
             ->method('getStatus')
@@ -123,6 +123,11 @@ class HttpServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
             ->expects($this->any())
             ->method('getBody')
             ->will($this->returnValue($body));
+        $responseMock
+            ->expects($this->any())
+            ->method('getReasonPhrase')
+            ->will($this->returnValue('PHPUnit'));
+
         return $responseMock;
     }
 
