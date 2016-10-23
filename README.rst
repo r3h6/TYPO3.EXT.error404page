@@ -58,9 +58,9 @@ Simply install the extension and create a new page with your error message.
 
 You can use following markers in your content.
 
-.. only:: html
-  :###CURRENT_URL###: The url of the called page.
-  :###REASON###: A text why the error occured.
+:###CURRENT_URL###: The url of the called page.
+:###REASON###: A text why the error occured.
+:###ERROR_STATUS_CODE###: 404|403
 
 If you like redirect non logged in users when a 403 (forbidden) error occurs,
 simply include the available "Page TSConfig" or define by yourself:
@@ -96,7 +96,7 @@ Instead of the error page, the home page is shown?
    Make sure it is possible to call your error page directly (ex. http://typo3.request.host/index.php?id=123&type=0&L=0&tx_error404page_request=ab12cd34de56).
 
 How to redirect 403 (Forbidden) errors to a login page?
-   Read the section "Integration".
+   Please read the section "Integration".
 
 
 Contributing
@@ -113,8 +113,8 @@ Pull request to the master branch will be ignored. Please pull to the develop br
 Changelog
 ---------
 
-2.0.0 Refactoring, Feature 403 redirects
-1.3.0 Updated backend modul
-1.2.0 TYPO3 6.2 compatibility
-1.1.0 Feature error log
-1.0.0 First release
+:2.0.0: Refactoring, Feature 403 redirects
+:1.3.0: Updated backend modul
+:1.2.0: TYPO3 6.2 compatibility
+:1.1.0: Feature error log
+:1.0.0: First release

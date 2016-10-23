@@ -100,7 +100,7 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
         $request->setHeader('user-agent', GeneralUtility::getIndpEnv('HTTP_USER_AGENT'));
 
         // Set basic authentication.
-        if ($this->extensionConfiguration->use('basicAuthentication')) {
+        if ($this->extensionConfiguration->has('basicAuthentication')) {
             $basicAuthentication = GeneralUtility::trimExplode(':', $this->extensionConfiguration->get('basicAuthentication'), true);
             $request->setAuth($basicAuthentication[0], $basicAuthentication[1]);
         }

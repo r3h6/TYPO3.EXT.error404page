@@ -53,7 +53,7 @@ class HttpServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     {
         $this->subject = new \R3H6\Error404page\Service\HttpService();
 
-        $this->extensionConfigurationMock = $this->getMock('R3H6\\Error404page\\Configuration\\ExtensionConfiguration', array('use', 'get'), array(), '', false);
+        $this->extensionConfigurationMock = $this->getMock('R3H6\\Error404page\\Configuration\\ExtensionConfiguration', array('has', 'get'), array(), '', false);
         $this->inject($this->subject, 'extensionConfiguration', $this->extensionConfigurationMock);
     }
 
@@ -129,7 +129,7 @@ class HttpServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     protected function createRequestMock($response)
     {
         $requestClass = 'TYPO3\\CMS\\Core\\Http\\HttpRequest';
-        $requestMock = $this->getMock($requestClass, array('send'), array(), '', true);
+        $requestMock = $this->getMock($requestClass, array('send'), array(), '', false);
         $method = ($response instanceof \Exception) ? 'throwException': 'returnValue';
         $requestMock
             ->expects($this->any())
