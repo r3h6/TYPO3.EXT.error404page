@@ -17,10 +17,11 @@
     },
     "license": "GPL-3.0+",
     "require": {
-        "typo3/cms": "^6.2.14 || ^7.6.0"
+        "typo3/cms": "^6.2.14 || ^7.6.0 || ~8.4.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.8.0"
+        "phpunit/phpunit": "~5.0.0",
+        "phpmetrics/phpmetrics": "^1.10"
     },
     "autoload": {
         "psr-4": {

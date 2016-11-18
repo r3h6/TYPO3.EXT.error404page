@@ -19,9 +19,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\HttpUtility;
 
 /**
- * Error handler
- *
- * This is a bridge class for using extbase dependency injection.
+ * HttpService
  */
 class HttpService implements \TYPO3\CMS\Core\SingletonInterface
 {
@@ -50,17 +48,15 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
     public function readUrl($url)
     {
         $content = null;
-
-        /** @var \TYPO3\CMS\Core\Http\HttpRequest $request */
-        $request = $this->getHttpRequest($url);
+        $url = $this->appendSignature($url);
 
         try {
-             /** @var \HTTP_Request2_Response $response */
-            $response = $request->send();
-            if ($response->getStatus() !== 200) {
-                throw new \RuntimeException($response->getReasonPhrase(), 1477079525);
+            /** @var \Psr\Http\Message\ResponseInterface $response */
+            $response = $this->getRequestFactory()->request($url, 'GET', $this->getRequestOptions());
+            if ($response->getStatusCode() !== 200) {
+                throw new \Exception($response->getReasonPhrase(), 1478293539);
             }
-            $content = $response->getBody();
+            $content = $response->getBody()->getContents();
         } catch (\Exception $exception) {
             $this->getLogger()->debug('Could not read url "' . $url . '" ' . $exception->getMessage());
         }
@@ -73,39 +69,52 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
         return GeneralUtility::_GP('tx_error404page_request') !== null;
     }
 
-    /**
-     * Creates a http request
-     *
-     * @param  string $url
-     * @return \TYPO3\CMS\Core\Http\HttpRequest
-     */
-    protected function getHttpRequest($url)
+    protected function appendSignature($url)
     {
         $url .= (strpos($url, '?') === false) ? '?': '&';
         $url .= 'tx_error404page_request=' . uniqid();
+        return $url;
+    }
 
-        /** @var \TYPO3\CMS\Core\Http\HttpRequest $request */
-        $request = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Http\\HttpRequest');
-        $request->setUrl($url); // For testing purpose not set in constructor!
-
-        $feCookieName = $GLOBALS['TYPO3_CONF_VARS']['FE']['cookieName'];
+    protected function getRequestOptions()
+    {
+        $options = [];
 
         // Forward cookies.
-        $request->setCookieJar(true);
+        $cookieJar = new \GuzzleHttp\Cookie\CookieJar(true);
+        $feCookieName = $GLOBALS['TYPO3_CONF_VARS']['FE']['cookieName'];
         if (isset($_COOKIE[$feCookieName]) && !empty($_COOKIE[$feCookieName])) {
-                $request->addCookie($feCookieName, $_COOKIE[$feCookieName]);
+            $feCookie = new \GuzzleHttp\Cookie\SetCookie();
+            $feCookie->setName($feCookieName);
+            $feCookie->setValue($_COOKIE[$feCookieName]);
+            $cookieJar->setCookie($feCookie);
+            $options['cookies'] = $cookieJar;
         }
 
         // TYPO3 uses user-agent for authentification.
-        $request->setHeader('user-agent', GeneralUtility::getIndpEnv('HTTP_USER_AGENT'));
+        $options['user-agent'] = GeneralUtility::getIndpEnv('HTTP_USER_AGENT');
 
         // Set basic authentication.
         if ($this->extensionConfiguration->has('basicAuthentication')) {
             $basicAuthentication = GeneralUtility::trimExplode(':', $this->extensionConfiguration->get('basicAuthentication'), true);
-            $request->setAuth($basicAuthentication[0], $basicAuthentication[1]);
+
+            $options['auth'] = [
+                'username' => $basicAuthentication[0],
+                'password' => $basicAuthentication[1],
+            ];
         }
 
-        return $request;
+        return $options;
+    }
+
+    /**
+     * [getRequestFactory description]
+     *
+     * @return \TYPO3\CMS\Core\Http\RequestFactory
+     */
+    protected function getRequestFactory()
+    {
+        return GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Http\\RequestFactory');
     }
 
     /**
