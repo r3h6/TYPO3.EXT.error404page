@@ -23,7 +23,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class DefaultErrorHandler implements ErrorHandlerInterface
 {
     /**
-     * @inherit
+     * {@inheritDoc}
      */
     public function handleError(\R3H6\Error404page\Domain\Model\Error $error)
     {
@@ -31,7 +31,7 @@ class DefaultErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      */
     public function getOutput(\R3H6\Error404page\Domain\Model\Error $error)
     {
@@ -43,7 +43,7 @@ class DefaultErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      */
     public function setCachingData($data)
     {
@@ -51,7 +51,7 @@ class DefaultErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      */
     public function getCachingData()
     {
@@ -59,7 +59,7 @@ class DefaultErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      */
     public function getCacheTags()
     {

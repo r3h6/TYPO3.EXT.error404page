@@ -47,7 +47,7 @@ class Page404ErrorHandler implements ErrorHandlerInterface
     protected $cacheTags = array();
 
     /**
-     * @inherit
+     * {@inheritDoc}
      */
     public function handleError(\R3H6\Error404page\Domain\Model\Error $error)
     {
@@ -63,7 +63,7 @@ class Page404ErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      */
     public function getOutput(\R3H6\Error404page\Domain\Model\Error $error)
     {
@@ -76,7 +76,7 @@ class Page404ErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      */
     public function setCachingData($data)
     {
@@ -84,7 +84,7 @@ class Page404ErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      */
     public function getCachingData()
     {
@@ -92,7 +92,7 @@ class Page404ErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      */
     public function getCacheTags()
     {

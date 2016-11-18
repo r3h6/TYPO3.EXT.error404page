@@ -60,7 +60,7 @@ class ErrorHandler
     protected $output = '';
 
     /**
-     * @inherit
+     * {@inheritDoc}
      */
     public function handleError(\R3H6\Error404page\Domain\Model\Error $error)
     {
