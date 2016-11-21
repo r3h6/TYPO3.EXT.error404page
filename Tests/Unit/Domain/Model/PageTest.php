@@ -41,7 +41,9 @@ class PageTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
             '_PAGES_OVERLAY_LANGUAGE' => '3',
         ));
 
-        // GeneralUtility::flushInternalRuntimeCaches();
+        if (method_exists('TYPO3\\CMS\\Core\\Utility\\GeneralUtility', 'flushInternalRuntimeCaches')) {
+            GeneralUtility::flushInternalRuntimeCaches();
+        }
         $_SERVER['HTTP_HOST'] = 'typo3.org';
     }
 
