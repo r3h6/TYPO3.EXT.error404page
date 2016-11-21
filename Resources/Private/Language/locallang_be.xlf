@@ -19,7 +19,7 @@
                 <source>Debug: Enable debug log (typo3temp/logs/debug.log).</source>
             </trans-unit>
             <trans-unit id="configuration.excludeErrorLogPattern">
-                <source>Exclude error log pattern: The error url matching this regex will not be added to the log.</source>
+                <source>Exclude error log pattern: The error url matching this regex will not be added to the log. Enter regex without delimiters (/ /) and modifiers (i).</source>
             </trans-unit>
         </body>
     </file>

@@ -71,8 +71,25 @@ simply include the available "Page TSConfig" or define by yourself:
 Configuration
 -------------
 
-* You can enable the error log and statistic backend modul in the extension configuration.
-* If required, you can change the page type in the extension configuration.
+Extension configuration
+^^^^^^^^^^^^^^^^^^^^^^^
+
+:doktypeError404page:
+   If required, you can change the page type.
+
+:enableErrorLog:
+   Enables the error log and statistic backend modul.
+
+:excludeErrorLogPattern:
+   Regex without delimiters (/ /) and modifiers (i).
+
+   **Example:** select|union
+
+:basicAuthentication:
+   Username and password for basic authentication.
+
+:debug:
+   Enable debug log.
 
 .. warning::
 
@@ -102,12 +119,19 @@ How to redirect 403 (Forbidden) errors to a login page?
 Contributing
 ------------
 
-Bug reports and pull request are welcome through `GitHub <https://github.com/r3h6/TYPO3.EXT.error404page/>`_.
+Bug reports
+^^^^^^^^^^^
+
+Bug reports are welcome through `GitHub <https://github.com/r3h6/TYPO3.EXT.error404page/issues/>`_.
+
+Please submit with your issue the debug log. Enable it in the extension configuration and clear the frontend cache before reproducing the failure.
 
 Pull request
 ^^^^^^^^^^^^
 
-Pull request to the master branch will be ignored. Please pull to the develop branch.
+Pull request are welcome through `GitHub <https://github.com/r3h6/TYPO3.EXT.error404page/>`_.
+
+Please not that pull requests to the *master* branch will be ignored. Please pull to the *develop* branch.
 
 
 Changelog
