@@ -2,6 +2,8 @@
 
 namespace R3H6\Error404page\Domain\Handler;
 
+use R3H6\Error404page\Tests\Unit\Utility\RegexUtility;
+
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
  *                                                                        *
@@ -69,7 +71,7 @@ class ErrorHandler
             throw new \Exception("Error processing request", 1475311053);
         }
 
-        if ($this->extensionConfiguration->is('enableErrorLog')) {
+        if ($this->extensionConfiguration->is('enableErrorLog') && !$this->excludeFromErrorLog($error)) {
             $this->errorRepository->log($error);
         }
 
@@ -92,6 +94,18 @@ class ErrorHandler
         $this->getLogger()->debug('Get error handler output of ' . get_class($errorHandler));
 
         return $errorHandler->getOutput($error);
+    }
+
+    protected function excludeFromErrorLog(\R3H6\Error404page\Domain\Model\Error $error)
+    {
+        $excludePattern = trim($this->extensionConfiguration->get('excludeErrorLogPattern'));
+        if (!empty($excludePattern)) {
+            $regex = "/$excludePattern/i";
+            if (RegexUtility::isValid($regex) && preg_match($regex, $error->getUrl())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected function getErrorHandlers()
