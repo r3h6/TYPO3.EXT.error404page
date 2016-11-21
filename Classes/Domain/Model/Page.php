@@ -1,4 +1,5 @@
 <?php
+
 namespace R3H6\Error404page\Domain\Model;
 
 /*                                                                        *
@@ -18,12 +19,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use R3H6\Error404page\Http\Request;
 
 /**
- * Page
+ * Page.
  */
 class Page extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
 {
     /**
-     * Record data
+     * Record data.
      *
      * @var array
      */
@@ -44,25 +45,31 @@ class Page extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
     /**
      * Returns if page allows caching.
      *
-     * @return  boolean
+     * @return bool
      */
     public function useCache()
     {
-        return (false === (bool) $this->data['no_cache']);
+        return false === (bool) $this->data['no_cache'];
     }
 
     /**
      * Returns the TYPO3 url for the page.
      *
-     * @return  string
+     * @return string
      */
     public function getUrl()
     {
-        // Fallback to default language if the site has no translation.
-        $language = (int) isset($this->data['_PAGES_OVERLAY_LANGUAGE']) ? $this->data['_PAGES_OVERLAY_LANGUAGE'] : 0;
-        $type = (int) GeneralUtility::_GP('type');
+        $url = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST').'/index.php?id='.$this->data['uid'];
 
-        $url = GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST') . '/index.php?id=' . $this->data['uid'] . '&type=' . $type . '&L=' . $language;
+        // Only add additional params when they are set by the request!
+        // https://github.com/r3h6/TYPO3.EXT.error404page/issues/7
+        if (GeneralUtility::_GP('type') !== null) {
+            $url .= '&type='.(int) GeneralUtility::_GP('type');
+        }
+        if (GeneralUtility::_GP('L') !== null) {
+            // Fallback to default language if the site has no translation.
+            $url .= '&L='.((int) isset($this->data['_PAGES_OVERLAY_LANGUAGE']) ? $this->data['_PAGES_OVERLAY_LANGUAGE'] : 0);
+        }
 
         return $url;
     }

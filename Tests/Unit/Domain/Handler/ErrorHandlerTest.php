@@ -116,6 +116,37 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 
     /**
      * @test
+     */
+    public function handleErrorDoesNotLogErrorWhenMatchingExcludeErrorLogPattern()
+    {
+        /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
+        $errorFixture = new Error();
+        $errorFixture->setUrl('http://typo3.org/?SELECT * FROM table WHERE 1=1');
+
+        $this->mockGetErrorHandlers();
+
+        $this->extensionConfigurationMock
+            ->expects($this->once())
+            ->method('is')
+            ->with($this->equalTo('enableErrorLog'))
+            ->will($this->returnValue(true));
+
+         $this->extensionConfigurationMock
+            ->expects($this->once())
+            ->method('get')
+            ->with($this->equalTo('excludeErrorLogPattern'))
+            ->will($this->returnValue('select|where'));
+
+        $this->errorRepositoryMock
+            ->expects($this->never())
+            ->method('log')
+            ->with($errorFixture);
+
+        $this->subject->handleError($errorFixture);
+    }
+
+    /**
+     * @test
      * @expectedException Exception
      */
     public function handleErrorThrowsExceptionForOwnRequests()

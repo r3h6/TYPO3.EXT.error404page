@@ -2,6 +2,8 @@
 
 namespace R3H6\Error404page\Domain\Handler;
 
+use R3H6\Error404page\Utility\RegexUtility;
+
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
  *                                                                        *
@@ -45,7 +47,7 @@ class ErrorHandler
     protected $errorHandlerCache;
 
     /**
-     * ObjectManager
+     * ObjectManager.
      *
      * @var \TYPO3\CMS\Extbase\Object\ObjectManager
      * @inject
@@ -53,23 +55,23 @@ class ErrorHandler
     protected $objectManager;
 
     /**
-     * Output
+     * Output.
      *
      * @var string
      */
     protected $output = '';
 
     /**
-     * @inherit
+     * {@inheritdoc}
      */
     public function handleError(\R3H6\Error404page\Domain\Model\Error $error)
     {
         if ($this->httpService->isOwnRequest()) {
-            $this->getLogger()->debug("Throw exception 1475311053");
-            throw new \Exception("Error processing request", 1475311053);
+            $this->getLogger()->debug('Throw exception 1475311053');
+            throw new \Exception('Error processing request', 1475311053);
         }
 
-        if ($this->extensionConfiguration->is('enableErrorLog')) {
+        if ($this->extensionConfiguration->is('enableErrorLog') && !$this->excludeFromErrorLog($error)) {
             $this->errorRepository->log($error);
         }
 
@@ -78,20 +80,33 @@ class ErrorHandler
         if ($errorHandler === null) {
             foreach ($this->getErrorHandlers() as $errorHandler) {
                 try {
-                    $this->getLogger()->debug('Try handle error with ' . get_class($errorHandler));
+                    $this->getLogger()->debug('Try handle error with '.get_class($errorHandler));
                     if ($errorHandler->handleError($error)) {
                         $this->errorHandlerCache->set($cacheIdentifier, $errorHandler);
                         break;
                     }
                 } catch (\Exception $exception) {
-                    $this->getLogger()->debug('Could not handle error in ' . get_class($errorHandler) . ': ' . $exception->getMessage());
+                    $this->getLogger()->debug('Could not handle error in '.get_class($errorHandler).': '.$exception->getMessage());
                 }
             }
         }
 
-        $this->getLogger()->debug('Get error handler output of ' . get_class($errorHandler));
+        $this->getLogger()->debug('Get error handler output of '.get_class($errorHandler));
 
         return $errorHandler->getOutput($error);
+    }
+
+    protected function excludeFromErrorLog(\R3H6\Error404page\Domain\Model\Error $error)
+    {
+        $excludePattern = trim($this->extensionConfiguration->get('excludeErrorLogPattern'));
+        if (!empty($excludePattern)) {
+            $regex = "/$excludePattern/i";
+            if (RegexUtility::isValid($regex) && preg_match($regex, $error->getUrl())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected function getErrorHandlers()
@@ -114,7 +129,7 @@ class ErrorHandler
     }
 
     /**
-     * Get class logger
+     * Get class logger.
      *
      * @return \TYPO3\CMS\Core\Log\Logger
      */
