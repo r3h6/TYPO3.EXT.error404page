@@ -51,7 +51,7 @@ class ExtensionConfiguration implements \TYPO3\CMS\Core\SingletonInterface
         return isset($this->configuration[$key]) ? $this->configuration[$key]: null;
     }
 
-    private function _use($key)
+    private function _has($key)
     {
         $value = $this->_get($key);
         return !empty($value);

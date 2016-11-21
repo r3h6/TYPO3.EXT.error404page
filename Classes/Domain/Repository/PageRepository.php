@@ -143,7 +143,6 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
                     $rootPage = $this->findByIdentifier($rootPages[0]['uid']);
                 }
             }
-
             $this->cachedRootPagesByHost[$host] = $rootPage;
         }
 
@@ -165,6 +164,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
         $rootPage = $this->findRootPageByHost($host);
 
         if ($rootPage !== null) {
+            $this->getLogger()->debug(sprintf('Get first matching error page for root page "%s"', $rootPage->getUid()));
             foreach ($pages as $page) {
                 $rootLine = $this->pageRepository->getRootLine($page->getUid());
                 foreach ($rootLine as $parentPage) {
@@ -176,6 +176,8 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
         } else if (count($pages)) {
             return reset($pages);
         }
+
+        $this->getLogger()->debug(sprintf('No page found for host "%s" and doktype "%s"', $host, $doktype));
 
         return null;
     }
@@ -201,6 +203,9 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
             }
             return $page;
         }
+
+        $this->getLogger()->debug(sprintf('No page found for doktype "%s"', $doktype));
+
         return null;
     }
 
@@ -224,11 +229,10 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
             while ($record = $this->getDatabaseConnection()->sql_fetch_assoc($result)) {
                 $page = $this->findByIdentifier($record['uid']);
                 if ($page !== null) {
+                    $this->getLogger()->debug(sprintf('Found page "#%s" with doktype "%s"', $page->getUid(), $doktype));
                     $pages[] = $page;
                 }
             }
-
-            $this->getLogger()->debug(sprintf('Found "%d" pages for doktype "%d"', count($pages), $doktype));
 
             $this->cachedPagesByDoktype[$doktype] = $pages;
         }

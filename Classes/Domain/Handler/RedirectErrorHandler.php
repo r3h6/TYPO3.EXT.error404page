@@ -68,7 +68,7 @@ class RedirectErrorHandler implements ErrorHandlerInterface
     protected $cacheTags = array();
 
     /**
-     * @inherit
+     * {@inheritDoc}
      */
     public function handleError(\R3H6\Error404page\Domain\Model\Error $error)
     {
@@ -119,7 +119,7 @@ class RedirectErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      */
     public function getOutput(\R3H6\Error404page\Domain\Model\Error $error)
     {
@@ -127,7 +127,7 @@ class RedirectErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      */
     public function setCachingData($data)
     {
@@ -135,7 +135,7 @@ class RedirectErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      */
     public function getCachingData()
     {
@@ -143,7 +143,7 @@ class RedirectErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * @inherit
+     * {@inheritDoc}
      */
     public function getCacheTags()
     {
