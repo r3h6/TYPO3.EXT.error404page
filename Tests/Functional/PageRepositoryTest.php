@@ -196,8 +196,8 @@ class PageRepositoryTest extends FunctionalTestCase
         $errorFixture = $this->createError();
         $errorFixture->setLanguage(1);
 
-        $pageRepository = $this->getInaccessibleProperty($this->pageRepository, 'pageRepository');
-        $pageRepository->sys_language_uid = 1;
+        // $pageRepository = $this->getInaccessibleProperty($this->pageRepository, 'pageRepository');
+        // $pageRepository->sys_language_uid = 1;
 
         $this->importDataSet('pages');
         $this->importDataSet('sys_language');

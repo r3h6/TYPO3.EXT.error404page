@@ -61,7 +61,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
     public function initializeObject()
     {
         $this->pageRepository->init(false);
-        $this->pageRepository->sys_language_uid = $this->getSystemLanguage();
+        // $this->pageRepository->sys_language_uid = $this->getSystemLanguage();
     }
 
     /**
@@ -71,6 +71,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      */
     public function findLoginPageForError(Error $error)
     {
+        $this->pageRepository->sys_language_uid = $error->getLanguage();
         if ($error->getPid()) {
             $rows = $this->getDatabaseConnection()->exec_SELECTgetRows('pid', 'tt_content', "CType='login'" . $this->pageRepository->enableFields('tt_content'));
             // Do not return a page if there is only one found, it could belong to an other domain!
@@ -103,6 +104,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
      */
     public function find404PageForError(Error $error)
     {
+        $this->pageRepository->sys_language_uid = $error->getLanguage();
         $doktype = (int) $this->extensionConfiguration->get('doktypeError404page');
         $page = $this->findFirstByHostAndDoktype($error->getHost(), $doktype);
         if ($page === null) {

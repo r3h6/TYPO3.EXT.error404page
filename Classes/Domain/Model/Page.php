@@ -66,9 +66,9 @@ class Page extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
         if (GeneralUtility::_GP('type') !== null) {
             $url .= '&type='.(int) GeneralUtility::_GP('type');
         }
-        if (GeneralUtility::_GP('L') !== null) {
+        if (isset($this->data['_PAGES_OVERLAY_LANGUAGE'])) {
             // Fallback to default language if the site has no translation.
-            $url .= '&L='.((int) isset($this->data['_PAGES_OVERLAY_LANGUAGE']) ? $this->data['_PAGES_OVERLAY_LANGUAGE'] : 0);
+            $url .= '&L='.$this->data['_PAGES_OVERLAY_LANGUAGE'];
         }
 
         return $url;

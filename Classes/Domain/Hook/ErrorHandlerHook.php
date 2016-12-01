@@ -83,7 +83,15 @@ class ErrorHandlerHook implements \TYPO3\CMS\Core\SingletonInterface
      */
     protected function getSystemLanguage()
     {
-        return (int) GeneralUtility::_GP('L');
+        $language = GeneralUtility::_GP('L');
+        if ($language === null && ExtensionManagementUtility::isLoaded('realurl')) {
+            $realurlVersion = ExtensionManagementUtility::getExtensionVersion('realurl');
+            if (version_compare($realurlVersion, '2.0.0', '<')) {
+                $language = GeneralUtility::callUserFunction('EXT:realurl/class.tx_realurl.php:&tx_realurl->getDetectedLanguage');
+            }
+        }
+
+        return (int) $language;
     }
 
     /**
