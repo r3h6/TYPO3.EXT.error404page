@@ -54,6 +54,8 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
         /** @var \TYPO3\CMS\Core\Http\HttpRequest $request */
         $request = $this->getHttpRequest($url);
 
+        $this->getLogger()->debug('Read url "'.$request->getUrl().'"');
+
         try {
              /** @var \HTTP_Request2_Response $response */
             $response = $request->send();
@@ -62,7 +64,7 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
             }
             $content = $response->getBody();
         } catch (\Exception $exception) {
-            $this->getLogger()->debug('Could not read url "' . $url . '" ' . $exception->getMessage());
+            $this->getLogger()->debug('Could not read url "'.$request->getUrl().'" '.$exception->getMessage());
         }
 
         return $content;
