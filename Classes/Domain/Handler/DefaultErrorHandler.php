@@ -23,7 +23,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class DefaultErrorHandler implements ErrorHandlerInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function handleError(\R3H6\Error404page\Domain\Model\Error $error)
     {
@@ -31,19 +31,20 @@ class DefaultErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getOutput(\R3H6\Error404page\Domain\Model\Error $error)
     {
         $title = 'Page not found';
-        $message = 'The page did not exist or was inaccessible.' . ($error->getReason() ? ' Reason: ' . htmlspecialchars($error->getReason()) : '');
+        $message = 'The page did not exist or was inaccessible.'.($error->getReason() ? ' Reason: '.htmlspecialchars($error->getReason()) : '');
         /** @var \TYPO3\CMS\Core\Messaging\ErrorpageMessage $messagePage */
         $messagePage = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Messaging\\ErrorpageMessage', $message, $title);
+
         return $messagePage->render();
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setCachingData($data)
     {
@@ -51,15 +52,15 @@ class DefaultErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCachingData()
     {
-        return null; // Only satisfy interface
+        return; // Only satisfy interface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCacheTags()
     {

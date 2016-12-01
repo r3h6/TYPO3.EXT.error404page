@@ -2,9 +2,6 @@
 
 namespace R3H6\Error404page\Utility;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
-
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
  *                                                                        *
@@ -19,7 +16,7 @@ use TYPO3\CMS\Core\Utility\VersionNumberUtility;
  *                                                                        */
 
 /**
- * CustomPageUtility
+ * CustomPageUtility.
  */
 class CustomPageUtility
 {
@@ -27,6 +24,7 @@ class CustomPageUtility
     {
         if (static::useCompatibility6()) {
             Compatibility6\CustomPageUtility::addDoktype($extKey, $doktype, $iconName);
+
             return;
         }
 
@@ -36,7 +34,7 @@ class CustomPageUtility
             'allowedTables' => '*',
         );
 
-        $identifier = 'apps-pagetree-' . strtolower($iconName);
+        $identifier = 'apps-pagetree-'.strtolower($iconName);
 
         // Provide icon for page tree, list view, ... :
         $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Imaging\\IconRegistry');
@@ -44,20 +42,20 @@ class CustomPageUtility
             $identifier,
             'TYPO3\\CMS\\Core\\Imaging\\IconProvider\\SvgIconProvider',
             array(
-                'source' => 'EXT:' . $extKey . '/Resources/Public/Icons/' . $identifier . '.svg',
+                'source' => 'EXT:'.$extKey.'/Resources/Public/Icons/'.$identifier.'.svg',
             )
         );
         $iconRegistry->registerIcon(
-            $identifier . '-hideinmenu',
+            $identifier.'-hideinmenu',
             'TYPO3\\CMS\\Core\\Imaging\\IconProvider\\SvgIconProvider',
             array(
-                'source' => 'EXT:' . $extKey . '/Resources/Public/Icons/' . $identifier . '-hideinmenu.svg',
+                'source' => 'EXT:'.$extKey.'/Resources/Public/Icons/'.$identifier.'-hideinmenu.svg',
             )
         );
 
         // Allow backend users to drag and drop the new page type:
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addUserTSConfig(
-            'options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $doktype . ')'
+            'options.pageTree.doktypesToShowInNewPageDragArea := addToList('.$doktype.')'
         );
     }
 
@@ -65,21 +63,22 @@ class CustomPageUtility
     {
         if (static::useCompatibility6()) {
             Compatibility6\CustomPageUtility::addDoktypeToPages($extKey, $doktype, $iconName, $alias);
+
             return;
         }
 
-        $identifier = 'apps-pagetree-' . strtolower($iconName);
+        $identifier = 'apps-pagetree-'.strtolower($iconName);
         $extRelPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($extKey);
-        $customPageIcon = $extRelPath . 'Resources/Public/Icons/' . $identifier . '.svg';
+        $customPageIcon = $extRelPath.'Resources/Public/Icons/'.$identifier.'.svg';
 
         // Add new page type as possible select item:
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItem(
             'pages',
             'doktype',
             array(
-                'LLL:EXT:' . $extKey . '/Resources/Private/Language/locallang_be.xlf:pages.doktype.' . (($alias === null) ? $doktype: $alias),
+                'LLL:EXT:'.$extKey.'/Resources/Private/Language/locallang_be.xlf:pages.doktype.'.(($alias === null) ? $doktype : $alias),
                 $doktype,
-                $customPageIcon
+                $customPageIcon,
             ),
             '1',
             'after'
@@ -92,7 +91,7 @@ class CustomPageUtility
                 'ctrl' => array(
                     'typeicon_classes' => array(
                         $doktype => $identifier,
-                        $doktype . '-hideinmenu' => $identifier . '-hideinmenu',
+                        $doktype.'-hideinmenu' => $identifier.'-hideinmenu',
                     ),
                 ),
             )
@@ -103,21 +102,22 @@ class CustomPageUtility
     {
         if (static::useCompatibility6()) {
             Compatibility6\CustomPageUtility::addDoktypeToPagesLanguageOverlay($extKey, $doktype, $iconName, $alias);
+
             return;
         }
 
-        $identifier = 'apps-pagetree-' . strtolower($iconName);
+        $identifier = 'apps-pagetree-'.strtolower($iconName);
         $extRelPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($extKey);
-        $customPageIcon = $extRelPath . 'Resources/Public/Icons/' . $identifier . '.svg';
+        $customPageIcon = $extRelPath.'Resources/Public/Icons/'.$identifier.'.svg';
 
         // Add new page type as possible select item:
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItem(
             'pages_language_overlay',
             'doktype',
             array(
-                'LLL:EXT:' . $extKey . '/Resources/Private/Language/locallang_be.xlf:pages.doktype.' . (($alias === null) ? $doktype: $alias),
+                'LLL:EXT:'.$extKey.'/Resources/Private/Language/locallang_be.xlf:pages.doktype.'.(($alias === null) ? $doktype : $alias),
                 $doktype,
-                $customPageIcon
+                $customPageIcon,
             ),
             '1',
             'after'

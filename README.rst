@@ -58,9 +58,28 @@ Simply install the extension and create a new page with your error message.
 
 You can use following markers in your content.
 
-:###CURRENT_URL###: The url of the called page.
-:###REASON###: A text why the error occured.
-:###ERROR_STATUS_CODE###: 404|403
+.. t3-field-list-table::
+   :header-rows: 1
+
+ - :Key:
+      Marker
+   :Description:
+      Description
+
+ - :Key:
+      ###CURRENT_URL###
+   :Description:
+      The url of the called page.
+
+ - :Key:
+      ###REASON###
+   :Description:
+      A text why the error occured.
+
+ - :Key:
+      ###ERROR_STATUS_CODE###
+   :Description:
+      404|403
 
 If you like redirect non logged in users when a 403 (forbidden) error occurs,
 simply include the available "Page TSConfig" or define by yourself:
@@ -74,22 +93,41 @@ Configuration
 Extension configuration
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-:doktypeError404page:
-   If required, you can change the page type.
+.. t3-field-list-table::
+   :header-rows: 1
 
-:enableErrorLog:
-   Enables the error log and statistic backend modul.
+ - :Key:
+      Key
+   :Description:
+      Description
 
-:excludeErrorLogPattern:
-   Regex without delimiters (/ /) and modifiers (i).
+ - :Key:
+      doktypeError404page
+   :Description:
+      If required, you can change the page type.
 
-   **Example:** select|union
+ - :Key:
+      enableErrorLog
+   :Description:
+      Enables the error log and statistic backend modul.
 
-:basicAuthentication:
-   Username and password for basic authentication.
+ - :Key:
+      excludeErrorLogPattern
+   :Description:
+      Regex without delimiters (/ /) and modifiers (i).
 
-:debug:
-   Enable debug log.
+      **Example:** select|union
+
+ - :Key:
+      basicAuthentication
+   :Description:
+      Username and password for basic authentication.
+
+ - :Key:
+      debug
+   :Description:
+      Enable debug log.
+
 
 .. warning::
 
@@ -137,6 +175,8 @@ Please not that pull requests to the *master* branch will be ignored. Please pul
 Changelog
 ---------
 
+:2.1.1: Bugfix for language detection with realurl 1.x.x
+:2.1.0: Added exclude pattern for error log
 :2.0.0: Refactoring, Feature 403 redirects
 :1.3.0: Updated backend modul
 :1.2.0: TYPO3 6.2 compatibility

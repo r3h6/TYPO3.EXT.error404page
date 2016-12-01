@@ -15,10 +15,8 @@ namespace R3H6\Error404page\Domain\Repository;
  * Public License for more details.                                       *
  *                                                                        */
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 /**
- * DomainRepository
+ * DomainRepository.
  */
 class DomainRepository implements \TYPO3\CMS\Core\SingletonInterface
 {
@@ -29,7 +27,7 @@ class DomainRepository implements \TYPO3\CMS\Core\SingletonInterface
     protected $pageRepository;
 
     /**
-     * Find all
+     * Find all.
      *
      * @return array Domain records
      */
@@ -38,8 +36,9 @@ class DomainRepository implements \TYPO3\CMS\Core\SingletonInterface
         $domains = $this->getDatabaseConnection()->exec_SELECTgetRows(
             '*',
             'sys_domain',
-            "redirectTo=''" . $this->pageRepository->enableFields('sys_domain')
+            "redirectTo=''".$this->pageRepository->enableFields('sys_domain')
         );
+
         return (array) $domains;
     }
 
@@ -48,8 +47,9 @@ class DomainRepository implements \TYPO3\CMS\Core\SingletonInterface
         $domains = $this->getDatabaseConnection()->exec_SELECTgetRows(
             '*',
             'sys_domain',
-            "redirectTo='' AND domainName=" . $this->getDatabaseConnection()->fullQuoteStr($domainName, 'sys_domain') . " " . $this->pageRepository->enableFields('sys_domain')
+            "redirectTo='' AND domainName=".$this->getDatabaseConnection()->fullQuoteStr($domainName, 'sys_domain').' '.$this->pageRepository->enableFields('sys_domain')
         );
+
         return (array) $domains;
     }
 

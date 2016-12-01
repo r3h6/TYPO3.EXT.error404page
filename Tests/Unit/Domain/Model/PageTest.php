@@ -31,15 +31,16 @@ class PageTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     protected $subject = null;
 
+    protected $dataFixture = array(
+        'uid' => '99',
+        'pid' => '11',
+        'title' => 'Test',
+        'no_cache' => '1',
+    );
+
     public function setUp()
     {
-        $this->subject = new \R3H6\Error404page\Domain\Model\Page(array(
-            'uid' => '99',
-            'pid' => '11',
-            'title' => 'Test',
-            'no_cache' => '1',
-            '_PAGES_OVERLAY_LANGUAGE' => '3',
-        ));
+        $this->subject = new \R3H6\Error404page\Domain\Model\Page($this->dataFixture);
 
         if (method_exists('TYPO3\\CMS\\Core\\Utility\\GeneralUtility', 'flushInternalRuntimeCaches')) {
             GeneralUtility::flushInternalRuntimeCaches();
@@ -94,8 +95,11 @@ class PageTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function getUrlWithTypeAndLanguageOverlayParameter()
     {
-        $_GET['L'] = '1';
         $_GET['type'] = '2';
+
+        $this->subject = new \R3H6\Error404page\Domain\Model\Page($this->dataFixture + array(
+            '_PAGES_OVERLAY_LANGUAGE' => '3',
+        ));
 
         $this->assertSame(
             'http://typo3.org/index.php?id=99&type=2&L=3',

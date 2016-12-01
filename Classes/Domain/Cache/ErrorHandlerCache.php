@@ -20,21 +20,21 @@ use R3H6\Error404page\Domain\Model\Error;
 use R3H6\Error404page\Domain\Handler\ErrorHandlerInterface;
 
 /**
- * ErrorHandlerCache
+ * ErrorHandlerCache.
  */
 class ErrorHandlerCache implements \TYPO3\CMS\Core\SingletonInterface
 {
     const IDENTIFIER = 'error404page_errorhandler';
 
     /**
-     * Cache instance
+     * Cache instance.
      *
      * @var \TYPO3\CMS\Core\Cache\Frontend\FrontendInterface
      */
     protected $cacheInstance;
 
     /**
-     * ObjectManager
+     * ObjectManager.
      *
      * @var \TYPO3\CMS\Extbase\Object\ObjectManager
      * @inject
@@ -59,8 +59,9 @@ class ErrorHandlerCache implements \TYPO3\CMS\Core\SingletonInterface
     /**
      * Calculates the cache identifier for a given error.
      *
-     * @param  Error  $error
-     * @return string        sha1
+     * @param Error $error
+     *
+     * @return string sha1
      */
     public function calculateCacheIdentifier(Error $error)
     {
@@ -68,19 +69,20 @@ class ErrorHandlerCache implements \TYPO3\CMS\Core\SingletonInterface
         $parts[] = $error->getHost();
         $parts[] = $error->getLanguage();
         $parts[] = $error->getStatusCode();
-        $parts[] = join(',', (array) $this->frontendUser->getUserGroups());
+        $parts[] = implode(',', (array) $this->frontendUser->getUserGroups());
 
         if ($error->getStatusCode() === Error::STATUS_CODE_FORBIDDEN) {
             $parts[] = $error->getCurrentUrl();
         }
 
-        return sha1(join('---', $parts));
+        return sha1(implode('---', $parts));
     }
 
     /**
      * Reads from cache.
      *
-     * @param  string $cacheIdentifier
+     * @param string $cacheIdentifier
+     *
      * @return ErrorHandlerInterface|null
      */
     public function get($cacheIdentifier)
@@ -91,10 +93,12 @@ class ErrorHandlerCache implements \TYPO3\CMS\Core\SingletonInterface
             $errorHandler = $this->objectManager->get($data['class']);
             if ($errorHandler instanceof ErrorHandlerInterface) {
                 $errorHandler->setCachingData($data['data']);
+
                 return $errorHandler;
             }
         }
-        return null;
+
+        return;
     }
 
     /**

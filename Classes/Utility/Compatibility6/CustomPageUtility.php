@@ -16,17 +16,17 @@ namespace R3H6\Error404page\Utility\Compatibility6;
  *                                                                        */
 
 /**
- * CustomPageUtility
+ * CustomPageUtility.
  */
 class CustomPageUtility
 {
     private static function getCustomPageIcon($extKey, $iconName)
     {
-        $identifier = 'apps-pagetree-' . strtolower($iconName);
-        $relativeExtensionPath = '../typo3conf/ext/' . $extKey . '/';
+        $identifier = 'apps-pagetree-'.strtolower($iconName);
+        $relativeExtensionPath = '../typo3conf/ext/'.$extKey.'/';
 
         // Define a new doktype
-        $customPageIcon = $relativeExtensionPath . 'Resources/Public/Icons/' . $identifier . '.png';
+        $customPageIcon = $relativeExtensionPath.'Resources/Public/Icons/'.$identifier.'.png';
 
         return $customPageIcon;
     }
@@ -39,7 +39,7 @@ class CustomPageUtility
         $GLOBALS['PAGES_TYPES'][$doktype] = array(
                 'type' => 'web',
                 'icon' => $customPageIcon,
-                'allowedTables' => '*'
+                'allowedTables' => '*',
         );
 
         // Add the icon for the new doktype
@@ -47,7 +47,7 @@ class CustomPageUtility
 
         // Add the new doktype to the list of types available from the new page menu at the top of the page tree
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addUserTSConfig(
-            'options.pageTree.doktypesToShowInNewPageDragArea := addToList(' . $doktype . ')'
+            'options.pageTree.doktypesToShowInNewPageDragArea := addToList('.$doktype.')'
         );
     }
 
@@ -60,9 +60,9 @@ class CustomPageUtility
         }
         // Add the new doktype to the page type selector
         $GLOBALS['TCA']['pages']['columns']['doktype']['config']['items'][] = array(
-                'LLL:EXT:' . $extKey . '/Resources/Private/Language/locallang_be.xlf:pages.doktype.' . $alias,
+                'LLL:EXT:'.$extKey.'/Resources/Private/Language/locallang_be.xlf:pages.doktype.'.$alias,
                 $doktype,
-                $customPageIcon
+                $customPageIcon,
         );
     }
 
@@ -75,9 +75,9 @@ class CustomPageUtility
         }
         // Also add the new doktype to the page language overlays type selector (so that translations can inherit the same type)
         $GLOBALS['TCA']['pages_language_overlay']['columns']['doktype']['config']['items'][] = array(
-                'LLL:EXT:' . $extKey . '/Resources/Private/Language/locallang_be.xlf:pages.doktype.' . $alias,
+                'LLL:EXT:'.$extKey.'/Resources/Private/Language/locallang_be.xlf:pages.doktype.'.$alias,
                 $doktype,
-                $customPageIcon
+                $customPageIcon,
         );
     }
 }

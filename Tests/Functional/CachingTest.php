@@ -16,7 +16,6 @@ namespace R3H6\Error404page\Tests\Functional;
  *                                                                        */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use R3H6\Error404page\Domain\Model\Error;
 use R3H6\Error404page\Tests\Functional\Fixtures\ErrorHandlerFixture;
 
 /**

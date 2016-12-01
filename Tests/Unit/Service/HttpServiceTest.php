@@ -23,7 +23,6 @@ use HTTP_Request2_Response;
  *
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
  * @author R3 H6 <r3h6@outlook.com>
  */
 class HttpServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
@@ -83,7 +82,7 @@ class HttpServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     public function readUrlReturnsNullOnException()
     {
         $url = 'index.php?id=123';
-        $this->createRequestMock(new \Exception("Test", 1477081985));
+        $this->createRequestMock(new \Exception('Test', 1477081985));
         $this->assertSame(null, $this->subject->readUrl($url));
     }
 
@@ -124,13 +123,14 @@ class HttpServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     {
         $requestClass = 'TYPO3\\CMS\\Core\\Http\\HttpRequest';
         $requestMock = $this->getMock($requestClass, array('send'), array(), '', false);
-        $method = ($response instanceof \Exception) ? 'throwException': 'returnValue';
+        $method = ($response instanceof \Exception) ? 'throwException' : 'returnValue';
         $requestMock
             ->expects($this->any())
             ->method('send')
             ->will($this->$method($response));
 
         GeneralUtility::addInstance($requestClass, $requestMock);
+
         return $requestMock;
     }
 }

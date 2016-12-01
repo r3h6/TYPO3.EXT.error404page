@@ -19,7 +19,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 
 /**
- * PageTsConfiguration
+ * PageTsConfiguration.
  *
  * API to access extension configuration (ext_conf_template.txt).
  */
@@ -30,7 +30,7 @@ class PageTsConfigManager implements \TYPO3\CMS\Core\SingletonInterface
     protected $pageTsConfig = array();
 
     /**
-     * TypoScriptService
+     * TypoScriptService.
      *
      * @var \TYPO3\CMS\Extbase\Service\TypoScriptService
      * @inject
@@ -40,14 +40,14 @@ class PageTsConfigManager implements \TYPO3\CMS\Core\SingletonInterface
     /**
      * Returns a PageTsConfig instance for a given page.
      *
-     * @param  int $pageUid
+     * @param int $pageUid
+     *
      * @return \R3H6\Error404page\Configuration\PageTsConfig
      */
     public function getPageTsConfig($pageUid)
     {
         $pageUid = (int) $pageUid;
         if (!isset($this->pageTsConfig[$pageUid])) {
-
             $pageTsConfig = $this->typoScriptService->convertTypoScriptArrayToPlainArray(BackendUtility::getPagesTSconfig($pageUid));
             $configuration = array();
             if (isset($pageTsConfig[self::TSCONFIG_KEY])) {
@@ -56,6 +56,7 @@ class PageTsConfigManager implements \TYPO3\CMS\Core\SingletonInterface
 
             $this->pageTsConfig[$pageUid] = GeneralUtility::makeInstance('R3H6\\Error404page\\Configuration\\PageTsConfig', $configuration, $pageUid);
         }
+
         return $this->pageTsConfig[$pageUid];
     }
 }

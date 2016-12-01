@@ -1,4 +1,5 @@
 <?php
+
 namespace R3H6\Error404page\Facade;
 
 /*                                                                        *
@@ -15,12 +16,12 @@ namespace R3H6\Error404page\Facade;
  *                                                                        */
 
 /**
- * FrontendUser
+ * FrontendUser.
  */
 class FrontendUser
 {
     /**
-     * FrontendUserAuthentication
+     * FrontendUserAuthentication.
      *
      * @var \TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication
      */
@@ -41,8 +42,10 @@ class FrontendUser
         if (!empty($this->frontendUserAuthentication->groupData['uid'])) {
             $groups = array_values($this->frontendUserAuthentication->groupData['uid']);
             sort($groups);
+
             return $groups;
         }
+
         return array();
         // $this->frontendUserAuthentication->fetchGroupData();
         // \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($this);

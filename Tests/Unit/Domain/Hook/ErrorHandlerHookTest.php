@@ -18,7 +18,6 @@ namespace R3H6\Error404page\Tests\Unit\Hooks;
 // require_once __DIR__ . '/../Fixtures/Request.php';
 
 use R3H6\Error404page\Domain\Hook\ErrorHandlerHook;
-use R3H6\Error404page\Domain\Handler\ErrorHandler;
 use R3H6\Error404page\Domain\Model\Error;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -62,10 +61,10 @@ class ErrorHandlerHookTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     public function pageNotFoundCallsHandleErrorOnErrorHandlerAndReturnsTheResult()
     {
         $tsfeFixture = $this->getMock('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController', array(), array(), '', false);
-        $paramsFixture = array (
+        $paramsFixture = array(
             'currentUrl' => '/index.php?id=5',
             'reasonText' => 'ID was not an accessible page',
-            'pageAccessFailureReasons' =>array (),
+            'pageAccessFailureReasons' => array(),
         );
 
         $this->errorHandlerMock
@@ -105,6 +104,7 @@ class ErrorHandlerHookTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
                 if ($error->getPid() !== null) {
                     return false;
                 }
+
                 return true;
             }))
             ->will($this->returnValue('test'));
@@ -125,11 +125,11 @@ class ErrorHandlerHookTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         $tsfeFixture = $this->getMock('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController', array(), array(), '', false);
         $tsfeFixture->page = array('uid' => '123');
 
-        $paramsFixture = array (
+        $paramsFixture = array(
             'currentUrl' => '/index.php?id=3',
             'reasonText' => 'ID was not an accessible page',
-            'pageAccessFailureReasons' => array (
-                'fe_group' => array (
+            'pageAccessFailureReasons' => array(
+                'fe_group' => array(
                     3 => '-2',
                 ),
             ),
@@ -139,12 +139,13 @@ class ErrorHandlerHookTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
             ->expects($this->once())
             ->method('handleError')
             ->with($this->callback(function ($error) use ($tsfeFixture) {
-                if ($error->getPid() !== (int)$tsfeFixture->page['uid']) {
+                if ($error->getPid() !== (int) $tsfeFixture->page['uid']) {
                     return false;
                 }
                 if ($error->getStatusCode() !== Error::STATUS_CODE_FORBIDDEN) {
                     return false;
                 }
+
                 return true;
             }));
 
@@ -155,11 +156,11 @@ class ErrorHandlerHookTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     {
         $tsfeFixture = $this->getMock('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController', array(), array(), '', false);
 
-        $paramsFixture = array (
+        $paramsFixture = array(
             'currentUrl' => '/invalid/path/',
             'reasonText' => 'Segment "path" was not a keyword for a postVarSet as expected on page with id=1.',
-            'pageAccessFailureReasons' => array (
-                'fe_group' => array (
+            'pageAccessFailureReasons' => array(
+                'fe_group' => array(
                     '' => 0,
                     ),
                 ),
@@ -175,8 +176,6 @@ class ErrorHandlerHookTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         $this->subject->pageNotFound($paramsFixture, $tsfeFixture);
     }
 
-
-
     /**
      * @test
      */
@@ -185,11 +184,11 @@ class ErrorHandlerHookTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         $tsfeFixture = $this->getMock('TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController', array(), array(), '', false);
         $tsfeFixture->page = array('uid' => '123');
 
-        $paramsFixture = array (
+        $paramsFixture = array(
             'currentUrl' => '/index.php?id=3',
             'reasonText' => 'ID was not an accessible page',
-            'pageAccessFailureReasons' => array (
-                'fe_group' => array (
+            'pageAccessFailureReasons' => array(
+                'fe_group' => array(
                     3 => '-2',
                 ),
             ),

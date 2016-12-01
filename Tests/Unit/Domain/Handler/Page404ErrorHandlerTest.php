@@ -70,7 +70,7 @@ class Page404ErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCase
     public function handleErrorReturnsFalseIfNoErrorPageIsFound()
     {
         /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
-        $errorFixture =  new Error();
+        $errorFixture = new Error();
 
         $this->pageRepositoryMock
             ->expects($this->once())
@@ -87,7 +87,7 @@ class Page404ErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCase
     public function handleErrorReturnsFalseWhenHttpServiceReturnsNullCalledWithPageUrl()
     {
         /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
-        $errorFixture =  new Error();
+        $errorFixture = new Error();
 
         /** @var \R3H6\Error404page\Domain\Model\Error $pageMock */
         $pageMock = $this->getPageMock(404, 'test');
@@ -115,7 +115,7 @@ class Page404ErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCase
         $expected = 'Error 404';
 
         /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
-        $errorFixture =  new Error();
+        $errorFixture = new Error();
 
         /** @var \R3H6\Error404page\Domain\Model\Error $pageMock */
         $pageMock = $this->getPageMock(404, 'test');
@@ -143,7 +143,7 @@ class Page404ErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCase
     public function getOutputSubstituesMarkers()
     {
         /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
-        $errorFixture =  new Error();
+        $errorFixture = new Error();
         $errorFixture->setCurrentUrl('http://www.typo3.org/page/not/found/');
         $errorFixture->setReasonText('Test reason text');
 
@@ -157,7 +157,6 @@ class Page404ErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCase
         $this->assertContains($errorFixture->getCurrentUrl(), $output);
         $this->assertContains($errorFixture->getReasonText(), $output);
     }
-
 
     protected function getPageMock($uid, $url)
     {

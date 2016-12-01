@@ -19,7 +19,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\HttpUtility;
 
 /**
- * Error handler
+ * Error handler.
  *
  * This is a bridge class for using extbase dependency injection.
  */
@@ -34,7 +34,7 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
     /**
      * Redirect to url.
      *
-     * @param  string $url [description]
+     * @param string $url [description]
      */
     public function redirect($url)
     {
@@ -44,7 +44,8 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
     /**
      * Reads and returns the content of the url.
      *
-     * @param  string $url
+     * @param string $url
+     *
      * @return string
      */
     public function readUrl($url)
@@ -54,15 +55,17 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
         /** @var \TYPO3\CMS\Core\Http\HttpRequest $request */
         $request = $this->getHttpRequest($url);
 
+        $this->getLogger()->debug('Read url "'.$request->getUrl().'"');
+
         try {
-             /** @var \HTTP_Request2_Response $response */
+            /** @var \HTTP_Request2_Response $response */
             $response = $request->send();
             if ($response->getStatus() !== 200) {
                 throw new \RuntimeException($response->getReasonPhrase(), 1477079525);
             }
             $content = $response->getBody();
         } catch (\Exception $exception) {
-            $this->getLogger()->debug('Could not read url "' . $url . '" ' . $exception->getMessage());
+            $this->getLogger()->debug('Could not read url "'.$request->getUrl().'" '.$exception->getMessage());
         }
 
         return $content;
@@ -74,15 +77,16 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
     }
 
     /**
-     * Creates a http request
+     * Creates a http request.
      *
-     * @param  string $url
+     * @param string $url
+     *
      * @return \TYPO3\CMS\Core\Http\HttpRequest
      */
     protected function getHttpRequest($url)
     {
-        $url .= (strpos($url, '?') === false) ? '?': '&';
-        $url .= 'tx_error404page_request=' . uniqid();
+        $url .= (strpos($url, '?') === false) ? '?' : '&';
+        $url .= 'tx_error404page_request='.uniqid();
 
         /** @var \TYPO3\CMS\Core\Http\HttpRequest $request */
         $request = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Http\\HttpRequest');
@@ -93,7 +97,7 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
         // Forward cookies.
         $request->setCookieJar(true);
         if (isset($_COOKIE[$feCookieName]) && !empty($_COOKIE[$feCookieName])) {
-                $request->addCookie($feCookieName, $_COOKIE[$feCookieName]);
+            $request->addCookie($feCookieName, $_COOKIE[$feCookieName]);
         }
 
         // TYPO3 uses user-agent for authentification.
@@ -109,7 +113,7 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
     }
 
     /**
-     * Get class logger
+     * Get class logger.
      *
      * @return \TYPO3\CMS\Core\Log\Logger
      */

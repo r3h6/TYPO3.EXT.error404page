@@ -19,7 +19,7 @@ use R3H6\Error404page\Domain\Handler\ErrorHandler;
 use R3H6\Error404page\Domain\Model\Error;
 
 /**
- * Unit test for the ErrorHandler.§
+ * Unit test for the ErrorHandler.§.
  */
 class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 {
@@ -52,7 +52,6 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      * @var \R3H6\Error404page\Service\HttpService
      */
     protected $httpServiceMock;
-
 
     public function setUp()
     {
@@ -131,7 +130,7 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
             ->with($this->equalTo('enableErrorLog'))
             ->will($this->returnValue(true));
 
-         $this->extensionConfigurationMock
+        $this->extensionConfigurationMock
             ->expects($this->once())
             ->method('get')
             ->with($this->equalTo('excludeErrorLogPattern'))
@@ -169,7 +168,6 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     {
         /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
         $errorFixture = new Error();
-
 
         $cacheIdentifierFixture = sha1(uniqid());
         $this->errorHandlerCacheMock
@@ -291,7 +289,7 @@ class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     {
         $errorHandlerMock = $this->getMock('R3H6\\Error404page\\Domain\\Handler\\ErrorHandlerInterface');
 
-         $this->objectManagerMock
+        $this->objectManagerMock
             ->expects($this->any())
             ->method('get')
             ->will($this->returnValue($errorHandlerMock));

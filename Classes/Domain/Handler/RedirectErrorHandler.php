@@ -54,21 +54,21 @@ class RedirectErrorHandler implements ErrorHandlerInterface
     protected $httpService;
 
     /**
-     * Redirect
+     * Redirect.
      *
      * @var string
      */
     protected $redirect = '';
 
     /**
-     * Cache tags
+     * Cache tags.
      *
      * @var array
      */
     protected $cacheTags = array();
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function handleError(\R3H6\Error404page\Domain\Model\Error $error)
     {
@@ -96,12 +96,12 @@ class RedirectErrorHandler implements ErrorHandlerInterface
         }
 
         if (MathUtility::canBeInterpretedAsInteger($parameter)) {
-            $this->cacheTags[] = 'pageId_' . $parameter;
+            $this->cacheTags[] = 'pageId_'.$parameter;
             if ($this->frontendController->isDefaultType() === false) {
                 $parameter .= ','.$this->frontendController->getType();
             }
             if ($this->frontendController->isDefaultLanguage() === false || $this->frontendController->isDefaultGetVar('L') === true) {
-                $parameter .= ' - - - &L=' . $this->frontendController->getSystemLanguageUid();
+                $parameter .= ' - - - &L='.$this->frontendController->getSystemLanguageUid();
             }
         }
 
@@ -111,15 +111,17 @@ class RedirectErrorHandler implements ErrorHandlerInterface
             $this->redirect = '';
             $this->redirect .= $this->frontendController->typoLink(array('parameter' => $parameter, 'forceAbsoluteUrl' => true));
 
-            $this->redirect .= (strpos($this->redirect, '?') === false) ? '?': '&';
-            $this->redirect .= 'redirect_url=' . $error->getUrl();
+            $this->redirect .= (strpos($this->redirect, '?') === false) ? '?' : '&';
+            $this->redirect .= 'redirect_url='.$error->getUrl();
+
             return true;
         }
+
         return false;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getOutput(\R3H6\Error404page\Domain\Model\Error $error)
     {
@@ -127,7 +129,7 @@ class RedirectErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setCachingData($data)
     {
@@ -135,7 +137,7 @@ class RedirectErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCachingData()
     {
@@ -143,7 +145,7 @@ class RedirectErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCacheTags()
     {
@@ -151,7 +153,7 @@ class RedirectErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * Get class logger
+     * Get class logger.
      *
      * @return \TYPO3\CMS\Core\Log\Logger
      */

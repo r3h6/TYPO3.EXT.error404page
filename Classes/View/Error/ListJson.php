@@ -1,4 +1,5 @@
 <?php
+
 namespace R3H6\Error404page\View\Error;
 
 /*                                                                        *
@@ -15,7 +16,7 @@ namespace R3H6\Error404page\View\Error;
  *                                                                        */
 
 /**
- * ListJson
+ * ListJson.
  */
 class ListJson extends \TYPO3\CMS\Extbase\Mvc\View\JsonView
 {

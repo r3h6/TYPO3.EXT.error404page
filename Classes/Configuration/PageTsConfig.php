@@ -15,9 +15,8 @@ namespace R3H6\Error404page\Configuration;
  * Public License for more details.                                       *
  *                                                                        */
 
-
 /**
- * PageTsConfiguration
+ * PageTsConfiguration.
  *
  * API to access extension configuration (ext_conf_template.txt).
  */
@@ -30,17 +29,17 @@ class PageTsConfig
     {
         $this->configuration = $configuration;
         $this->pageUid = $pageUid;
-
     }
 
     public function get($key)
     {
-        return isset($this->configuration[$key]) ? $this->configuration[$key]: null;
+        return isset($this->configuration[$key]) ? $this->configuration[$key] : null;
     }
 
     public function is($key)
     {
         $value = $this->get($key);
+
         return empty($value) === false;
     }
 }

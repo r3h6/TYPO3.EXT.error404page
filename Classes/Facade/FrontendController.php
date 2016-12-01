@@ -1,4 +1,5 @@
 <?php
+
 namespace R3H6\Error404page\Facade;
 
 /*                                                                        *
@@ -15,14 +16,14 @@ namespace R3H6\Error404page\Facade;
  *                                                                        */
 
 /**
- * FrontendController
+ * FrontendController.
  *
  * Facade for TypoScriptFrontendController (TSFE)
  */
 class FrontendController
 {
     /**
-     * TypoScriptFrontendController
+     * TypoScriptFrontendController.
      *
      * @var \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
      */
@@ -36,6 +37,7 @@ class FrontendController
     public function getType()
     {
         $this->initialize();
+
         return (int) $this->typoScriptFrontendController->type;
     }
 
@@ -47,6 +49,7 @@ class FrontendController
     public function getSystemLanguageUid()
     {
         $this->initialize();
+
         return (int) $this->typoScriptFrontendController->sys_language_uid;
     }
 
@@ -58,12 +61,14 @@ class FrontendController
     public function typoLink(array $parameters)
     {
         $this->initialize();
+
         return $this->typoScriptFrontendController->cObj->typoLink_URL($parameters);
     }
 
     public function isDefaultGetVar($getVar)
     {
         $this->initialize();
+
         return isset($this->typoScriptFrontendController->config['config']['defaultGetVars.'][$getVar]);
     }
 
