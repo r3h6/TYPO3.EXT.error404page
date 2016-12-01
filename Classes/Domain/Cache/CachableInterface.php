@@ -35,7 +35,7 @@ interface CachableInterface
     public function getCachingData();
 
     /**
-     * Get optional cache tags
+     * Get optional cache tags.
      *
      * @return array
      */

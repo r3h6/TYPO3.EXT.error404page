@@ -17,9 +17,6 @@ namespace R3H6\Error404page\Tests\Unit;
 
 // require_once __DIR__ . '/../Fixtures/Request.php';
 
-use R3H6\Error404page\Domain\Hook\ErrorHandlerHook;
-use R3H6\Error404page\Domain\Handler\ErrorHandler;
-use R3H6\Error404page\Domain\Model\Error;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**

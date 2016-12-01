@@ -1,4 +1,5 @@
 <?php
+
 namespace R3H6\Error404page\Domain\Model;
 
 /*                                                                        *
@@ -17,7 +18,7 @@ namespace R3H6\Error404page\Domain\Model;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Error
+ * Error.
  */
 class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
 {
@@ -25,14 +26,14 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     const STATUS_CODE_FORBIDDEN = 403;
 
     /**
-     * Timestamp
+     * Timestamp.
      *
-     * @var integer
+     * @var int
      */
     protected $timestamp = 0;
 
     /**
-     * Url
+     * Url.
      *
      * @var string
      * @validate NotEmpty
@@ -40,7 +41,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     protected $url = '';
 
     /**
-     * Root page
+     * Root page.
      *
      * @var int
      * @validate NotEmpty
@@ -48,7 +49,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     protected $rootPage = 0;
 
     /**
-     * Reason
+     * Reason.
      *
      * @var string
      * @validate NotEmpty
@@ -56,7 +57,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     protected $reason = '';
 
     /**
-     * Counter
+     * Counter.
      *
      * @var int
      * @validate NotEmpty
@@ -64,71 +65,72 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     protected $counter = 0;
 
     /**
-     * Last referer
+     * Last referer.
      *
      * @var string
      */
     protected $referer = '';
 
     /**
-     * IP
+     * IP.
      *
      * @var string
      */
     protected $ip = '';
 
     /**
-     * User agent
+     * User agent.
      *
      * @var string
      */
     protected $userAgent = '';
 
     /**
-     * urlHash
+     * urlHash.
      *
      * @var string
      */
     protected $urlHash = '';
 
     /**
-     * Language
+     * Language.
      *
-     * @var integer
+     * @var int
      */
     protected $_language = 0;
 
     /**
-     * Status code
+     * Status code.
      *
-     * @var integer
+     * @var int
      */
     protected $_statusCode = self::STATUS_CODE_NOT_FOUND;
 
     /**
-     * Host
+     * Host.
      *
      * @var string
      */
     protected $_host = null;
 
     /**
-     * Reason text
+     * Reason text.
      *
      * @var string
      */
     protected $_reasonText = '';
 
     /**
-     * Current url
+     * Current url.
+     *
      * @var string
      */
     protected $_currentUrl = '';
 
     /**
-     * Gets the language
+     * Gets the language.
      *
-     * @return integer
+     * @return int
      */
     public function getLanguage()
     {
@@ -136,9 +138,9 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Sets the language
+     * Sets the language.
      *
-     * @param integer $language
+     * @param int $language
      */
     public function setLanguage($language)
     {
@@ -146,7 +148,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Returns the url
+     * Returns the url.
      *
      * @return string $url
      */
@@ -156,10 +158,9 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Sets the url
+     * Sets the url.
      *
      * @param string $url
-     * @return void
      */
     public function setUrl($url)
     {
@@ -168,9 +169,9 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Gets the reasonText
+     * Gets the reasonText.
      *
-     * @return  string
+     * @return string
      */
     public function getReasonText()
     {
@@ -178,9 +179,9 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Sets the reasonText
+     * Sets the reasonText.
      *
-     * @param   string $reasonText
+     * @param string $reasonText
      */
     public function setReasonText($reasonText)
     {
@@ -189,7 +190,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Returns the reason
+     * Returns the reason.
      *
      * @return string $reason
      */
@@ -199,18 +200,17 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Sets the reason
+     * Sets the reason.
      *
      * @param string $reason
-     * @return void
      */
     public function setReason($reason)
     {
         if (preg_match('/Cannot decode "([^"]+)"/si', $reason)) {
             $reason = 'Cannot decode path';
-        } else if (preg_match('/Could not map alias "([^"]+)" to an id\\./si', $reason)) {
+        } elseif (preg_match('/Could not map alias "([^"]+)" to an id\\./si', $reason)) {
             $reason = 'Could not map alias to an id.';
-        } else if (preg_match('/Segment "([^"]+)" was not a keyword for a postVarSet as expected on page with id=([0-9]+)\\./si', $reason, $matches)) {
+        } elseif (preg_match('/Segment "([^"]+)" was not a keyword for a postVarSet as expected on page with id=([0-9]+)\\./si', $reason, $matches)) {
             $reason = 'Segment was not a keyword for a postVarSet as expected on page';
             $this->pid = (int) $matches[2];
         }
@@ -223,7 +223,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Returns the ip
+     * Returns the ip.
      *
      * @return int $ip
      */
@@ -233,10 +233,9 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Sets the ip
+     * Sets the ip.
      *
      * @param int $ip
-     * @return void
      */
     public function setIp($ip)
     {
@@ -244,7 +243,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Gets the counter
+     * Gets the counter.
      *
      * @return int
      */
@@ -254,7 +253,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Sets the counter
+     * Sets the counter.
      *
      * @param int $counter
      */
@@ -264,7 +263,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Returns the referer
+     * Returns the referer.
      *
      * @return string referer
      */
@@ -274,10 +273,9 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Sets the referer
+     * Sets the referer.
      *
      * @param string $referer
-     * @return void
      */
     public function setReferer($referer)
     {
@@ -285,7 +283,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Returns the rootPage
+     * Returns the rootPage.
      *
      * @return int $rootPage
      */
@@ -295,10 +293,9 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Sets the rootPage
+     * Sets the rootPage.
      *
      * @param int $rootPage
-     * @return void
      */
     public function setRootPage($rootPage)
     {
@@ -306,7 +303,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Returns the userAgent
+     * Returns the userAgent.
      *
      * @return string $userAgent
      */
@@ -316,10 +313,9 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Sets the userAgent
+     * Sets the userAgent.
      *
      * @param string $userAgent
-     * @return void
      */
     public function setUserAgent($userAgent)
     {
@@ -327,9 +323,9 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Gets the timestamp
+     * Gets the timestamp.
      *
-     * @return integer
+     * @return int
      */
     public function getTimestamp()
     {
@@ -337,9 +333,9 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Sets the timestamp
+     * Sets the timestamp.
      *
-     * @param integer $timestamp
+     * @param int $timestamp
      */
     public function setTimestamp($timestamp)
     {
@@ -347,9 +343,9 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Gets the statusCode
+     * Gets the statusCode.
      *
-     * @return integer
+     * @return int
      */
     public function getStatusCode()
     {
@@ -357,9 +353,9 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Sets the statusCode
+     * Sets the statusCode.
      *
-     * @param integer $statusCode
+     * @param int $statusCode
      */
     public function setStatusCode($statusCode)
     {
@@ -367,7 +363,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Gets the host
+     * Gets the host.
      *
      * @return string
      */
@@ -377,7 +373,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Sets the host
+     * Sets the host.
      *
      * @param string $host
      */
@@ -387,9 +383,9 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Gets the currentUrl
+     * Gets the currentUrl.
      *
-     * @return  string
+     * @return string
      */
     public function getCurrentUrl()
     {
@@ -397,9 +393,9 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Sets the currentUrl
+     * Sets the currentUrl.
      *
-     * @param   string $currentUrl
+     * @param string $currentUrl
      */
     public function setCurrentUrl($currentUrl)
     {
@@ -407,7 +403,7 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Returns properties array
+     * Returns properties array.
      *
      * @return array
      */
@@ -424,11 +420,12 @@ class Error extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
         }
         unset($properties['uid']);
         unset($properties['timestamp']);
+
         return $properties;
     }
 
     /**
-     * Returns the urlHash
+     * Returns the urlHash.
      *
      * @return string $urlHash
      */

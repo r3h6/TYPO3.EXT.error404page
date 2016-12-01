@@ -19,7 +19,6 @@ use R3H6\Error404page\Domain\Model\Error;
 use R3H6\Error404page\Domain\Model\Page;
 use R3H6\Error404page\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Functional test case for the PageRepository.
@@ -55,7 +54,6 @@ class PageRepositoryTest extends FunctionalTestCase
         parent::tearDown();
         unset($this->pageRepository);
     }
-
 
     /**
      * @test
@@ -226,11 +224,12 @@ class PageRepositoryTest extends FunctionalTestCase
         $reflectionObject = new \ReflectionObject($object);
         $reflectionProperty = $reflectionObject->getProperty($propertyName);
         $reflectionProperty->setAccessible(true);
+
         return $reflectionProperty->getValue($object);
     }
 
     /**
-     * @return  R3H6\Error404page\Domain\Model\Error
+     * @return R3H6\Error404page\Domain\Model\Error
      */
     protected function createError($host = 'www.typo3.org', $statusCode = Error::STATUS_CODE_NOT_FOUND, $pid = null)
     {
@@ -239,6 +238,7 @@ class PageRepositoryTest extends FunctionalTestCase
         $error->setStatusCode($statusCode);
         $error->setPid($pid);
         $error->setHost($host);
+
         return $error;
     }
 
@@ -251,9 +251,8 @@ class PageRepositoryTest extends FunctionalTestCase
         $this->getDatabaseConnection()->exec_INSERTquery('pages_language_overlay', $record);
     }
 
-
     protected function importDataSet($name)
     {
-        parent::importDataSet(ORIGINAL_ROOT . 'typo3conf/ext/error404page/Tests/Functional/Fixtures/Database/' . $name . '.xml');
+        parent::importDataSet(ORIGINAL_ROOT.'typo3conf/ext/error404page/Tests/Functional/Fixtures/Database/'.$name.'.xml');
     }
 }

@@ -24,7 +24,8 @@ interface ErrorHandlerInterface extends \R3H6\Error404page\Domain\Cache\Cachable
      * Handle error.
      *
      * @param \R3H6\Error404page\Domain\Model\Error $error
-     * @return boolean true if error could be handled
+     *
+     * @return bool true if error could be handled
      */
     public function handleError(\R3H6\Error404page\Domain\Model\Error $error);
 
@@ -32,6 +33,7 @@ interface ErrorHandlerInterface extends \R3H6\Error404page\Domain\Cache\Cachable
      * Get the output.
      *
      * @param \R3H6\Error404page\Domain\Model\Error $error
+     *
      * @return string
      */
     public function getOutput(\R3H6\Error404page\Domain\Model\Error $error);

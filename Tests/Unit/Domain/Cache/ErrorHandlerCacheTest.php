@@ -19,7 +19,7 @@ use R3H6\Error404page\Domain\Cache\ErrorHandlerCache;
 use R3H6\Error404page\Domain\Model\Error;
 
 /**
- * Unit test for the ErrorHandler.§
+ * Unit test for the ErrorHandler.§.
  */
 class ErrorHandlerCacheTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 {

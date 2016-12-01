@@ -1,4 +1,5 @@
 <?php
+
 namespace R3H6\Error404page\Domain\Model\Dto;
 
 /*                                                                        *
@@ -14,11 +15,10 @@ namespace R3H6\Error404page\Domain\Model\Dto;
  * Public License for more details.                                       *
  *                                                                        */
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
- * ErrorDemand
+ * ErrorDemand.
  */
 class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
 {
@@ -26,13 +26,12 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     const TYPE_TOP_URLS = 'ErrorTopUrls';
     const DEFAULT_LIMIT = 50;
 
-
     const TIME_ONE_WEEK_AGO = 'midnight -1 week';
     const TIME_ONE_MONTH_AGO = 'midnight -1 month';
     const TIME_ONE_YEAR_AGO = 'midnight -1 year';
 
     /**
-     * ErrorRepository
+     * ErrorRepository.
      *
      * @var \R3H6\Error404page\Domain\Repository\ErrorRepository
      * @inject
@@ -40,39 +39,44 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     protected $_errorRepository = null;
 
     /**
-     * [$minTime description]
-     * @var integer
+     * [$minTime description].
+     *
+     * @var int
      */
     protected $minTime = 0;
 
     /**
-     * [$url description]
+     * [$url description].
+     *
      * @var string
      */
     protected $url = '';
 
     /**
-     * [$type description]
+     * [$type description].
+     *
      * @var string
      */
     protected $type = '';
 
     /**
-     * [$limit description]
-     * @var integer
+     * [$limit description].
+     *
+     * @var int
      */
     protected $limit = self::DEFAULT_LIMIT;
 
     /**
-     * [$urlHash description]
+     * [$urlHash description].
+     *
      * @var string
      */
     protected $urlHash = '';
 
     /**
-     * Gets the minTime
+     * Gets the minTime.
      *
-     * @return integer
+     * @return int
      */
     public function getMinTime()
     {
@@ -80,9 +84,9 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Sets the minTime
+     * Sets the minTime.
      *
-     * @param integer
+     * @param int
      */
     public function setMinTime($minTime)
     {
@@ -90,7 +94,7 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Gets the url
+     * Gets the url.
      *
      * @return string
      */
@@ -100,7 +104,7 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Sets the url
+     * Sets the url.
      *
      * @param string
      */
@@ -110,7 +114,7 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Gets the type
+     * Gets the type.
      *
      * @return string
      */
@@ -120,7 +124,7 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Sets the type
+     * Sets the type.
      *
      * @param string
      */
@@ -130,9 +134,9 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Gets the limit
+     * Gets the limit.
      *
-     * @return integer
+     * @return int
      */
     public function getLimit()
     {
@@ -140,9 +144,9 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Sets the limit
+     * Sets the limit.
      *
-     * @param integer $limit
+     * @param int $limit
      */
     public function setLimit($limit)
     {
@@ -150,7 +154,7 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Gets the urlHash
+     * Gets the urlHash.
      *
      * @return string
      */
@@ -160,7 +164,7 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Sets the urlHash
+     * Sets the urlHash.
      *
      * @param string $urlHash
      */
@@ -170,7 +174,7 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
     }
 
     /**
-     * Returns the date options
+     * Returns the date options.
      *
      * @return array options for select
      */
@@ -195,6 +199,7 @@ class ErrorDemand extends \TYPO3\CMS\Extbase\DomainObject\AbstractValueObject
             }
         }
         $options[0] = LocalizationUtility::translate('tx_error404page_domain_model_dto_errordemand.min_date.0', 'error404page');
+
         return $options;
     }
 }

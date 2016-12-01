@@ -15,16 +15,13 @@ namespace R3H6\Error404page\Configuration;
  * Public License for more details.                                       *
  *                                                                        */
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 /**
- * ExtensionConfiguration
+ * ExtensionConfiguration.
  *
  * API to access extension configuration (ext_conf_template.txt).
  */
 class ExtensionConfiguration implements \TYPO3\CMS\Core\SingletonInterface
 {
-
     /**
      * @var string
      */
@@ -48,25 +45,27 @@ class ExtensionConfiguration implements \TYPO3\CMS\Core\SingletonInterface
 
     private function _get($key)
     {
-        return isset($this->configuration[$key]) ? $this->configuration[$key]: null;
+        return isset($this->configuration[$key]) ? $this->configuration[$key] : null;
     }
 
     private function _has($key)
     {
         $value = $this->_get($key);
+
         return !empty($value);
     }
 
     private function _is($key)
     {
         $value = $this->_get($key);
+
         return !empty($value);
     }
 
     public function __call($method, $arguments)
     {
-        if (method_exists($this, '_' . $method)) {
-            return call_user_func_array(array($this, '_' . $method), $arguments);
+        if (method_exists($this, '_'.$method)) {
+            return call_user_func_array(array($this, '_'.$method), $arguments);
         }
         throw new \RuntimeException("Method $method doesn't exist", 1461958193);
     }
@@ -74,6 +73,7 @@ class ExtensionConfiguration implements \TYPO3\CMS\Core\SingletonInterface
     public static function __callStatic($method, $arguments)
     {
         $instance = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('R3H6\\Error404page\\Configuration\\ExtensionConfiguration');
+
         return call_user_func_array(array($instance, $method), $arguments);
     }
 }

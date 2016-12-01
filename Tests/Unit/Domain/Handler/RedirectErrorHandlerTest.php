@@ -210,7 +210,7 @@ class RedirectErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCas
         $return = $this->subject->handleError($errorFixture);
 
         $this->assertStringStartsWith($expected, $this->subject->getCachingData());
-        $this->assertStringEndsWith('?redirect_url=' . $errorFixture->getUrl(), $this->subject->getCachingData());
+        $this->assertStringEndsWith('?redirect_url='.$errorFixture->getUrl(), $this->subject->getCachingData());
         $this->assertContains('pageId_123', $this->subject->getCacheTags(), 'Invalid cache tags');
 
         $this->assertTrue($return, 'Error handler shoudl return true');
@@ -233,7 +233,8 @@ class RedirectErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCas
     }
 
     /**
-     * [getErrorFixture description]
+     * [getErrorFixture description].
+     *
      * @return \R3H6\Error404page\Domain\Model\Error
      */
     protected function getErrorFixture()
@@ -243,6 +244,7 @@ class RedirectErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCas
         $errorFixture->setStatusCode(Error::STATUS_CODE_FORBIDDEN);
         $errorFixture->setPid(123);
         $errorFixture->setUrl('http://www.typo3.org/not/found/');
+
         return $errorFixture;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace R3H6\Error404page\Controller;
 
 use R3H6\Error404page\Domain\Model\Dto\ErrorDemand;
@@ -19,13 +20,12 @@ use TYPO3\CMS\Core\Messaging\AbstractMessage;
  *                                                                        */
 
 /**
- * ErrorController
+ * ErrorController.
  */
 class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 {
-
     /**
-     * ErrorRepository
+     * ErrorRepository.
      *
      * @var \R3H6\Error404page\Domain\Repository\ErrorRepository
      * @inject
@@ -33,10 +33,9 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
     protected $errorRepository = null;
 
     /**
-     * action dashboard
+     * action dashboard.
      *
      * @param \R3H6\Error404page\Domain\Model\Dto\ErrorDemand $demand
-     * @return void
      */
     public function dashboardAction(ErrorDemand $demand = null)
     {
@@ -63,10 +62,9 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
     }
 
     /**
-     * action list
+     * action list.
      *
      * @param \R3H6\Error404page\Domain\Model\Dto\ErrorDemand $demand
-     * @return void
      */
     public function listAction(ErrorDemand $demand)
     {
@@ -81,10 +79,9 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
     }
 
     /**
-     * action show
+     * action show.
      *
      * @param \R3H6\Error404page\Domain\Model\Dto\ErrorDemand $demand
-     * @return void
      */
     public function showAction(ErrorDemand $demand)
     {
@@ -93,9 +90,7 @@ class ErrorController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
     }
 
     /**
-     * action deleteAll
-     *
-     * @return void
+     * action deleteAll.
      */
     public function deleteAllAction()
     {

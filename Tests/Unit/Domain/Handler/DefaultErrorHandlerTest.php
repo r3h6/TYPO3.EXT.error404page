@@ -49,7 +49,7 @@ class DefaultErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCase
     public function handleErrorReturnsAlwaysTrue()
     {
         /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
-        $errorFixture =  new Error();
+        $errorFixture = new Error();
         $this->assertTrue($this->subject->handleError($errorFixture));
     }
 
@@ -59,7 +59,7 @@ class DefaultErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCase
     public function getOutputReturnsHtml()
     {
         /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
-        $errorFixture =  new Error();
+        $errorFixture = new Error();
         $output = $this->subject->getOutput($errorFixture);
         $this->assertContains('Page not found', $output);
         $this->assertNotContains('Reason', $output);
@@ -70,9 +70,9 @@ class DefaultErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCase
      */
     public function getOutputContainsErrorReason()
     {
-        $expected = 'Reason ' . uniqid();
+        $expected = 'Reason '.uniqid();
         /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
-        $errorFixture =  new Error();
+        $errorFixture = new Error();
         $errorFixture->setReason($expected);
         $this->assertContains($expected, $this->subject->getOutput($errorFixture));
     }

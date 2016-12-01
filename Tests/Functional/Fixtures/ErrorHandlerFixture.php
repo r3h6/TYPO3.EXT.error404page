@@ -15,9 +15,8 @@ namespace R3H6\Error404page\Tests\Functional\Fixtures;
  * Public License for more details.                                       *
  *                                                                        */
 
-
 /**
- * Fixture
+ * Fixture.
  */
 class ErrorHandlerFixture implements \R3H6\Error404page\Domain\Handler\ErrorHandlerInterface
 {

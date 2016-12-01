@@ -15,24 +15,25 @@ namespace R3H6\Error404page\Domain\Hook;
  * Public License for more details.                                       *
  *                                                                        */
 
-use R3H6\Error404page\Domain\Handler\ErrorHandler;
 use R3H6\Error404page\Domain\Model\Error;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 /**
- * Error handler
+ * Error handler.
  *
  * This is a bridge class for using extbase dependency injection.
  */
 class ErrorHandlerHook implements \TYPO3\CMS\Core\SingletonInterface
 {
     /**
-     * Hook
+     * Hook.
      *
-     * @param  array                                                       $params
-     * @param  \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe
+     * @param array                                                       $params
+     * @param \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe
+     *
      * @return string
+     *
      * @see \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController::pageErrorHandler
      */
     public function pageNotFound(array $params, \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $tsfe)
@@ -61,7 +62,7 @@ class ErrorHandlerHook implements \TYPO3\CMS\Core\SingletonInterface
             'error' => array(
                 'pid' => $error->getPid(),
                 'statusCode' => $error->getStatusCode(),
-            )));
+            ), ));
 
         return $this->getErrorHandler()->handleError($error);
     }
@@ -77,7 +78,7 @@ class ErrorHandlerHook implements \TYPO3\CMS\Core\SingletonInterface
     }
 
     /**
-     * Get system language uid
+     * Get system language uid.
      *
      * @return int
      */
@@ -95,7 +96,7 @@ class ErrorHandlerHook implements \TYPO3\CMS\Core\SingletonInterface
     }
 
     /**
-     * Get class logger
+     * Get class logger.
      *
      * @return \TYPO3\CMS\Core\Log\Logger
      */

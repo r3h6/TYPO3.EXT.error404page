@@ -2,9 +2,6 @@
 
 namespace R3H6\Error404page\Utility;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
-
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
  *                                                                        *
@@ -19,7 +16,7 @@ use TYPO3\CMS\Core\Utility\VersionNumberUtility;
  *                                                                        */
 
 /**
- * RegexUtility
+ * RegexUtility.
  */
 class RegexUtility
 {
@@ -28,6 +25,7 @@ class RegexUtility
         if (@preg_match($regex, null) === false) {
             return false;
         }
+
         return true;
     }
 }

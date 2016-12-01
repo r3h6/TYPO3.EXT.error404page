@@ -33,21 +33,21 @@ class Page404ErrorHandler implements ErrorHandlerInterface
     protected $httpService;
 
     /**
-     * Output
+     * Output.
      *
      * @var string
      */
     protected $output = '';
 
     /**
-     * Cache tags
+     * Cache tags.
      *
      * @var array
      */
     protected $cacheTags = array();
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function handleError(\R3H6\Error404page\Domain\Model\Error $error)
     {
@@ -55,15 +55,17 @@ class Page404ErrorHandler implements ErrorHandlerInterface
         if ($errorPage !== null) {
             $this->output = $this->httpService->readUrl($errorPage->getUrl());
             if ($this->output) {
-                $this->cacheTags[] = 'pageId_' . $errorPage->getUid();
+                $this->cacheTags[] = 'pageId_'.$errorPage->getUid();
+
                 return true;
             }
         }
+
         return false;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getOutput(\R3H6\Error404page\Domain\Model\Error $error)
     {
@@ -72,11 +74,12 @@ class Page404ErrorHandler implements ErrorHandlerInterface
             '###REASON###' => $error->getReasonText(),
             '###ERROR_STATUS_CODE###' => $error->getStatusCode(),
         );
+
         return str_replace(array_keys($replaceMap), array_values($replaceMap), $this->output);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function setCachingData($data)
     {
@@ -84,7 +87,7 @@ class Page404ErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCachingData()
     {
@@ -92,7 +95,7 @@ class Page404ErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getCacheTags()
     {
