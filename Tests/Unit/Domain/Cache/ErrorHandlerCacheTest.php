@@ -23,6 +23,8 @@ use R3H6\Error404page\Domain\Model\Error;
  */
 class ErrorHandlerCacheTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 {
+    use \R3H6\Error404page\Tests\TestCaseCompatibility;
+
     /**
      * @var \R3H6\Error404page\Domain\Cache\ErrorHandlerCache
      */

@@ -37,10 +37,14 @@ class DefaultErrorHandler implements ErrorHandlerInterface
     {
         $title = 'Page not found';
         $message = 'The page did not exist or was inaccessible.'.($error->getReason() ? ' Reason: '.htmlspecialchars($error->getReason()) : '');
-        /** @var \TYPO3\CMS\Core\Messaging\ErrorpageMessage $messagePage */
-        $messagePage = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Messaging\\ErrorpageMessage', $message, $title);
+        // /** @var \TYPO3\CMS\Core\Messaging\ErrorpageMessage $messagePage */
+        // $messagePage = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Messaging\\ErrorpageMessage', $message, $title);
 
-        return $messagePage->render();
+        // return $messagePage->render();
+
+        /** @var \TYPO3\CMS\Core\Controller\ErrorPageController $errorPageController */
+        $errorPageController = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Controller\ErrorPageController::class);
+        return $errorPageController->errorAction($title, $message);
     }
 
     /**

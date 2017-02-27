@@ -17,12 +17,16 @@ namespace R3H6\Error404page\Tests\Unit\Controller;
 
 use R3H6\Error404page\Domain\Model\Error;
 use R3H6\Error404page\Domain\Handler\DefaultErrorHandler;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Unit test for the ErrorHandler.
  */
-class DefaultErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCase
+class DefaultErrorHandlerTest extends \Nimut\TestingFramework\TestCase\UnitTestCase
 {
+    use \R3H6\Error404page\Tests\TestCaseCompatibility;
+    use \R3H6\Error404page\Tests\DeprecationLogTrait;
+
     /**
      * @var \R3H6\Error404page\Domain\Handler\DefaultErrorHandler
      */
@@ -31,6 +35,13 @@ class DefaultErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->enableDeprecationLog();
+
+        $packageManager = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Package\PackageManager::class);
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::setPackageManager($packageManager);
+        // \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::setPackageManager(
+        //     $this->getMock(\TYPO3\CMS\Core\Package\PackageManager::class, ['isPackageActive'], [], '', false)
+        // );
 
         $this->subject = new DefaultErrorHandler();
     }
