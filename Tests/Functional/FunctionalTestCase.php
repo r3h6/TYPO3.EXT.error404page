@@ -23,6 +23,9 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
  */
 abstract class FunctionalTestCase extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
 {
+    use \R3H6\Error404page\Tests\TestCaseCompatibility;
+    use \R3H6\Error404page\Tests\DeprecationLogTrait;
+
     /**
      * Minimal frontent environment to satisfy Extbase Typo3DbBackend.
      */

@@ -26,6 +26,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class ErrorHandlerHookTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 {
+    use \R3H6\Error404page\Tests\TestCaseCompatibility;
+    use \R3H6\Error404page\Tests\DeprecationLogTrait;
+
     /**
      * @var \R3H6\Error404page\Domain\Hook\ErrorHandlerHook
      */

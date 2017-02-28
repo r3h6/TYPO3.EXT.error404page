@@ -22,7 +22,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Unit test for the ErrorHandler.
  */
-class DefaultErrorHandlerTest extends \Nimut\TestingFramework\TestCase\UnitTestCase
+class DefaultErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 {
     use \R3H6\Error404page\Tests\TestCaseCompatibility;
     use \R3H6\Error404page\Tests\DeprecationLogTrait;
@@ -37,8 +37,6 @@ class DefaultErrorHandlerTest extends \Nimut\TestingFramework\TestCase\UnitTestC
         parent::setUp();
         $this->enableDeprecationLog();
 
-        $packageManager = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Package\PackageManager::class);
-        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::setPackageManager($packageManager);
         // \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::setPackageManager(
         //     $this->getMock(\TYPO3\CMS\Core\Package\PackageManager::class, ['isPackageActive'], [], '', false)
         // );

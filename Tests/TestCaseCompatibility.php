@@ -2,6 +2,8 @@
 
 namespace R3H6\Error404page\Tests;
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
  *                                                                        *

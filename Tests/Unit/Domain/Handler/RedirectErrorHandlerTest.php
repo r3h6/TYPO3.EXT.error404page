@@ -24,6 +24,7 @@ use R3H6\Error404page\Domain\Handler\RedirectErrorHandler;
 class RedirectErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCase
 {
     use \R3H6\Error404page\Tests\TestCaseCompatibility;
+    use \R3H6\Error404page\Tests\DeprecationLogTrait;
 
     /**
      * @var \R3H6\Error404page\Domain\Handler\RedirectErrorHandler

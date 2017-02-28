@@ -26,6 +26,9 @@ use R3H6\Error404page\Utility\RegexUtility;
  */
 class RegexUtilityTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 {
+    use \R3H6\Error404page\Tests\TestCaseCompatibility;
+    use \R3H6\Error404page\Tests\DeprecationLogTrait;
+
     /**
      * @test
      * @dataProvider isValidDataProvider
