@@ -16,6 +16,7 @@ namespace R3H6\Error404page\Domain\Handler\Compatibility7;
  *                                                                        */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use R3H6\Error404page\Domain\Handler\ErrorHandlerInterface;
 
 /**
  * Error handler.
