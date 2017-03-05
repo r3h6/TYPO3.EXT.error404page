@@ -1,9 +1,0 @@
-
- # Module configuration
-module.tx_error404page_web_error404pagestatistic {
-	view {
-		templateRootPaths.0 = EXT:error404page/Resources/Private/Compatibility6/Backend/Templates/
-		partialRootPaths.0 = EXT:error404page/Resources/Private/Compatibility6/Backend/Partials/
-		layoutRootPaths.0 = EXT:error404page/Resources/Private/Compatibility6/Backend/Layouts/
-	}
-}
