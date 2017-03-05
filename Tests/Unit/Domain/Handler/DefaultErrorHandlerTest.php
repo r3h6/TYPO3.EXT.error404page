@@ -41,7 +41,7 @@ class DefaultErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         //     $this->getMock(\TYPO3\CMS\Core\Package\PackageManager::class, ['isPackageActive'], [], '', false)
         // );
 
-        $class = (version_compare(\TYPO3\CMS\Core\Utility\VersionNumberUtility::getCurrentTypo3Version(), '8.0.0', '<') ?
+        $class = version_compare(\TYPO3\CMS\Core\Utility\VersionNumberUtility::getCurrentTypo3Version(), '8.0.0', '<') ?
             'R3H6\\Error404page\\Domain\\Handler\\Compatibility7\\DefaultErrorHandler':
             'R3H6\\Error404page\\Domain\\Handler\\DefaultErrorHandler';
 
