@@ -16,7 +16,7 @@ namespace R3H6\Error404page\Tests\Unit\Controller;
  *                                                                        */
 
 use R3H6\Error404page\Domain\Model\Error;
-use R3H6\Error404page\Domain\Handler\DefaultErrorHandler;
+// use R3H6\Error404page\Domain\Handler\DefaultErrorHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -41,7 +41,11 @@ class DefaultErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
         //     $this->getMock(\TYPO3\CMS\Core\Package\PackageManager::class, ['isPackageActive'], [], '', false)
         // );
 
-        $this->subject = new DefaultErrorHandler();
+        $class = (version_compare(\TYPO3\CMS\Core\Utility\VersionNumberUtility::getCurrentTypo3Version(), '8.0.0', '<') ?
+            'R3H6\\Error404page\\Domain\\Handler\\Compatibility7\\DefaultErrorHandler':
+            'R3H6\\Error404page\\Domain\\Handler\\DefaultErrorHandler';
+
+        $this->subject = new $class();
     }
 
     public function tearDown()
