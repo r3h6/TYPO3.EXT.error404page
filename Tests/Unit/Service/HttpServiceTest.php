@@ -16,7 +16,6 @@ namespace R3H6\Error404page\Tests\Unit\Service;
  *                                                                        */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use HTTP_Request2_Response;
 
 /**
  * Test case for class \R3H6\Error404page\Service\HttpService.
@@ -48,6 +47,10 @@ class HttpServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 
     public function setUp()
     {
+        if (!class_exists('GuzzleHttp\\Handler\\MockHandler')) {
+            $this->markTestSkipped('Class \GuzzleHttp\Handler\MockHandler not available.');
+        }
+
         $this->subject = new \R3H6\Error404page\Service\HttpService();
 
         $this->extensionConfigurationMock = $this->getMock('R3H6\\Error404page\\Configuration\\ExtensionConfiguration', array('has', 'get'), array(), '', false);

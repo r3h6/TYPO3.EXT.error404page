@@ -42,7 +42,7 @@ class HttpServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 
     public function setUp()
     {
-        if (!class_exists(\TYPO3\CMS\Core\Http\HttpRequest::class)) {
+        if (!class_exists('TYPO3\\CMS\\Core\\Http\\HttpRequest')) {
             $this->markTestSkipped('Class \TYPO3\CMS\Core\Http\HttpRequest not available.');
         }
 

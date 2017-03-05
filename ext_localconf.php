@@ -31,4 +31,5 @@ if (version_compare(\TYPO3\CMS\Core\Utility\VersionNumberUtility::getCurrentTypo
     /** @var \TYPO3\CMS\Extbase\Object\Container\Container $objectConainer */
     $objectContainer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Object\Container\Container::class);
     $objectContainer->registerImplementation(\R3H6\Error404page\Service\HttpService::class, \R3H6\Error404page\Service\Compatibility7\HttpService::class);
+    $objectContainer->registerImplementation(\R3H6\Error404page\Domain\Handler\DefaultErrorHandler::class, \R3H6\Error404page\Domain\Handler\Compatibility7\DefaultErrorHandler::class);
 }
