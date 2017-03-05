@@ -32,3 +32,10 @@ if (TYPO3_MODE === 'BE' && \R3H6\Error404page\Configuration\ExtensionConfigurati
 }
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr('tx_error404page_domain_model_error', 'EXT:error404page/Resources/Private/Language/locallang_csh_tx_error404page_domain_model_error.xlf');
+
+if (TYPO3_MODE === 'BE' && \R3H6\Error404page\Configuration\ExtensionConfiguration::get('enableErrorLog')) {
+
+	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup(
+		'<INCLUDE_TYPOSCRIPT: source="FILE:EXT:error404page/Configuration/TypoScript/setup.txt">'
+	);
+}
