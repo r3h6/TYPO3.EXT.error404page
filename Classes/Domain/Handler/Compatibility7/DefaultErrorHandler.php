@@ -1,6 +1,6 @@
 <?php
 
-namespace R3H6\Error404page\Domain\Handler;
+namespace R3H6\Error404page\Domain\Handler\Compatibility7;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
