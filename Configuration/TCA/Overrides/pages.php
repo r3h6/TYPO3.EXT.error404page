@@ -9,3 +9,9 @@ if (!defined('TYPO3_MODE')) {
     'Error404page',
     '404'
 );
+
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerPageTSConfigFile(
+    'error404page',
+    'Configuration/PageTS/Redirect403.txt',
+    'EXT:error404page :: Redirect 403 error to login page'
+);

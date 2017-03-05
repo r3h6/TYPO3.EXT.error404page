@@ -22,12 +22,6 @@ class CustomPageUtility
 {
     public static function addDoktype($extKey, $doktype, $iconName)
     {
-        if (static::useCompatibility6()) {
-            Compatibility6\CustomPageUtility::addDoktype($extKey, $doktype, $iconName);
-
-            return;
-        }
-
         // Add new page type:
         $GLOBALS['PAGES_TYPES'][$doktype] = array(
             'type' => 'web',
@@ -61,12 +55,6 @@ class CustomPageUtility
 
     public static function addDoktypeToPages($extKey, $doktype, $iconName, $alias = null)
     {
-        if (static::useCompatibility6()) {
-            Compatibility6\CustomPageUtility::addDoktypeToPages($extKey, $doktype, $iconName, $alias);
-
-            return;
-        }
-
         $identifier = 'apps-pagetree-'.strtolower($iconName);
         $extRelPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($extKey);
         $customPageIcon = $extRelPath.'Resources/Public/Icons/'.$identifier.'.svg';
@@ -100,12 +88,6 @@ class CustomPageUtility
 
     public static function addDoktypeToPagesLanguageOverlay($extKey, $doktype, $iconName, $alias = null)
     {
-        if (static::useCompatibility6()) {
-            Compatibility6\CustomPageUtility::addDoktypeToPagesLanguageOverlay($extKey, $doktype, $iconName, $alias);
-
-            return;
-        }
-
         $identifier = 'apps-pagetree-'.strtolower($iconName);
         $extRelPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($extKey);
         $customPageIcon = $extRelPath.'Resources/Public/Icons/'.$identifier.'.svg';
@@ -122,10 +104,5 @@ class CustomPageUtility
             '1',
             'after'
         );
-    }
-
-    private static function useCompatibility6()
-    {
-        return version_compare(\TYPO3\CMS\Core\Utility\VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<');
     }
 }
