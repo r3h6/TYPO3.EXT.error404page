@@ -1,6 +1,6 @@
 <?php
 
-namespace R3H6\Error404page\Service;
+namespace R3H6\Error404page\Service\Compatibility7;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -19,7 +19,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\HttpUtility;
 
 /**
- * HttpService
+ * Error handler.
+ *
+ * This is a bridge class for using extbase dependency injection.
  */
 class HttpService implements \TYPO3\CMS\Core\SingletonInterface
 {
@@ -32,7 +34,7 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
     /**
      * Redirect to url.
      *
-     * @param  string $url [description]
+     * @param string $url [description]
      */
     public function redirect($url)
     {
@@ -42,23 +44,28 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
     /**
      * Reads and returns the content of the url.
      *
-     * @param  string $url
+     * @param string $url
+     *
      * @return string
      */
     public function readUrl($url)
     {
         $content = null;
-        $url = $this->appendSignature($url);
+
+        /** @var \TYPO3\CMS\Core\Http\HttpRequest $request */
+        $request = $this->getHttpRequest($url);
+
+        $this->getLogger()->debug('Read url "'.$request->getUrl().'"');
 
         try {
-            /** @var \Psr\Http\Message\ResponseInterface $response */
-            $response = $this->getRequestFactory()->request($url, 'GET', $this->getRequestOptions());
-            if ($response->getStatusCode() !== 200) {
-                throw new \Exception($response->getReasonPhrase(), 1478293539);
+            /** @var \HTTP_Request2_Response $response */
+            $response = $request->send();
+            if ($response->getStatus() !== 200) {
+                throw new \RuntimeException($response->getReasonPhrase(), 1477079525);
             }
-            $content = $response->getBody()->getContents();
+            $content = $response->getBody();
         } catch (\Exception $exception) {
-            $this->getLogger()->debug('Could not read url "' . $url . '" ' . $exception->getMessage());
+            $this->getLogger()->debug('Could not read url "'.$request->getUrl().'" '.$exception->getMessage());
         }
 
         return $content;
@@ -69,56 +76,44 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
         return GeneralUtility::_GP('tx_error404page_request') !== null;
     }
 
-    protected function appendSignature($url)
+    /**
+     * Creates a http request.
+     *
+     * @param string $url
+     *
+     * @return \TYPO3\CMS\Core\Http\HttpRequest
+     */
+    protected function getHttpRequest($url)
     {
-        $url .= (strpos($url, '?') === false) ? '?': '&';
-        $url .= 'tx_error404page_request=' . uniqid();
-        return $url;
-    }
+        $url .= (strpos($url, '?') === false) ? '?' : '&';
+        $url .= 'tx_error404page_request='.uniqid();
 
-    protected function getRequestOptions()
-    {
-        $options = [];
+        /** @var \TYPO3\CMS\Core\Http\HttpRequest $request */
+        $request = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Http\\HttpRequest');
+        $request->setUrl($url); // For testing purpose not set in constructor!
+
+        $feCookieName = $GLOBALS['TYPO3_CONF_VARS']['FE']['cookieName'];
 
         // Forward cookies.
-        $cookieJar = new \GuzzleHttp\Cookie\CookieJar(true);
-        $feCookieName = $GLOBALS['TYPO3_CONF_VARS']['FE']['cookieName'];
+        $request->setCookieJar(true);
         if (isset($_COOKIE[$feCookieName]) && !empty($_COOKIE[$feCookieName])) {
-            $feCookie = new \GuzzleHttp\Cookie\SetCookie();
-            $feCookie->setName($feCookieName);
-            $feCookie->setValue($_COOKIE[$feCookieName]);
-            $cookieJar->setCookie($feCookie);
-            $options['cookies'] = $cookieJar;
+            $request->addCookie($feCookieName, $_COOKIE[$feCookieName]);
         }
 
         // TYPO3 uses user-agent for authentification.
-        $options['user-agent'] = GeneralUtility::getIndpEnv('HTTP_USER_AGENT');
+        $request->setHeader('user-agent', GeneralUtility::getIndpEnv('HTTP_USER_AGENT'));
 
         // Set basic authentication.
         if ($this->extensionConfiguration->has('basicAuthentication')) {
             $basicAuthentication = GeneralUtility::trimExplode(':', $this->extensionConfiguration->get('basicAuthentication'), true);
-
-            $options['auth'] = [
-                'username' => $basicAuthentication[0],
-                'password' => $basicAuthentication[1],
-            ];
+            $request->setAuth($basicAuthentication[0], $basicAuthentication[1]);
         }
 
-        return $options;
+        return $request;
     }
 
     /**
-     * [getRequestFactory description]
-     *
-     * @return \TYPO3\CMS\Core\Http\RequestFactory
-     */
-    protected function getRequestFactory()
-    {
-        return GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Http\\RequestFactory');
-    }
-
-    /**
-     * Get class logger
+     * Get class logger.
      *
      * @return \TYPO3\CMS\Core\Log\Logger
      */

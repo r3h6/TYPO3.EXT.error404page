@@ -23,8 +23,6 @@ use R3H6\Error404page\Tests\Functional\Fixtures\ErrorHandlerFixture;
  */
 class CachingTest extends FunctionalTestCase
 {
-    // use R3H6\Error404page\Tests\Functional\BasicFrontendEnvironmentTrait;
-
     /**
      * @var \R3H6\Error404page\Domain\Cache\ErrorHandlerCache
      */

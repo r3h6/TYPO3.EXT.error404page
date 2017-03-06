@@ -16,13 +16,17 @@ namespace R3H6\Error404page\Tests\Unit\Controller;
  *                                                                        */
 
 use R3H6\Error404page\Domain\Model\Error;
-use R3H6\Error404page\Domain\Handler\DefaultErrorHandler;
+// use R3H6\Error404page\Domain\Handler\DefaultErrorHandler;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Unit test for the ErrorHandler.
  */
-class DefaultErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCase
+class DefaultErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 {
+    use \R3H6\Error404page\Tests\TestCaseCompatibility;
+    use \R3H6\Error404page\Tests\DeprecationLogTrait;
+
     /**
      * @var \R3H6\Error404page\Domain\Handler\DefaultErrorHandler
      */
@@ -31,8 +35,17 @@ class DefaultErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->enableDeprecationLog();
 
-        $this->subject = new DefaultErrorHandler();
+        // \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::setPackageManager(
+        //     $this->getMock(\TYPO3\CMS\Core\Package\PackageManager::class, ['isPackageActive'], [], '', false)
+        // );
+
+        $class = version_compare(\TYPO3\CMS\Core\Utility\VersionNumberUtility::getCurrentTypo3Version(), '8.0.0', '<') ?
+            'R3H6\\Error404page\\Domain\\Handler\\Compatibility7\\DefaultErrorHandler':
+            'R3H6\\Error404page\\Domain\\Handler\\DefaultErrorHandler';
+
+        $this->subject = new $class();
     }
 
     public function tearDown()
