@@ -1,6 +1,8 @@
 <?php
 
-namespace R3H6\Error404page\Tests\Unit\Utility;
+namespace R3H6\Error404page\Tests;
+
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -15,37 +17,30 @@ namespace R3H6\Error404page\Tests\Unit\Utility;
  * Public License for more details.                                       *
  *                                                                        */
 
-use R3H6\Error404page\Utility\RegexUtility;
-
 /**
- * Test case for class \R3H6\Error404page\Utility\RegexUtility.
- *
- * @copyright Copyright belongs to the respective authors
- * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- * @author R3 H6 <r3h6@outlook.com>
+ * Compatibility with PhpUnit 4.8.
  */
-class RegexUtilityTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+trait TestCaseCompatibility
 {
-    use \R3H6\Error404page\Tests\TestCaseCompatibility;
-    use \R3H6\Error404page\Tests\DeprecationLogTrait;
-
     /**
-     * @test
-     * @dataProvider isValidDataProvider
+     * @link https://github.com/sebastianbergmann/phpunit/blob/4.8/src/Framework/TestCase.php
      */
-    public function isValid($expected, $regex)
+    public function getMock($originalClassName, $methods = array(), array $arguments = array(), $mockClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true, $cloneArguments = false, $callOriginalMethods = false, $proxyTarget = null)
     {
-        $this->assertSame($expected, RegexUtility::isValid($regex));
-    }
-
-    public function isValidDataProvider()
-    {
-        return array(
-            array(true, '/test/'),
-            array(false, '/test\/'),
-            array(false, '/test\\/'),
-            array(true, '/test\\\/'),
-            array(false, '/test/e/i'),
+        $mockObject = $this->getMockObjectGenerator()->getMock(
+            $originalClassName,
+            $methods,
+            $arguments,
+            $mockClassName,
+            $callOriginalConstructor,
+            $callOriginalClone,
+            $callAutoload,
+            $cloneArguments,
+            $callOriginalMethods,
+            $proxyTarget
         );
+        $this->mockObjects[] = $mockObject;
+
+        return $mockObject;
     }
 }

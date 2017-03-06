@@ -1,6 +1,6 @@
 <?php
 
-namespace R3H6\Error404page\Domain\Handler;
+namespace R3H6\Error404page\Domain\Handler\Compatibility7;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -16,6 +16,7 @@ namespace R3H6\Error404page\Domain\Handler;
  *                                                                        */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use R3H6\Error404page\Domain\Handler\ErrorHandlerInterface;
 
 /**
  * Error handler.
@@ -37,14 +38,10 @@ class DefaultErrorHandler implements ErrorHandlerInterface
     {
         $title = 'Page not found';
         $message = 'The page did not exist or was inaccessible.'.($error->getReason() ? ' Reason: '.htmlspecialchars($error->getReason()) : '');
-        // /** @var \TYPO3\CMS\Core\Messaging\ErrorpageMessage $messagePage */
-        // $messagePage = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Messaging\\ErrorpageMessage', $message, $title);
+        /** @var \TYPO3\CMS\Core\Messaging\ErrorpageMessage $messagePage */
+        $messagePage = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Messaging\\ErrorpageMessage', $message, $title);
 
-        // return $messagePage->render();
-
-        /** @var \TYPO3\CMS\Core\Controller\ErrorPageController $errorPageController */
-        $errorPageController = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Controller\ErrorPageController::class);
-        return $errorPageController->errorAction($title, $message);
+        return $messagePage->render();
     }
 
     /**

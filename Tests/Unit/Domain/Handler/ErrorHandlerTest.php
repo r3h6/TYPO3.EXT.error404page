@@ -19,10 +19,13 @@ use R3H6\Error404page\Domain\Handler\ErrorHandler;
 use R3H6\Error404page\Domain\Model\Error;
 
 /**
- * Unit test for the ErrorHandler.§.
+ * Unit test for the ErrorHandler.
  */
 class ErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 {
+    use \R3H6\Error404page\Tests\TestCaseCompatibility;
+    use \R3H6\Error404page\Tests\DeprecationLogTrait;
+
     /**
      * @var \R3H6\Error404page\Domain\Handler\ErrorHandler
      */

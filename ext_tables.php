@@ -11,16 +11,6 @@ if (!defined('TYPO3_MODE')) {
 
 if (TYPO3_MODE === 'BE' && \R3H6\Error404page\Configuration\ExtensionConfiguration::get('enableErrorLog')) {
 
-	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup(
-		'<INCLUDE_TYPOSCRIPT: source="FILE:EXT:error404page/Configuration/TypoScript/setup.txt">'
-	);
-
-	if (version_compare(\TYPO3\CMS\Core\Utility\VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup(
-			'<INCLUDE_TYPOSCRIPT: source="FILE:EXT:error404page/Configuration/TypoScript/Compatibility6/setup.txt">'
-		);
-	}
-
 	/**
 	 * Registers a Backend Module
 	 */
@@ -41,12 +31,11 @@ if (TYPO3_MODE === 'BE' && \R3H6\Error404page\Configuration\ExtensionConfigurati
 	);
 }
 
-if (version_compare(\TYPO3\CMS\Core\Utility\VersionNumberUtility::getCurrentTypo3Version(), '7.4.0', '>=')) {
-	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerPageTSConfigFile(
-		$_EXTKEY,
-		'Configuration/PageTS/Redirect403.txt',
-		'EXT:error404page :: Redirect 403 error to login page'
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr('tx_error404page_domain_model_error', 'EXT:error404page/Resources/Private/Language/locallang_csh_tx_error404page_domain_model_error.xlf');
+
+if (TYPO3_MODE === 'BE' && \R3H6\Error404page\Configuration\ExtensionConfiguration::get('enableErrorLog')) {
+
+	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup(
+		'<INCLUDE_TYPOSCRIPT: source="FILE:EXT:error404page/Configuration/TypoScript/setup.txt">'
 	);
 }
-
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr('tx_error404page_domain_model_error', 'EXT:error404page/Resources/Private/Language/locallang_csh_tx_error404page_domain_model_error.xlf');
