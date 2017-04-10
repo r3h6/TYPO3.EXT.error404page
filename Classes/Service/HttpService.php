@@ -85,6 +85,7 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
         $feCookieName = $GLOBALS['TYPO3_CONF_VARS']['FE']['cookieName'];
         if (isset($_COOKIE[$feCookieName]) && !empty($_COOKIE[$feCookieName])) {
             $feCookie = new \GuzzleHttp\Cookie\SetCookie();
+            $feCookie->setDomain(GeneralUtility::getIndpEnv('TYPO3_HOST_ONLY'));
             $feCookie->setName($feCookieName);
             $feCookie->setValue($_COOKIE[$feCookieName]);
             $cookieJar->setCookie($feCookie);
