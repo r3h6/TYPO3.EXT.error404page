@@ -100,8 +100,8 @@ class HttpService implements \TYPO3\CMS\Core\SingletonInterface
             $basicAuthentication = GeneralUtility::trimExplode(':', $this->extensionConfiguration->get('basicAuthentication'), true);
 
             $options['auth'] = [
-                'username' => $basicAuthentication[0],
-                'password' => $basicAuthentication[1],
+                $basicAuthentication[0],
+                $basicAuthentication[1],
             ];
         }
 
