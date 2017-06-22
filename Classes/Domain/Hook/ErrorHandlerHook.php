@@ -88,7 +88,9 @@ class ErrorHandlerHook implements \TYPO3\CMS\Core\SingletonInterface
         if ($language === null && ExtensionManagementUtility::isLoaded('realurl')) {
             $realurlVersion = ExtensionManagementUtility::getExtensionVersion('realurl');
             if (version_compare($realurlVersion, '2.0.0', '<')) {
-                $language = GeneralUtility::callUserFunction('EXT:realurl/class.tx_realurl.php:&tx_realurl->getDetectedLanguage');
+                $params = [];
+                $ref = $this;
+                $language = GeneralUtility::callUserFunction('EXT:realurl/class.tx_realurl.php:&tx_realurl->getDetectedLanguage', $params, $ref);
             }
         }
 
