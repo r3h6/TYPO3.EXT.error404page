@@ -78,13 +78,13 @@ class RedirectErrorHandler implements ErrorHandlerInterface
         if (!$error->getPid()) {
             return false;
         }
-        if ($this->frontendUser->isLoggedIn()) {
-            return false;
-        }
 
         /** @var \R3H6\Error404page\Configuration\PageTsConfig $pageTsConfig */
         $pageTsConfig = $this->pageTsConfigManager->getPageTsConfig($error->getPid());
         $parameter = (string) $pageTsConfig->get('redirectError403To');
+        if ($this->frontendUser->isLoggedIn()) {
+            $parameter = (string) $pageTsConfig->get('redirectError403LoggedInUserTo');
+        }
 
         if ($parameter === 'auto') {
             $loginPage = $this->pageRepository->findLoginPageForError($error);
@@ -97,6 +97,7 @@ class RedirectErrorHandler implements ErrorHandlerInterface
 
         if (MathUtility::canBeInterpretedAsInteger($parameter)) {
             $this->cacheTags[] = 'pageId_'.$parameter;
+            $this->cacheTags[] = 'loggedIn_' . (string)$this->frontendUser->isLoggedIn();
             if ($this->frontendController->isDefaultType() === false) {
                 $parameter .= ','.$this->frontendController->getType();
             }
@@ -110,10 +111,10 @@ class RedirectErrorHandler implements ErrorHandlerInterface
         if ($parameter) {
             $this->redirect = '';
             $this->redirect .= $this->frontendController->typoLink(array('parameter' => $parameter, 'forceAbsoluteUrl' => true));
-
-            $this->redirect .= (strpos($this->redirect, '?') === false) ? '?' : '&';
-            $this->redirect .= 'redirect_url='.$error->getUrl();
-
+            if (!$this->frontendUser->isLoggedIn()) {
+                $this->redirect .= (strpos($this->redirect, '?') === false) ? '?' : '&';
+                $this->redirect .= 'redirect_url=' . urlencode($error->getUrl());
+            }
             return true;
         }
 
