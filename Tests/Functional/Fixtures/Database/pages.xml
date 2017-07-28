@@ -46,6 +46,13 @@
 		<fe_group>1</fe_group>
 	</pages>
 	<pages>
+		<uid>14</uid>
+		<pid>1</pid>
+		<title>Test Page 1.4</title>
+		<doktype>1</doktype>
+		<sorting>14</sorting>
+	</pages>
+	<pages>
 		<uid>2</uid>
 		<pid>0</pid>
 		<title>Test Page 2</title>
