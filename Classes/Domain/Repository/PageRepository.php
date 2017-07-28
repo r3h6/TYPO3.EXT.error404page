@@ -79,7 +79,7 @@ class PageRepository implements \TYPO3\CMS\Core\SingletonInterface
             foreach ($rows as $row) {
                 foreach ($rootLine as $pageRecord) {
                     if ((int) $pageRecord['uid'] === (int) $row['pid']) {
-                        return $this->findByIdentifier($rows['pid']);
+                        return $this->findByIdentifier($row['pid']);
                     }
                 }
             }
