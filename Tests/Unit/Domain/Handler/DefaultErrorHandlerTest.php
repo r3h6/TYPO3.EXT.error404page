@@ -1,6 +1,6 @@
 <?php
 
-namespace R3H6\Error404page\Tests\Unit\Controller;
+namespace R3H6\Error404page\Tests\Unit\Domain\Handler;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
