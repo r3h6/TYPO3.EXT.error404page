@@ -112,7 +112,7 @@ class RedirectErrorHandler implements ErrorHandlerInterface
             $this->redirect .= $this->frontendController->typoLink(array('parameter' => $parameter, 'forceAbsoluteUrl' => true));
 
             $this->redirect .= (strpos($this->redirect, '?') === false) ? '?' : '&';
-            $this->redirect .= 'redirect_url='.$error->getUrl();
+            $this->redirect .= 'redirect_url=' . urlencode($error->getUrl());
 
             return true;
         }
