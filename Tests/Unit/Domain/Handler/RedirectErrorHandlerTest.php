@@ -1,6 +1,6 @@
 <?php
 
-namespace R3H6\Error404page\Tests\Unit\Controller;
+namespace R3H6\Error404page\Tests\Unit\Domain\Handler;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -17,6 +17,7 @@ namespace R3H6\Error404page\Tests\Unit\Controller;
 
 use R3H6\Error404page\Domain\Model\Error;
 use R3H6\Error404page\Domain\Handler\RedirectErrorHandler;
+use R3H6\Error404page\Domain\Model\Page;
 
 /**
  * Unit test for the ErrorHandler.
@@ -147,6 +148,9 @@ class RedirectErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCas
         $this->assertFalse($this->subject->handleError($errorFixture));
     }
 
+    /**
+     * @test
+     */
     public function handleErrorAppendsLanguageToParameter()
     {
         /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
@@ -180,6 +184,9 @@ class RedirectErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCas
         $this->subject->handleError($errorFixture);
     }
 
+    /**
+     * @test
+     */
     public function handleErrorFindsLoginPageWhenConfigurationIsAuto()
     {
         $expected = 'http://www.typo3.org/login/';
@@ -187,7 +194,7 @@ class RedirectErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCas
         /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
         $errorFixture = $this->getErrorFixture();
 
-        /** @var \R3H6\Error404page\Domain\Model\Error $pageFixture */
+        // /** @var \R3H6\Error404page\Domain\Model\Page $pageFixture */
         $pageFixture = new Page(array(
             'uid' => 123,
             'pid' => 1,
@@ -199,7 +206,7 @@ class RedirectErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCas
             ->expects($this->once())
             ->method('findLoginPageForError')
             ->with($errorFixture)
-            ->will($this->returnValue(null));
+            ->will($this->returnValue($pageFixture));
 
         $this->frontendControllerMock
             ->expects($this->once())
@@ -213,7 +220,7 @@ class RedirectErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCas
         $return = $this->subject->handleError($errorFixture);
 
         $this->assertStringStartsWith($expected, $this->subject->getCachingData());
-        $this->assertStringEndsWith('?redirect_url='.$errorFixture->getUrl(), $this->subject->getCachingData());
+        $this->assertStringEndsWith('?redirect_url='.urlencode($errorFixture->getUrl()), $this->subject->getCachingData());
         $this->assertContains('pageId_123', $this->subject->getCacheTags(), 'Invalid cache tags');
 
         $this->assertTrue($return, 'Error handler shoudl return true');
@@ -226,7 +233,7 @@ class RedirectErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCas
             ->expects($this->once())
             ->method('get')
             ->with('redirectError403To')
-            ->will($this->returnValue($value));
+            ->will($this->returnValue($redirectError403To));
 
         $this->pageTsConfigManagerMock
             ->expects($this->once())
@@ -246,7 +253,7 @@ class RedirectErrorHandlerTest extends \R3H6\Error404page\Tests\Unit\UnitTestCas
         $errorFixture = new Error();
         $errorFixture->setStatusCode(Error::STATUS_CODE_FORBIDDEN);
         $errorFixture->setPid(123);
-        $errorFixture->setUrl('http://www.typo3.org/not/found/');
+        $errorFixture->setUrl('http://www.typo3.org/not/found/?tx_ext_pi1[key]=value');
 
         return $errorFixture;
     }

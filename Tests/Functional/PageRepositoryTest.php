@@ -219,6 +219,48 @@ class PageRepositoryTest extends FunctionalTestCase
         $this->assertEquals('Fehler Seite', $errorPage->getTitle(), 'Wrong page found!');
     }
 
+    /**
+     * @test
+     */
+    public function findLoginPageForErrorFindsLoginPageInRootline()
+    {
+        /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
+        $errorFixture = $this->createError('www.typo3.org', Error::STATUS_CODE_FORBIDDEN, 111);
+
+        $this->importDataSet('pages');
+        $this->importContentRecord(array(
+            'uid' => 1501224320,
+            'header' => 'Login',
+            'pid' => 11,
+            'CType' => 'login',
+        ));
+
+        $errorPage = $this->pageRepository->findLoginPageForError($errorFixture);
+        $this->assertInstanceOf('R3H6\\Error404page\\Domain\\Model\\Page', $errorPage);
+        $this->assertEquals('Test Page 1.1', $errorPage->getTitle(), 'Wrong page found!');
+    }
+
+    /**
+     * @test
+     */
+    public function findLoginPageForErrorFindsLoginPageInWebsite()
+    {
+        /** @var \R3H6\Error404page\Domain\Model\Error $errorFixture */
+        $errorFixture = $this->createError('www.typo3.org', Error::STATUS_CODE_FORBIDDEN, 111);
+
+        $this->importDataSet('pages');
+        $this->importContentRecord(array(
+            'uid' => 1501224320,
+            'header' => 'Login',
+            'pid' => 14,
+            'CType' => 'login',
+        ));
+
+        $errorPage = $this->pageRepository->findLoginPageForError($errorFixture);
+        $this->assertInstanceOf('R3H6\\Error404page\\Domain\\Model\\Page', $errorPage);
+        $this->assertEquals('Test Page 1.4', $errorPage->getTitle(), 'Wrong page found!');
+    }
+
     protected function getInaccessibleProperty($object, $propertyName)
     {
         $reflectionObject = new \ReflectionObject($object);
@@ -242,10 +284,16 @@ class PageRepositoryTest extends FunctionalTestCase
         return $error;
     }
 
+    protected function importContentRecord(array $record)
+    {
+        $this->getDatabaseConnection()->exec_INSERTquery('tt_content', $record);
+    }
+
     protected function importPageRecord(array $record)
     {
         $this->getDatabaseConnection()->exec_INSERTquery('pages', $record);
     }
+
     protected function importPageLanguageOverlayRecord(array $record)
     {
         $this->getDatabaseConnection()->exec_INSERTquery('pages_language_overlay', $record);
