@@ -153,7 +153,7 @@ class ErrorRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
         $this->normalizeDates($startDate, $endDate);
         $where = sprintf('tstamp > %d AND tstamp < %d', $startDate->getTimestamp(), $endDate->getTimestamp());
 
-        $sql = sprintf('SELECT url_hash AS urlHash, url, count(*) AS counter FROM %s WHERE %s GROUP BY urlHash ORDER BY counter DESC LIMIT %d', static::$table, $where, $limit);
+        $sql = sprintf('SELECT url_hash AS urlHash, url, count(*) AS counter FROM %s WHERE %s GROUP BY urlHash, url ORDER BY counter DESC LIMIT %d', static::$table, $where, $limit);
 
         /** @var \TYPO3\CMS\Extbase\Persistence\Generic\Query $query */
         $query = $this->createQuery();
