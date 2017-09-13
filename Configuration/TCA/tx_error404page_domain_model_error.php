@@ -12,7 +12,7 @@ return array(
 
 		),
 		'searchFields' => 'url,url_hash,root_page,reason,counter,referer,ip,user_agent,',
-		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('error404page') . 'Resources/Public/Icons/tx_error404page_domain_model_error.gif',
+		'iconfile' => 'EXT:error404page/Resources/Public/Icons/tx_error404page_domain_model_error.gif',
 		'rootLevel' => -1
 	),
 	'interface' => array(
