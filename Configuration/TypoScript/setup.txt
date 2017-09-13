@@ -1,6 +1,6 @@
 
  # Module configuration
-module.tx_error404page_web_error404pagestatistic {
+module.tx_error404page {
 	view {
 		templateRootPaths.0 = EXT:error404page/Resources/Private/Backend/Templates/
 		partialRootPaths.0 = EXT:error404page/Resources/Private/Backend/Partials/
