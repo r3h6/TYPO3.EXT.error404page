@@ -21,7 +21,7 @@ use R3H6\Error404page\Domain\Model\Error;
 /**
  * Unit test for the ErrorHandler.§.
  */
-class ErrorHandlerCacheTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+class ErrorHandlerCacheTest extends \Nimut\TestingFramework\TestCase\UnitTestCase
 {
     use \R3H6\Error404page\Tests\TestCaseCompatibility;
     use \R3H6\Error404page\Tests\DeprecationLogTrait;

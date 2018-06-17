@@ -22,7 +22,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Unit test for the ErrorHandler.
  */
-class DefaultErrorHandlerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+class DefaultErrorHandlerTest extends \Nimut\TestingFramework\TestCase\UnitTestCase
 {
     use \R3H6\Error404page\Tests\TestCaseCompatibility;
     use \R3H6\Error404page\Tests\DeprecationLogTrait;

@@ -286,17 +286,17 @@ class PageRepositoryTest extends FunctionalTestCase
 
     protected function importContentRecord(array $record)
     {
-        $this->getDatabaseConnection()->exec_INSERTquery('tt_content', $record);
+        $this->getDatabaseConnection()->insertArray('tt_content', $record);
     }
 
     protected function importPageRecord(array $record)
     {
-        $this->getDatabaseConnection()->exec_INSERTquery('pages', $record);
+        $this->getDatabaseConnection()->insertArray('pages', $record);
     }
 
     protected function importPageLanguageOverlayRecord(array $record)
     {
-        $this->getDatabaseConnection()->exec_INSERTquery('pages_language_overlay', $record);
+        $this->getDatabaseConnection()->insertArray('pages_language_overlay', $record);
     }
 
     protected function importDataSet($name)
