@@ -57,8 +57,8 @@ class CachingTest extends FunctionalTestCase
 
         $this->subject->set($cacheIdentifierFixture, $errorHandlerFixture);
 
-        $this->assertSame(1, $this->getDatabaseConnection()->exec_SELECTcountRows('*', 'cf_cache_pages'));
-        $this->assertSame(2, $this->getDatabaseConnection()->exec_SELECTcountRows('*', 'cf_cache_pages_tags'));
+        $this->assertSame(1, $this->getDatabaseConnection()->selectCount('*', 'cf_cache_pages'));
+        $this->assertSame(2, $this->getDatabaseConnection()->selectCount('*', 'cf_cache_pages_tags'));
 
         $errorHandler = $this->subject->get($cacheIdentifierFixture);
         $this->assertNotSame($errorHandlerFixture, $errorHandler, 'Object from cache is not a new instance');

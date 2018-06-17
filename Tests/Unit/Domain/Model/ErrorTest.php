@@ -22,7 +22,7 @@ namespace R3H6\Error404page\Tests\Unit\Domain\Model;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  * @author R3 H6 <r3h6@outlook.com>
  */
-class ErrorTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+class ErrorTest extends \Nimut\TestingFramework\TestCase\UnitTestCase
 {
     use \R3H6\Error404page\Tests\TestCaseCompatibility;
     use \R3H6\Error404page\Tests\DeprecationLogTrait;
