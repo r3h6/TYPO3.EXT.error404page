@@ -25,7 +25,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * @author R3 H6 <r3h6@outlook.com>
  */
-class HttpServiceTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+class HttpServiceTest extends \Nimut\TestingFramework\TestCase\UnitTestCase
 {
     use \R3H6\Error404page\Tests\TestCaseCompatibility;
     use \R3H6\Error404page\Tests\DeprecationLogTrait;

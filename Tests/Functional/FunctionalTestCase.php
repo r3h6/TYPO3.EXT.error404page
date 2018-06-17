@@ -21,7 +21,7 @@ use TYPO3\CMS\Frontend\Page\PageRepository;
 /**
  * FunctionalTestCase.
  */
-abstract class FunctionalTestCase extends \TYPO3\CMS\Core\Tests\FunctionalTestCase
+abstract class FunctionalTestCase extends \Nimut\TestingFramework\TestCase\FunctionalTestCase
 {
     use \R3H6\Error404page\Tests\TestCaseCompatibility;
     use \R3H6\Error404page\Tests\DeprecationLogTrait;

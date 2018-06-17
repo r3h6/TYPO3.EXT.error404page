@@ -22,7 +22,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * UnitTestCase.
  */
-class UnitTestCase extends \TYPO3\CMS\Core\Tests\UnitTestCase
+class UnitTestCase extends \Nimut\TestingFramework\TestCase\UnitTestCase
 {
     public function setUpTYPO3Globals()
     {

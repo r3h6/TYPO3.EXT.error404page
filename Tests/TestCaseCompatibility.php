@@ -3,6 +3,7 @@
 namespace R3H6\Error404page\Tests;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use PHPUnit\Framework\MockObject\Generator as MockGenerator;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -42,5 +43,18 @@ trait TestCaseCompatibility
         $this->mockObjects[] = $mockObject;
 
         return $mockObject;
+    }
+
+    /**
+     * Compatibility with PhpUnit 6
+     * @return MockGenerator
+     */
+    private function getMockObjectGenerator()
+    {
+        if (null === $this->mockObjectGenerator) {
+            $this->mockObjectGenerator = new MockGenerator;
+        }
+
+        return $this->mockObjectGenerator;
     }
 }

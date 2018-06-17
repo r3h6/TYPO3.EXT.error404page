@@ -24,7 +24,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Unit test for the ErrorHandlerHook.
  */
-class ErrorHandlerHookTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+class ErrorHandlerHookTest extends \Nimut\TestingFramework\TestCase\UnitTestCase
 {
     use \R3H6\Error404page\Tests\TestCaseCompatibility;
     use \R3H6\Error404page\Tests\DeprecationLogTrait;
