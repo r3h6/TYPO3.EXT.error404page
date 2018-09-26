@@ -60,6 +60,7 @@ class Page404ErrorHandler implements ErrorHandlerInterface
                 return true;
             }
         }
+        $this->getLogger()->debug('Do not handle error because no error page found');
 
         return false;
     }
@@ -100,5 +101,14 @@ class Page404ErrorHandler implements ErrorHandlerInterface
     public function getCacheTags()
     {
         return $this->cacheTags;
+    }
+
+    /**
+     * Get class logger
+     *
+     * @return \TYPO3\CMS\Core\Log\Logger
+     */
+    protected function getLogger (){
+        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Log\\LogManager')->getLogger(__CLASS__);
     }
 }
