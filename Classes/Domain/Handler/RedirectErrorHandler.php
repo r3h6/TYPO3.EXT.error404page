@@ -73,12 +73,15 @@ class RedirectErrorHandler implements ErrorHandlerInterface
     public function handleError(\R3H6\Error404page\Domain\Model\Error $error)
     {
         if ($error->getStatusCode() !== Error::STATUS_CODE_FORBIDDEN) {
+            $this->getLogger()->debug('Do not handle error because wrong status code');
             return false;
         }
         if (!$error->getPid()) {
+            $this->getLogger()->debug('Do not handle error because no pid found');
             return false;
         }
         if ($this->frontendUser->isLoggedIn()) {
+            $this->getLogger()->debug('Do not handle error because user is logged in');
             return false;
         }
 
@@ -116,6 +119,8 @@ class RedirectErrorHandler implements ErrorHandlerInterface
 
             return true;
         }
+
+        $this->getLogger()->debug('Do not handle error because parameter is not set');
 
         return false;
     }

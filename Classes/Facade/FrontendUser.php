@@ -34,7 +34,7 @@ class FrontendUser
 
     public function isLoggedIn()
     {
-        return $this->frontendUserAuthentication->user !== null;
+        return isset($GLOBALS['TSFE']) && $GLOBALS['TSFE']->loginUser;
     }
 
     public function getUserGroups()
@@ -47,8 +47,5 @@ class FrontendUser
         }
 
         return array();
-        // $this->frontendUserAuthentication->fetchGroupData();
-        // \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($this);
-        // $this->frontendUserAuthentication->groupData;
     }
 }
